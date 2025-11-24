@@ -13,6 +13,9 @@ export default {
       },
     },
     extend: {
+      fontFamily: {
+        sans: ['IBM Plex Sans', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -57,11 +60,15 @@ export default {
           info: "hsl(var(--status-info))",
           "info-bg": "hsl(var(--status-info-bg))",
         },
-        utility: {
-          blue: "hsl(var(--utility-blue))",
-          navy: "hsl(var(--utility-navy))",
-          slate: "hsl(var(--utility-slate))",
-          light: "hsl(var(--utility-light))",
+        corporate: {
+          navy: "hsl(var(--corporate-navy))",
+          slate: "hsl(var(--corporate-slate))",
+          gray: "hsl(var(--corporate-gray))",
+          light: "hsl(var(--corporate-light))",
+        },
+        header: {
+          bg: "hsl(var(--header-bg))",
+          foreground: "hsl(var(--header-foreground))",
         },
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",

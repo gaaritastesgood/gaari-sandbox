@@ -48,13 +48,13 @@ export const GlobalSearch = ({ onSelectCustomer }: GlobalSearchProps) => {
   return (
     <div className="relative w-full max-w-2xl">
       <div className="relative">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
         <Input
           type="text"
           placeholder="Search by name, BP ID, account number, address, phone, or email..."
           value={query}
           onChange={(e) => handleSearch(e.target.value)}
-          className="pl-10 h-12 text-base bg-card border-border"
+          className="pl-9 h-10 text-sm bg-card border-border focus:border-primary"
         />
       </div>
 

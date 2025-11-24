@@ -31,21 +31,22 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <header className="bg-card border-b border-border shadow-sm sticky top-0 z-40">
-        <div className="px-6 py-4">
-          <div className="flex items-center justify-between mb-4">
+      <header className="bg-header-bg border-b border-border/50 shadow-sm sticky top-0 z-40">
+        <div className="px-6 py-3">
+          <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-3">
-              <div className="flex items-center gap-2">
-                <Zap className="h-8 w-8 text-primary" />
-                <h1 className="text-2xl font-bold text-foreground">Gaari</h1>
+              <div className="flex items-center gap-2.5">
+                <Zap className="h-7 w-7 text-header-foreground" />
+                <h1 className="text-xl font-semibold text-header-foreground tracking-tight">Gaari</h1>
               </div>
             </div>
             <Button 
               variant="outline" 
+              size="sm"
               onClick={() => setShowInteractionPanel(!showInteractionPanel)}
-              className={showInteractionPanel ? "bg-primary text-primary-foreground" : ""}
+              className={showInteractionPanel ? "bg-primary text-primary-foreground border-primary" : "bg-header-bg text-header-foreground border-border/50 hover:bg-header-bg/80"}
             >
-              <MessageSquare className="h-4 w-4 mr-2" />
+              <MessageSquare className="h-4 w-4 mr-1.5" />
               {showInteractionPanel ? "Close" : "Open"} Interaction
             </Button>
           </div>
@@ -61,16 +62,16 @@ const Index = () => {
                 <Customer360Header customer={selectedCustomer} />
 
                 <Tabs defaultValue="overview" className="w-full">
-                  <TabsList className="bg-muted">
-                    <TabsTrigger value="overview">Overview</TabsTrigger>
-                    <TabsTrigger value="bills">Bills & Usage</TabsTrigger>
-                    <TabsTrigger value="rates">Rates & Tariffs</TabsTrigger>
-                    <TabsTrigger value="payments">Payments</TabsTrigger>
-                    <TabsTrigger value="meters">Meters & Readings</TabsTrigger>
-                    <TabsTrigger value="interactions">Interactions</TabsTrigger>
+                  <TabsList className="bg-muted h-9 p-1">
+                    <TabsTrigger value="overview" className="text-xs h-7">Overview</TabsTrigger>
+                    <TabsTrigger value="bills" className="text-xs h-7">Bills & Usage</TabsTrigger>
+                    <TabsTrigger value="rates" className="text-xs h-7">Rates & Tariffs</TabsTrigger>
+                    <TabsTrigger value="payments" className="text-xs h-7">Payments</TabsTrigger>
+                    <TabsTrigger value="meters" className="text-xs h-7">Meters & Readings</TabsTrigger>
+                    <TabsTrigger value="interactions" className="text-xs h-7">Interactions</TabsTrigger>
                   </TabsList>
 
-                  <div className="mt-6">
+                  <div className="mt-4">
                     <TabsContent value="overview">
                       <OverviewTab customer={selectedCustomer} bills={bills} interactions={interactions} />
                     </TabsContent>
