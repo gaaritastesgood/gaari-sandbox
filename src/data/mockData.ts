@@ -365,112 +365,32 @@ export const mockPayments: Record<string, Payment[]> = {
 };
 
 export const mockInteractions: Record<string, Interaction[]> = {
-  ca1: [
+  "1": [
     {
       id: "int1",
-      date: "2025-11-02",
-      type: "phone",
-      summary: "Customer called to inquire about bill.",
-      notes: "Explained the charges and due date.",
-      agent: "Agent Smith",
-    },
-  ],
-  ca2: [
-    {
-      id: "int2",
-      date: "2025-11-06",
-      type: "email",
-      summary: "Customer emailed to request payment plan.",
-      notes: "Sent information about available payment plans.",
-      agent: "Agent Johnson",
-    },
-  ],
-  ca3: [
-    {
-      id: "int3",
-      date: "2025-11-11",
-      type: "phone",
-      summary: "Customer called to report a meter reading issue.",
-      notes: "Scheduled a technician to check the meter.",
-      agent: "Agent Williams",
-    },
-  ],
-  ca4: [
-    {
-      id: "int4",
-      date: "2025-11-16",
-      type: "email",
-      summary: "Customer emailed to dispute a charge.",
-      notes: "Opened a case to investigate the disputed charge.",
-      agent: "Agent Brown",
-    },
-  ],
-  ca5: [
-    {
-      id: "int5",
-      date: "2025-11-21",
-      type: "phone",
-      summary: "Customer called to update contact information.",
-      notes: "Updated the customer's email address and phone number.",
-      agent: "Agent Davis",
+      date: "2025-11-15",
+      time: "10:23",
+      type: "call",
+      channel: "Phone",
+      reason: "Billing Inquiry",
+      description: "Customer called to inquire about recent bill increase",
+      outcome: "Explained seasonal rate changes and usage spike",
+      agent: "Agent: Sarah Chen",
     },
   ],
 };
 
 export const mockCases: Record<string, Case[]> = {
-  ca1: [
+  "7": [
     {
       id: "case1",
-      dateOpened: "2025-11-03",
-      type: "billing dispute",
-      status: "open",
-      summary: "Customer disputes a high bill amount.",
-      notes: "Investigating the billing details and usage history.",
-      agent: "Agent Smith",
-    },
-  ],
-  ca2: [
-    {
-      id: "case2",
-      dateOpened: "2025-11-07",
-      type: "payment plan request",
-      status: "closed",
-      summary: "Customer requests a payment plan due to financial hardship.",
-      notes: "Approved the customer for a temporary payment plan.",
-      agent: "Agent Johnson",
-    },
-  ],
-  ca3: [
-    {
-      id: "case3",
-      dateOpened: "2025-11-12",
-      type: "meter issue",
-      status: "pending",
-      summary: "Customer reports a potential issue with the meter.",
-      notes: "Awaiting technician's report after inspecting the meter.",
-      agent: "Agent Williams",
-    },
-  ],
-  ca4: [
-    {
-      id: "case4",
-      dateOpened: "2025-11-17",
-      type: "charge dispute",
-      status: "open",
-      summary: "Customer disputes a specific charge on the bill.",
-      notes: "Gathering evidence to determine the validity of the charge.",
-      agent: "Agent Brown",
-    },
-  ],
-  ca5: [
-    {
-      id: "case5",
-      dateOpened: "2025-11-22",
-      type: "account update",
-      status: "closed",
-      summary: "Customer requests to update their account information.",
-      notes: "Updated the customer's contact details and preferences.",
-      agent: "Agent Davis",
+      createdDate: "2025-11-19",
+      type: "Billing Issue",
+      subject: "High usage investigation - October bill",
+      status: "in_progress",
+      priority: "medium",
+      assignedTo: "Billing Specialist Team",
+      relatedBillId: "bill7",
     },
   ],
 };
@@ -479,104 +399,51 @@ export const mockRates: Record<string, Rate[]> = {
   ca1: [
     {
       id: "rate1",
-      startDate: "2025-01-01",
-      endDate: "2025-12-31",
-      tariff: "RES-STD (Residential Standard)",
-      energyCharge: 0.13,
-      deliveryCharge: 0.028,
-      fixedCharge: 15.00,
+      name: "Residential Standard Rate",
+      code: "RES-STD",
+      effectiveDate: "2024-01-01",
+      category: "Residential",
+      riders: [],
     },
   ],
   ca2: [
     {
       id: "rate2",
-      startDate: "2025-01-01",
-      endDate: "2025-12-31",
-      tariff: "COM-STD (Commercial Standard)",
-      energyCharge: 0.12,
-      deliveryCharge: 0.028,
-      fixedCharge: 25.00,
+      name: "Commercial Time-of-Use Rate",
+      code: "COM-TOU-2",
+      effectiveDate: "2024-01-01",
+      category: "Commercial",
+      riders: ["Demand Charge"],
     },
   ],
-  ca3: [
+  ca7: [
     {
-      id: "rate3",
-      startDate: "2025-01-01",
-      endDate: "2025-12-31",
-      tariff: "RES-LOW (Residential Low Usage)",
-      energyCharge: 0.145,
-      deliveryCharge: 0.029,
-      fixedCharge: 10.00,
-    },
-  ],
-  ca4: [
-    {
-      id: "rate4",
-      startDate: "2025-01-01",
-      endDate: "2025-12-31",
-      tariff: "COM-HIGH (Commercial High Usage)",
-      energyCharge: 0.128,
-      deliveryCharge: 0.034,
-      fixedCharge: 40.00,
-    },
-  ],
-  ca5: [
-    {
-      id: "rate5",
-      startDate: "2025-01-01",
-      endDate: "2025-12-31",
-      tariff: "RES-STD (Residential Standard)",
-      energyCharge: 0.13,
-      deliveryCharge: 0.025,
-      fixedCharge: 15.00,
+      id: "rate7",
+      name: "Commercial Industrial Rate",
+      code: "COM-IND-1",
+      effectiveDate: "2024-01-01",
+      category: "Industrial",
+      riders: ["Industrial Demand Rider"],
     },
   ],
 };
 
 export const mockMeterReadings: Record<string, MeterReading[]> = {
   sp1: [
-    {
-      id: "mr1",
-      date: "2025-11-20",
-      reading: 14521,
-      estimated: false,
-      notes: "Normal meter reading.",
-    },
+    { id: "mr1", date: "2025-11-20", reading: 14521, type: "actual", usage: 1245, anomaly: false },
+    { id: "mr2", date: "2025-10-20", reading: 13276, type: "actual", usage: 1189, anomaly: false },
+    { id: "mr3", date: "2025-09-20", reading: 12087, type: "actual", usage: 1234, anomaly: false },
   ],
   sp2: [
-    {
-      id: "mr2",
-      date: "2025-11-15",
-      reading: 8765,
-      estimated: true,
-      notes: "Estimated due to remote read failure.",
-    },
-  ],
-  sp3: [
-    {
-      id: "mr3",
-      date: "2025-11-25",
-      reading: 4321,
-      estimated: false,
-      notes: "Normal meter reading.",
-    },
-  ],
-  sp4: [
-    {
-      id: "mr4",
-      date: "2025-11-30",
-      reading: 9876,
-      estimated: true,
-      notes: "Estimated due to access issue.",
-    },
+    { id: "mr4", date: "2025-11-18", reading: 38942, type: "actual", usage: 9842, anomaly: false },
+    { id: "mr5", date: "2025-10-18", reading: 29100, type: "actual", usage: 9456, anomaly: false },
   ],
   sp5: [
-    {
-      id: "mr5",
-      date: "2025-12-05",
-      reading: 5432,
-      estimated: false,
-      notes: "Normal meter reading.",
-    },
+    { id: "mr6", date: "2025-11-20", reading: 52341, type: "actual", usage: 16234, anomaly: false },
+    { id: "mr7", date: "2025-10-20", reading: 36107, type: "actual", usage: 15892, anomaly: false },
+  ],
+  sp7: [
+    { id: "mr8", date: "2025-11-19", reading: 61254, type: "actual", usage: 21345, anomaly: true },
+    { id: "mr9", date: "2025-10-19", reading: 39909, type: "actual", usage: 18234, anomaly: false },
   ],
 };
