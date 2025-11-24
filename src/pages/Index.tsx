@@ -13,7 +13,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Customer } from "@/types/customer";
 import { mockBills, mockPayments, mockInteractions, mockCases, mockRates, mockMeterReadings } from "@/data/mockData";
-import { MessageSquare, Zap } from "lucide-react";
+import { MessageSquare } from "lucide-react";
 
 const Index = () => {
   const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null);
@@ -37,7 +37,6 @@ const Index = () => {
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-3">
               <div className="flex items-center gap-2.5">
-                <Zap className="h-7 w-7 text-header-foreground" />
                 <h1 className="text-xl font-semibold text-header-foreground tracking-tight">Gaari</h1>
               </div>
             </div>
@@ -60,8 +59,8 @@ const Index = () => {
 
       <div className="flex">
         <main className={`flex-1 transition-all ${showInteractionPanel ? "mr-96" : ""}`}>
-          <div className="p-6">
-            {selectedCustomer ? (
+          {selectedCustomer && (
+            <div className="p-6">
               <div className="space-y-6">
                 <Customer360Header customer={selectedCustomer} />
 
@@ -108,20 +107,8 @@ const Index = () => {
                   </div>
                 </Tabs>
               </div>
-            ) : (
-              <div className="flex items-center justify-center min-h-[60vh]">
-                <div className="text-center">
-                  <Zap className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
-                  <h2 className="text-2xl font-semibold text-foreground mb-2">
-                    Welcome to Gaari
-                  </h2>
-                  <p className="text-muted-foreground max-w-md">
-                    Search for a customer by name, business partner ID, account number, address, phone, or email to view their Customer 360 profile.
-                  </p>
-                </div>
-              </div>
-            )}
-          </div>
+            </div>
+          )}
         </main>
 
         {showInteractionPanel && (
