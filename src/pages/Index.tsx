@@ -3,6 +3,7 @@ import { GlobalSearch } from "@/components/GlobalSearch";
 import { Customer360Header } from "@/components/Customer360Header";
 import { InteractionPanel } from "@/components/InteractionPanel";
 import { KPIDashboard } from "@/components/KPIDashboard";
+import { EmptyState } from "@/components/EmptyState";
 import { OverviewTab } from "@/components/tabs/OverviewTab";
 import { BillsTab } from "@/components/tabs/BillsTab";
 import { RatesTab } from "@/components/tabs/RatesTab";
@@ -59,7 +60,7 @@ const Index = () => {
 
       <div className="flex flex-1">
         <main className={`flex-1 transition-all ${showInteractionPanel ? "mr-96" : ""}`}>
-          {selectedCustomer && (
+          {selectedCustomer ? (
             <div className="p-6 space-y-6">
               <Customer360Header customer={selectedCustomer} />
 
@@ -111,6 +112,8 @@ const Index = () => {
                 </div>
               </Tabs>
             </div>
+          ) : (
+            <EmptyState />
           )}
         </main>
 
