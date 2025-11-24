@@ -119,6 +119,12 @@ export const BillsTab = ({ bills, customerSegment, customerId, customerName }: B
               <div>
                 <div className="text-sm text-muted-foreground">Total Usage</div>
                 <div className="text-xl font-bold text-foreground">{selectedBill.usage.toLocaleString()} {selectedBill.usageUnit}</div>
+                <Badge 
+                  variant="outline" 
+                  className={selectedBill.readingType === "estimated" ? "mt-2 bg-status-warning-bg text-status-warning" : "mt-2 bg-status-success-bg text-status-success"}
+                >
+                  {selectedBill.readingType === "estimated" ? "Estimated Reading" : "Actual Reading"}
+                </Badge>
               </div>
 
               <div className="border-t border-border pt-4">

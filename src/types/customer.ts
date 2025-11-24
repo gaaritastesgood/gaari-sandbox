@@ -52,6 +52,7 @@ export interface Bill {
   usageUnit: string;
   charges: BillCharge[];
   pdfUrl: string;
+  readingType: "actual" | "estimated";
   issues?: BillIssue[];
 }
 
@@ -88,6 +89,7 @@ export interface Interaction {
   description: string;
   outcome: string;
   agent: string;
+  customerDescription?: string;
 }
 
 export interface Case {
