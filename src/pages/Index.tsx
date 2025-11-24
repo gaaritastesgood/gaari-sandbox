@@ -111,7 +111,11 @@ const Index = () => {
 
         {showInteractionPanel && (
           <aside className="fixed right-0 top-[180px] bottom-0 z-30">
-            <InteractionPanel onClose={() => setShowInteractionPanel(false)} />
+            <InteractionPanel 
+              onClose={() => setShowInteractionPanel(false)}
+              customerId={selectedCustomer?.id}
+              customerName={selectedCustomer ? `${selectedCustomer.firstName} ${selectedCustomer.lastName}` : undefined}
+            />
           </aside>
         )}
       </div>
