@@ -4,15 +4,19 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { X, Clock, Save } from "lucide-react";
+import { X, Clock, Save, FileText } from "lucide-react";
+import { CaseCreationDialog } from "@/components/CaseCreationDialog";
 
 interface InteractionPanelProps {
   onClose: () => void;
+  customerId?: string;
+  customerName?: string;
 }
 
-export const InteractionPanel = ({ onClose }: InteractionPanelProps) => {
+export const InteractionPanel = ({ onClose, customerId, customerName }: InteractionPanelProps) => {
   const [reason, setReason] = useState("");
   const [notes, setNotes] = useState("");
+  const [showCaseDialog, setShowCaseDialog] = useState(false);
   const startTime = new Date().toLocaleTimeString();
 
   return (
@@ -88,6 +92,14 @@ export const InteractionPanel = ({ onClose }: InteractionPanelProps) => {
       </div>
 
       <div className="p-4 border-t border-border space-y-2">
+        <Button 
+          variant="outline" 
+          className="w-full"
+          onClick={() => setShowCaseDialog(true)}
+        >
+          <FileText className="h-4 w-4 mr-2" />
+          Create Case
+        </Button>
         <Button className="w-full" size="lg">
           <Save className="h-4 w-4 mr-2" />
           Save & Close Interaction
@@ -96,6 +108,13 @@ export const InteractionPanel = ({ onClose }: InteractionPanelProps) => {
           Save Draft
         </Button>
       </div>
+
+      <CaseCreationDialog 
+        open={showCaseDialog}
+        onOpenChange={setShowCaseDialog}
+        customerId={customerId}
+        customerName={customerName}
+      />
     </Card>
   );
 };
