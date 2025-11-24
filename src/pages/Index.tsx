@@ -34,8 +34,8 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <header className="bg-header-bg border-b border-border/50 shadow-sm z-40">
-        <div className="px-6 py-3">
-          <div className="flex items-center justify-between mb-3">
+        <div className="px-6 py-2">
+          <div className="flex items-center justify-between mb-2">
             <div className="flex items-center gap-3">
               <div className="flex items-center gap-2.5">
                 <h1 className="text-xl font-semibold text-header-foreground tracking-tight">Gaari</h1>
@@ -52,7 +52,7 @@ const Index = () => {
             </Button>
           </div>
           <GlobalSearch onSelectCustomer={handleSelectCustomer} />
-          <div className="mt-4">
+          <div className="mt-3">
             <KPIDashboard />
           </div>
         </div>
@@ -61,7 +61,7 @@ const Index = () => {
       <div className="flex flex-1">
         <main className={`flex-1 transition-all ${showInteractionPanel ? "mr-96" : ""}`}>
           {selectedCustomer ? (
-            <div className="p-6 space-y-6">
+            <div className="p-4 space-y-4">
               <Customer360Header customer={selectedCustomer} />
 
               <Tabs defaultValue="overview" className="w-full">

@@ -45,8 +45,8 @@ const KPITile = ({ label, primaryMetric, subtext, trend, status = "info", trendV
   };
 
   return (
-    <Card className="p-4 bg-card border-border hover:shadow-md transition-shadow">
-      <div className="space-y-2">
+    <Card className="p-3 bg-card border-border hover:shadow-md transition-shadow">
+      <div className="space-y-1.5">
         <div className="flex items-start justify-between">
           <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
             {label}
@@ -55,7 +55,7 @@ const KPITile = ({ label, primaryMetric, subtext, trend, status = "info", trendV
         </div>
         
         <div className="flex items-baseline gap-2">
-          <div className="text-2xl font-semibold text-foreground tracking-tight">
+          <div className="text-xl font-semibold text-foreground tracking-tight">
             {primaryMetric}
           </div>
           {trendValue && (
@@ -130,7 +130,7 @@ export const KPIDashboard = () => {
   ];
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-3">
       {kpis.map((kpi, index) => (
         <KPITile key={index} {...kpi} />
       ))}
