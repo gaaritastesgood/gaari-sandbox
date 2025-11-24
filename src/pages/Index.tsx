@@ -79,7 +79,7 @@ const Index = () => {
                   </TabsContent>
 
                   <TabsContent value="bills">
-                    <BillsTab bills={bills} />
+                    <BillsTab bills={bills} customerSegment={selectedCustomer.segment} />
                   </TabsContent>
 
                   <TabsContent value="rates">

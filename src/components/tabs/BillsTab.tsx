@@ -3,14 +3,24 @@ import { Bill } from "@/types/customer";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { FileText, Download, ChevronRight, TrendingUp, AlertCircle } from "lucide-react";
+import { FileText, Download, ChevronRight, AlertCircle, Zap, DollarSign, Activity } from "lucide-react";
 
 interface BillsTabProps {
   bills: Bill[];
+  customerSegment?: "residential" | "commercial" | "industrial";
 }
 
-export const BillsTab = ({ bills }: BillsTabProps) => {
+export const BillsTab = ({ bills, customerSegment }: BillsTabProps) => {
   const [selectedBill, setSelectedBill] = useState<Bill | null>(null);
+
+  const getChargesByCategory = (bill: Bill) => {
+    const energyCost = bill.charges.find(c => c.category === "Energy");
+    const fixedCost = bill.charges.find(c => c.category === "Fixed");
+    const demandCost = bill.charges.find(c => c.category === "Demand");
+    const otherCharges = bill.charges.filter(c => !["Energy", "Fixed", "Demand"].includes(c.category || ""));
+    
+    return { energyCost, fixedCost, demandCost, otherCharges };
+  };
 
   const getStatusBadge = (status: string) => {
     const variants: Record<string, string> = {
@@ -90,32 +100,104 @@ export const BillsTab = ({ bills }: BillsTabProps) => {
             </div>
 
             <div className="space-y-4">
-              <div>
-                <div className="text-sm text-muted-foreground">Bill Date</div>
-                <div className="font-medium text-foreground">{new Date(selectedBill.billDate).toLocaleDateString()}</div>
+              <div className="bg-muted/50 rounded-lg p-3 border border-border">
+                <div className="text-xs text-muted-foreground mb-1">Rate Plan</div>
+                <div className="font-semibold text-foreground">{selectedBill.tariff}</div>
               </div>
 
               <div>
-                <div className="text-sm text-muted-foreground">Total Amount</div>
-                <div className="text-2xl font-bold text-foreground">${selectedBill.amount.toLocaleString()}</div>
+                <div className="text-sm text-muted-foreground">Bill Period</div>
+                <div className="font-medium text-foreground">
+                  {new Date(selectedBill.servicePeriodStart).toLocaleDateString()} - {new Date(selectedBill.servicePeriodEnd).toLocaleDateString()}
+                </div>
               </div>
 
               <div>
-                <div className="text-sm text-muted-foreground mb-2">Charges Breakdown</div>
-                <div className="space-y-2">
-                  {selectedBill.charges.map((charge, idx) => (
-                    <div key={idx} className="flex justify-between items-start text-sm border-b border-border pb-2 last:border-b-0">
-                      <div>
-                        <div className="font-medium text-foreground">{charge.description}</div>
-                        <div className="text-xs text-muted-foreground">
-                          {charge.rate && charge.quantity && (
-                            <>Rate: ${charge.rate} × {charge.quantity.toLocaleString()}</>
-                          )}
-                        </div>
-                      </div>
-                      <div className="font-medium text-foreground">${charge.amount.toLocaleString()}</div>
-                    </div>
-                  ))}
+                <div className="text-sm text-muted-foreground">Total Usage</div>
+                <div className="text-xl font-bold text-foreground">{selectedBill.usage.toLocaleString()} {selectedBill.usageUnit}</div>
+              </div>
+
+              <div className="border-t border-border pt-4">
+                <div className="text-sm font-semibold text-foreground mb-3">Cost Breakdown</div>
+                <div className="space-y-3">
+                  {(() => {
+                    const { energyCost, fixedCost, demandCost, otherCharges } = getChargesByCategory(selectedBill);
+                    
+                    return (
+                      <>
+                        {energyCost && (
+                          <div className="bg-muted/30 rounded-lg p-3 border border-border">
+                            <div className="flex items-start gap-2">
+                              <Zap className="h-4 w-4 text-primary mt-0.5" />
+                              <div className="flex-1">
+                                <div className="flex justify-between items-start mb-1">
+                                  <div className="font-medium text-sm text-foreground">Energy Cost</div>
+                                  <div className="font-bold text-foreground">${energyCost.amount.toLocaleString()}</div>
+                                </div>
+                                <div className="text-xs text-muted-foreground">
+                                  {energyCost.rate && energyCost.quantity && (
+                                    <>${energyCost.rate}/kWh × {energyCost.quantity.toLocaleString()} kWh</>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+
+                        {fixedCost && (
+                          <div className="bg-muted/30 rounded-lg p-3 border border-border">
+                            <div className="flex items-start gap-2">
+                              <DollarSign className="h-4 w-4 text-primary mt-0.5" />
+                              <div className="flex-1">
+                                <div className="flex justify-between items-start mb-1">
+                                  <div className="font-medium text-sm text-foreground">Fixed Cost</div>
+                                  <div className="font-bold text-foreground">${fixedCost.amount.toLocaleString()}</div>
+                                </div>
+                                <div className="text-xs text-muted-foreground">{fixedCost.description}</div>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+
+                        {demandCost && (customerSegment === "commercial" || customerSegment === "industrial") && (
+                          <div className="bg-muted/30 rounded-lg p-3 border border-border">
+                            <div className="flex items-start gap-2">
+                              <Activity className="h-4 w-4 text-primary mt-0.5" />
+                              <div className="flex-1">
+                                <div className="flex justify-between items-start mb-1">
+                                  <div className="font-medium text-sm text-foreground">Demand Cost</div>
+                                  <div className="font-bold text-foreground">${demandCost.amount.toLocaleString()}</div>
+                                </div>
+                                <div className="text-xs text-muted-foreground">
+                                  {demandCost.rate && demandCost.quantity && (
+                                    <>${demandCost.rate}/kW × {demandCost.quantity.toLocaleString()} kW</>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+
+                        {otherCharges.length > 0 && (
+                          <div className="space-y-2 mt-2">
+                            {otherCharges.map((charge, idx) => (
+                              <div key={idx} className="flex justify-between items-center text-sm">
+                                <div className="text-muted-foreground">{charge.description}</div>
+                                <div className="font-medium text-foreground">${charge.amount.toLocaleString()}</div>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </>
+                    );
+                  })()}
+                </div>
+              </div>
+
+              <div className="border-t border-border pt-4">
+                <div className="flex justify-between items-center">
+                  <div className="text-sm font-semibold text-foreground">Total Amount</div>
+                  <div className="text-2xl font-bold text-foreground">${selectedBill.amount.toLocaleString()}</div>
                 </div>
               </div>
 
