@@ -59,12 +59,12 @@ export const GlobalSearch = ({ onSelectCustomer }: GlobalSearchProps) => {
       </div>
 
       {showSuggestions && suggestions.length > 0 && (
-        <div className="absolute top-full mt-2 w-full bg-card border border-border rounded-lg shadow-lg z-50 max-h-96 overflow-y-auto">
+        <div className="fixed mt-2 w-full max-w-2xl bg-card border border-border rounded-lg shadow-xl z-[100] max-h-96 overflow-y-auto">
           {suggestions.map((customer) => (
             <button
               key={customer.id}
               onClick={() => handleSelectCustomer(customer)}
-              className="w-full px-4 py-3 text-left hover:bg-muted transition-colors border-b border-border last:border-b-0"
+              className="w-full px-4 py-3 text-left hover:bg-muted transition-colors border-b border-border last:border-b-0 first:rounded-t-lg last:rounded-b-lg"
             >
               <div className="font-medium text-foreground">
                 {customer.firstName} {customer.lastName}
