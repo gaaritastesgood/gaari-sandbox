@@ -1,6 +1,8 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { LineChart, Line, BarChart, Bar, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
+import { IssueEscalationDialog } from "./IssueEscalationDialog";
+import { useState } from "react";
 
 interface KPIDetailDialogProps {
   open: boolean;
@@ -91,6 +93,7 @@ const chartConfig = {
 
 export const KPIDetailDialog = ({ open, onOpenChange, kpiLabel }: KPIDetailDialogProps) => {
   const data = generateChartData(kpiLabel);
+  const [selectedIssue, setSelectedIssue] = useState<{ type: string; count: number; impact: string } | null>(null);
 
   const renderChart = () => {
     switch (kpiLabel) {
@@ -145,7 +148,10 @@ export const KPIDetailDialog = ({ open, onOpenChange, kpiLabel }: KPIDetailDialo
 
             {/* Exception Breakdown */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="p-4 rounded-lg border border-border bg-card">
+              <div 
+                className="p-4 rounded-lg border border-border bg-card hover:border-primary/50 hover:shadow-md transition-all cursor-pointer"
+                onClick={() => setSelectedIssue({ type: "Estimated Over-read", count: 5, impact: "High" })}
+              >
                 <div className="text-sm text-muted-foreground mb-1">Primary Issue</div>
                 <div className="text-lg font-semibold text-foreground">Estimated Reads</div>
                 <div className="text-xs text-muted-foreground mt-1">5 of 8 exceptions (62.5%)</div>
@@ -174,7 +180,11 @@ export const KPIDetailDialog = ({ open, onOpenChange, kpiLabel }: KPIDetailDialo
                   { type: "Mismatched Meter", count: 2, impact: "High" },
                   { type: "Smart Meter Offline", count: 1, impact: "Medium" },
                 ].map((item, i) => (
-                  <div key={i} className="px-4 py-3 flex items-center justify-between hover:bg-muted/50">
+                  <div 
+                    key={i} 
+                    className="px-4 py-3 flex items-center justify-between hover:bg-muted/50 cursor-pointer transition-colors"
+                    onClick={() => setSelectedIssue(item)}
+                  >
                     <div>
                       <div className="text-sm font-medium text-foreground">{item.type}</div>
                       <div className="text-xs text-muted-foreground">{item.count} occurrences</div>
@@ -286,15 +296,28 @@ export const KPIDetailDialog = ({ open, onOpenChange, kpiLabel }: KPIDetailDialo
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-4xl">
-        <DialogHeader>
-          <DialogTitle>{kpiLabel} - Performance Trend</DialogTitle>
-        </DialogHeader>
-        <div className="mt-4">
-          {renderChart()}
-        </div>
-      </DialogContent>
-    </Dialog>
+    <>
+      <Dialog open={open} onOpenChange={onOpenChange}>
+        <DialogContent className="max-w-4xl">
+          <DialogHeader>
+            <DialogTitle>{kpiLabel} - Performance Trend</DialogTitle>
+            <DialogDescription>
+              Click on any issue to escalate it to the relevant team
+            </DialogDescription>
+          </DialogHeader>
+          <div className="mt-4">
+            {renderChart()}
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      <IssueEscalationDialog
+        open={selectedIssue !== null}
+        onOpenChange={(open) => !open && setSelectedIssue(null)}
+        issueType={selectedIssue?.type || ""}
+        count={selectedIssue?.count || 0}
+        impact={selectedIssue?.impact || ""}
+      />
+    </>
   );
 };
