@@ -89,11 +89,11 @@ export const KPIDashboard = () => {
   const kpis: KPITileProps[] = [
     {
       label: "Bill Accuracy Score",
-      primaryMetric: "97.2%",
-      subtext: "3 billing exceptions today",
-      status: "good",
-      trend: "up",
-      trendValue: "+0.3%",
+      primaryMetric: "97.9%",
+      subtext: "Below 98% benchmark - 8 exceptions today",
+      status: "error",
+      trend: "down",
+      trendValue: "-0.1%",
     },
     {
       label: "Estimated vs Actual Reads",
