@@ -31,8 +31,8 @@ const Index = () => {
   const meterReadings = selectedCustomer ? mockMeterReadings[selectedCustomer.premises[0].servicePoints[0].id] || [] : [];
 
   return (
-    <div className="min-h-screen bg-background">
-      <header className="bg-header-bg border-b border-border/50 shadow-sm sticky top-0 z-40">
+    <div className="min-h-screen bg-background flex flex-col">
+      <header className="bg-header-bg border-b border-border/50 shadow-sm z-40">
         <div className="px-6 py-3">
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-3">
@@ -57,60 +57,60 @@ const Index = () => {
         </div>
       </header>
 
-      <div className="flex">
+      <div className="flex flex-1">
         <main className={`flex-1 transition-all ${showInteractionPanel ? "mr-96" : ""}`}>
           {selectedCustomer && (
             <div className="p-6 space-y-6">
               <Customer360Header customer={selectedCustomer} />
 
               <Tabs defaultValue="overview" className="w-full">
-                  <TabsList className="bg-muted h-9 p-1">
-                    <TabsTrigger value="overview" className="text-xs h-7">Overview</TabsTrigger>
-                    <TabsTrigger value="bills" className="text-xs h-7">Bills & Usage</TabsTrigger>
-                    <TabsTrigger value="rates" className="text-xs h-7">Rates & Tariffs</TabsTrigger>
-                    <TabsTrigger value="payments" className="text-xs h-7">Payments</TabsTrigger>
-                    <TabsTrigger value="meters" className="text-xs h-7">Meters & Readings</TabsTrigger>
-                    <TabsTrigger value="interactions" className="text-xs h-7">Interactions</TabsTrigger>
-                  </TabsList>
+                <TabsList className="bg-muted h-9 p-1">
+                  <TabsTrigger value="overview" className="text-xs h-7">Overview</TabsTrigger>
+                  <TabsTrigger value="bills" className="text-xs h-7">Bills & Usage</TabsTrigger>
+                  <TabsTrigger value="rates" className="text-xs h-7">Rates & Tariffs</TabsTrigger>
+                  <TabsTrigger value="payments" className="text-xs h-7">Payments</TabsTrigger>
+                  <TabsTrigger value="meters" className="text-xs h-7">Meters & Readings</TabsTrigger>
+                  <TabsTrigger value="interactions" className="text-xs h-7">Interactions</TabsTrigger>
+                </TabsList>
 
-                  <div className="mt-4">
-                    <TabsContent value="overview">
-                      <OverviewTab customer={selectedCustomer} bills={bills} interactions={interactions} />
-                    </TabsContent>
+                <div className="mt-4">
+                  <TabsContent value="overview">
+                    <OverviewTab customer={selectedCustomer} bills={bills} interactions={interactions} />
+                  </TabsContent>
 
-                    <TabsContent value="bills">
-                      <BillsTab bills={bills} />
-                    </TabsContent>
+                  <TabsContent value="bills">
+                    <BillsTab bills={bills} />
+                  </TabsContent>
 
-                    <TabsContent value="rates">
-                      <RatesTab rates={rates} />
-                    </TabsContent>
+                  <TabsContent value="rates">
+                    <RatesTab rates={rates} />
+                  </TabsContent>
 
-                    <TabsContent value="payments">
-                      <PaymentsTab 
-                        payments={payments} 
-                        balance={selectedCustomer.contractAccounts[0].balance} 
-                      />
-                    </TabsContent>
+                  <TabsContent value="payments">
+                    <PaymentsTab 
+                      payments={payments} 
+                      balance={selectedCustomer.contractAccounts[0].balance} 
+                    />
+                  </TabsContent>
 
-                    <TabsContent value="meters">
-                      <MetersTab 
-                        servicePoints={selectedCustomer.premises[0].servicePoints} 
-                        meterReadings={meterReadings}
-                      />
-                    </TabsContent>
+                  <TabsContent value="meters">
+                    <MetersTab 
+                      servicePoints={selectedCustomer.premises[0].servicePoints} 
+                      meterReadings={meterReadings}
+                    />
+                  </TabsContent>
 
-                    <TabsContent value="interactions">
-                      <InteractionsTab interactions={interactions} cases={cases} />
-                    </TabsContent>
-                  </div>
-                </Tabs>
-              </div>
-            )}
-          </main>
+                  <TabsContent value="interactions">
+                    <InteractionsTab interactions={interactions} cases={cases} />
+                  </TabsContent>
+                </div>
+              </Tabs>
+            </div>
+          )}
+        </main>
 
         {showInteractionPanel && (
-          <aside className="fixed right-0 top-[128px] bottom-0 z-30">
+          <aside className="fixed right-0 top-[180px] bottom-0 z-30">
             <InteractionPanel onClose={() => setShowInteractionPanel(false)} />
           </aside>
         )}
