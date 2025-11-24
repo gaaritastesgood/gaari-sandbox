@@ -2,6 +2,7 @@ import { useState } from "react";
 import { GlobalSearch } from "@/components/GlobalSearch";
 import { Customer360Header } from "@/components/Customer360Header";
 import { InteractionPanel } from "@/components/InteractionPanel";
+import { KPIDashboard } from "@/components/KPIDashboard";
 import { OverviewTab } from "@/components/tabs/OverviewTab";
 import { BillsTab } from "@/components/tabs/BillsTab";
 import { RatesTab } from "@/components/tabs/RatesTab";
@@ -51,6 +52,9 @@ const Index = () => {
             </Button>
           </div>
           <GlobalSearch onSelectCustomer={handleSelectCustomer} />
+          <div className="mt-4">
+            <KPIDashboard />
+          </div>
         </div>
       </header>
 
