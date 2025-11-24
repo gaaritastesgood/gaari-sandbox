@@ -60,11 +60,10 @@ const Index = () => {
       <div className="flex">
         <main className={`flex-1 transition-all ${showInteractionPanel ? "mr-96" : ""}`}>
           {selectedCustomer && (
-            <div className="p-6">
-              <div className="space-y-6">
-                <Customer360Header customer={selectedCustomer} />
+            <div className="p-6 space-y-6">
+              <Customer360Header customer={selectedCustomer} />
 
-                <Tabs defaultValue="overview" className="w-full">
+              <Tabs defaultValue="overview" className="w-full">
                   <TabsList className="bg-muted h-9 p-1">
                     <TabsTrigger value="overview" className="text-xs h-7">Overview</TabsTrigger>
                     <TabsTrigger value="bills" className="text-xs h-7">Bills & Usage</TabsTrigger>
@@ -107,9 +106,8 @@ const Index = () => {
                   </div>
                 </Tabs>
               </div>
-            </div>
-          )}
-        </main>
+            )}
+          </main>
 
         {showInteractionPanel && (
           <aside className="fixed right-0 top-[128px] bottom-0 z-30">
