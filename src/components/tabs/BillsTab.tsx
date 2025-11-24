@@ -3,7 +3,7 @@ import { Bill } from "@/types/customer";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { FileText, Download, ChevronRight, AlertCircle, Zap, DollarSign, Activity } from "lucide-react";
+import { FileText, Download, ChevronRight, AlertCircle } from "lucide-react";
 import { CaseCreationDialog } from "@/components/CaseCreationDialog";
 
 interface BillsTabProps {
@@ -131,53 +131,38 @@ export const BillsTab = ({ bills, customerSegment, customerId, customerName }: B
                       <>
                         {energyCost && (
                           <div className="bg-muted/30 rounded-lg p-3 border border-border">
-                            <div className="flex items-start gap-2">
-                              <Zap className="h-4 w-4 text-primary mt-0.5" />
-                              <div className="flex-1">
-                                <div className="flex justify-between items-start mb-1">
-                                  <div className="font-medium text-sm text-foreground">Energy Cost</div>
-                                  <div className="font-bold text-foreground">${energyCost.amount.toLocaleString()}</div>
-                                </div>
-                                <div className="text-xs text-muted-foreground">
-                                  {energyCost.rate && energyCost.quantity && (
-                                    <>${energyCost.rate}/kWh × {energyCost.quantity.toLocaleString()} kWh</>
-                                  )}
-                                </div>
-                              </div>
+                            <div className="flex justify-between items-start mb-1">
+                              <div className="font-medium text-sm text-foreground">Energy Cost</div>
+                              <div className="font-bold text-foreground">${energyCost.amount.toLocaleString()}</div>
+                            </div>
+                            <div className="text-xs text-muted-foreground">
+                              {energyCost.rate && energyCost.quantity && (
+                                <>${energyCost.rate}/kWh × {energyCost.quantity.toLocaleString()} kWh</>
+                              )}
                             </div>
                           </div>
                         )}
 
                         {fixedCost && (
                           <div className="bg-muted/30 rounded-lg p-3 border border-border">
-                            <div className="flex items-start gap-2">
-                              <DollarSign className="h-4 w-4 text-primary mt-0.5" />
-                              <div className="flex-1">
-                                <div className="flex justify-between items-start mb-1">
-                                  <div className="font-medium text-sm text-foreground">Fixed Cost</div>
-                                  <div className="font-bold text-foreground">${fixedCost.amount.toLocaleString()}</div>
-                                </div>
-                                <div className="text-xs text-muted-foreground">{fixedCost.description}</div>
-                              </div>
+                            <div className="flex justify-between items-start mb-1">
+                              <div className="font-medium text-sm text-foreground">Fixed Cost</div>
+                              <div className="font-bold text-foreground">${fixedCost.amount.toLocaleString()}</div>
                             </div>
+                            <div className="text-xs text-muted-foreground">{fixedCost.description}</div>
                           </div>
                         )}
 
                         {demandCost && (customerSegment === "commercial" || customerSegment === "industrial") && (
                           <div className="bg-muted/30 rounded-lg p-3 border border-border">
-                            <div className="flex items-start gap-2">
-                              <Activity className="h-4 w-4 text-primary mt-0.5" />
-                              <div className="flex-1">
-                                <div className="flex justify-between items-start mb-1">
-                                  <div className="font-medium text-sm text-foreground">Demand Cost</div>
-                                  <div className="font-bold text-foreground">${demandCost.amount.toLocaleString()}</div>
-                                </div>
-                                <div className="text-xs text-muted-foreground">
-                                  {demandCost.rate && demandCost.quantity && (
-                                    <>${demandCost.rate}/kW × {demandCost.quantity.toLocaleString()} kW</>
-                                  )}
-                                </div>
-                              </div>
+                            <div className="flex justify-between items-start mb-1">
+                              <div className="font-medium text-sm text-foreground">Demand Cost</div>
+                              <div className="font-bold text-foreground">${demandCost.amount.toLocaleString()}</div>
+                            </div>
+                            <div className="text-xs text-muted-foreground">
+                              {demandCost.rate && demandCost.quantity && (
+                                <>${demandCost.rate}/kW × {demandCost.quantity.toLocaleString()} kW</>
+                              )}
                             </div>
                           </div>
                         )}
