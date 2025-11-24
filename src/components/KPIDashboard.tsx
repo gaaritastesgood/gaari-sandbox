@@ -1,6 +1,8 @@
 import { TrendingUp, TrendingDown, Minus, AlertTriangle, CheckCircle, AlertCircle } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { useState } from "react";
+import { KPIDetailDialog } from "./KPIDetailDialog";
 
 interface KPITileProps {
   label: string;
@@ -9,9 +11,10 @@ interface KPITileProps {
   trend?: "up" | "down" | "neutral";
   status?: "good" | "warning" | "error" | "info";
   trendValue?: string;
+  onClick?: () => void;
 }
 
-const KPITile = ({ label, primaryMetric, subtext, trend, status = "info", trendValue }: KPITileProps) => {
+const KPITile = ({ label, primaryMetric, subtext, trend, status = "info", trendValue, onClick }: KPITileProps) => {
   const getTrendIcon = () => {
     if (trend === "up") return <TrendingUp className="h-3.5 w-3.5" />;
     if (trend === "down") return <TrendingDown className="h-3.5 w-3.5" />;
@@ -45,7 +48,10 @@ const KPITile = ({ label, primaryMetric, subtext, trend, status = "info", trendV
   };
 
   return (
-    <Card className="p-3 bg-card border-border hover:shadow-md transition-shadow">
+    <Card 
+      className="p-3 bg-card border-border hover:shadow-md transition-shadow cursor-pointer hover:border-primary/50"
+      onClick={onClick}
+    >
       <div className="space-y-1.5">
         <div className="flex items-start justify-between">
           <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
@@ -78,6 +84,8 @@ const KPITile = ({ label, primaryMetric, subtext, trend, status = "info", trendV
 };
 
 export const KPIDashboard = () => {
+  const [selectedKPI, setSelectedKPI] = useState<string | null>(null);
+
   const kpis: KPITileProps[] = [
     {
       label: "Bill Accuracy Score",
@@ -130,10 +138,18 @@ export const KPIDashboard = () => {
   ];
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-3">
-      {kpis.map((kpi, index) => (
-        <KPITile key={index} {...kpi} />
-      ))}
-    </div>
+    <>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-3">
+        {kpis.map((kpi, index) => (
+          <KPITile key={index} {...kpi} onClick={() => setSelectedKPI(kpi.label)} />
+        ))}
+      </div>
+      
+      <KPIDetailDialog 
+        open={selectedKPI !== null} 
+        onOpenChange={(open) => !open && setSelectedKPI(null)}
+        kpiLabel={selectedKPI || ""}
+      />
+    </>
   );
 };
