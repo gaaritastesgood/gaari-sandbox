@@ -51,10 +51,18 @@ export const CaseCreationDialog = ({ open, onOpenChange, customerId, customerNam
 
   // Update case type when defaultCaseType changes and dialog opens
   useEffect(() => {
-    if (defaultCaseType && open) {
-      setCaseType(defaultCaseType);
+    if (open) {
+      if (defaultCaseType) {
+        setCaseType(defaultCaseType);
+      }
+    } else {
+      // Reset form when dialog closes
+      setCaseType("");
+      setSubject("");
+      setDescription("");
+      setPriority("medium");
     }
-  }, [defaultCaseType, open]);
+  }, [open, defaultCaseType]);
 
   const handleSubmit = () => {
     if (!caseType || !subject || !description) {
@@ -72,11 +80,7 @@ export const CaseCreationDialog = ({ open, onOpenChange, customerId, customerNam
       description: `Case "${subject}" has been created successfully`,
     });
 
-    // Reset form
-    setCaseType("");
-    setSubject("");
-    setDescription("");
-    setPriority("medium");
+    // Reset form and close dialog
     onOpenChange(false);
   };
 
