@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -12,6 +12,7 @@ interface CaseCreationDialogProps {
   onOpenChange: (open: boolean) => void;
   customerId?: string;
   customerName?: string;
+  defaultCaseType?: string;
 }
 
 const CASE_TYPES = [
@@ -42,11 +43,18 @@ const CASE_TYPES = [
   }
 ];
 
-export const CaseCreationDialog = ({ open, onOpenChange, customerId, customerName }: CaseCreationDialogProps) => {
-  const [caseType, setCaseType] = useState("");
+export const CaseCreationDialog = ({ open, onOpenChange, customerId, customerName, defaultCaseType }: CaseCreationDialogProps) => {
+  const [caseType, setCaseType] = useState(defaultCaseType || "");
   const [subject, setSubject] = useState("");
   const [description, setDescription] = useState("");
   const [priority, setPriority] = useState<"low" | "medium" | "high" | "critical">("medium");
+
+  // Update case type when defaultCaseType changes and dialog opens
+  useEffect(() => {
+    if (defaultCaseType && open) {
+      setCaseType(defaultCaseType);
+    }
+  }, [defaultCaseType, open]);
 
   const handleSubmit = () => {
     if (!caseType || !subject || !description) {

@@ -4,14 +4,18 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { FileText, Download, ChevronRight, AlertCircle, Zap, DollarSign, Activity } from "lucide-react";
+import { CaseCreationDialog } from "@/components/CaseCreationDialog";
 
 interface BillsTabProps {
   bills: Bill[];
   customerSegment?: "residential" | "commercial" | "industrial";
+  customerId?: string;
+  customerName?: string;
 }
 
-export const BillsTab = ({ bills, customerSegment }: BillsTabProps) => {
+export const BillsTab = ({ bills, customerSegment, customerId, customerName }: BillsTabProps) => {
   const [selectedBill, setSelectedBill] = useState<Bill | null>(null);
+  const [showCaseDialog, setShowCaseDialog] = useState(false);
 
   const getChargesByCategory = (bill: Bill) => {
     const energyCost = bill.charges.find(c => c.category === "Energy");
@@ -216,12 +220,24 @@ export const BillsTab = ({ bills, customerSegment }: BillsTabProps) => {
               )}
 
               <div className="pt-4 border-t border-border">
-                <Button className="w-full" variant="outline">
+                <Button 
+                  className="w-full" 
+                  variant="outline"
+                  onClick={() => setShowCaseDialog(true)}
+                >
                   <FileText className="h-4 w-4 mr-2" />
                   Create Billing Issue Case
                 </Button>
               </div>
             </div>
+
+            <CaseCreationDialog
+              open={showCaseDialog}
+              onOpenChange={setShowCaseDialog}
+              customerId={customerId}
+              customerName={customerName}
+              defaultCaseType="high_bill"
+            />
           </Card>
         ) : (
           <Card className="p-8 border-border text-center">
