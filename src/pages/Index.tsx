@@ -37,7 +37,7 @@ const Index = () => {
             <div className="flex items-center gap-3">
               <div className="flex items-center gap-2">
                 <Zap className="h-8 w-8 text-primary" />
-                <h1 className="text-2xl font-bold text-foreground">Utility CRM</h1>
+                <h1 className="text-2xl font-bold text-foreground">Gaari</h1>
               </div>
             </div>
             <Button 
@@ -108,7 +108,7 @@ const Index = () => {
                 <div className="text-center">
                   <Zap className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
                   <h2 className="text-2xl font-semibold text-foreground mb-2">
-                    Welcome to Utility CRM
+                    Welcome to Gaari
                   </h2>
                   <p className="text-muted-foreground max-w-md">
                     Search for a customer by name, business partner ID, account number, address, phone, or email to view their Customer 360 profile.
