@@ -1134,7 +1134,7 @@ export const mockBills: Record<string, Bill[]> = {
       usage: 2334567,
       usageUnit: "kWh",
       pdfUrl: "#",
-      readingType: "actual",
+      readingType: "estimated" as const,
       charges: [
         { category: "Energy", description: "Energy Charge", amount: 116728.35, rate: 0.05, quantity: 2334567 },
         { category: "Fixed", description: "Monthly Service Fee", amount: 750.00 },
@@ -1142,13 +1142,15 @@ export const mockBills: Record<string, Bill[]> = {
         { category: "Demand", description: "Peak Demand Charge", amount: 20800.00, rate: 4.00, quantity: 5200 },
         { category: "Taxes", description: "State & Local Taxes", amount: 2264.87 },
       ],
-      issues: [
-        {
-          type: "expansion_planning",
-          severity: "info",
-          description: "New production line expected to add 18% load growth starting Q1 2026. Refrigeration-intensive equipment will increase peak demand significantly. Infrastructure assessment recommended.",
-        },
-      ],
+      issues: [{
+        type: "Outage Impact",
+        severity: "warning",
+        description: "4-hour power outage on Jan 20th affected billing period. Partial estimated reading used for equipment downtime period."
+      }, {
+        type: "expansion_planning",
+        severity: "info",
+        description: "New production line expected to add 18% load growth starting Q1 2026. Refrigeration-intensive equipment will increase peak demand significantly. Infrastructure assessment recommended.",
+      }],
     },
     {
       id: "bill11b",
@@ -1194,13 +1196,15 @@ export const mockBills: Record<string, Bill[]> = {
         { category: "Reliability", description: "High Reliability Service", amount: 35000.00 },
         { category: "Taxes", description: "State & Local Taxes", amount: 5931.85 },
       ],
-      issues: [
-        {
-          type: "major_expansion",
-          severity: "info",
-          description: "New 100k sq ft data center construction requires 40 MW new load. Substation upgrades in progress. Completion expected Q2 2026. Projected monthly bill: $2.8M at full capacity.",
-        },
-      ],
+      issues: [{
+        type: "Power Quality",
+        severity: "warning",
+        description: "Voltage fluctuations detected mid-period. Power quality monitoring equipment installed. May impact UPS battery life."
+      }, {
+        type: "major_expansion",
+        severity: "info",
+        description: "New 100k sq ft data center construction requires 40 MW new load. Substation upgrades in progress. Completion expected Q2 2026. Projected monthly bill: $2.8M at full capacity.",
+      }],
     },
     {
       id: "bill12b",
@@ -1238,20 +1242,22 @@ export const mockBills: Record<string, Bill[]> = {
       usage: 792345,
       usageUnit: "kWh",
       pdfUrl: "#",
-      readingType: "actual",
+      readingType: "estimated",
+      issues: [{
+        type: "Phase Loss Incident",
+        severity: "error",
+        description: "Single-phase failure on Jan 19th resulted in estimated reading for affected circuits. Underground cable fault repaired."
+      }, {
+        type: "ev_fleet_planning",
+        severity: "warning",
+        description: "EV fleet electrification project: 50 trucks with Level 3 chargers will add 900 kW evening peak spike. Current infrastructure may require upgrades. Demand charges expected to increase 40%. Load study recommended.",
+      }],
       charges: [
         { category: "Energy", description: "Energy Charge", amount: 47740.71, rate: 0.06025, quantity: 792345 },
         { category: "Fixed", description: "Monthly Service Fee", amount: 350.00 },
         { category: "Delivery", description: "Distribution Charge", amount: 15846.90, rate: 0.02, quantity: 792345 },
         { category: "Demand", description: "Peak Demand Charge", amount: 3150.00, rate: 1.50, quantity: 2100 },
         { category: "Taxes", description: "State & Local Taxes", amount: 1146.51 },
-      ],
-      issues: [
-        {
-          type: "ev_fleet_planning",
-          severity: "warning",
-          description: "EV fleet electrification project: 50 trucks with Level 3 chargers will add 900 kW evening peak spike. Current infrastructure may require upgrades. Demand charges expected to increase 40%. Load study recommended.",
-        },
       ],
     },
     {
@@ -1688,6 +1694,17 @@ export const mockInteractions: Record<string, Interaction[]> = {
   ],
   "11": [
     {
+      id: "int11-outage",
+      date: "2025-01-20",
+      time: "02:45 AM",
+      type: "field_visit",
+      channel: "Field Service",
+      reason: "Power Outage - Equipment Failure",
+      description: "4-hour power outage due to transformer failure. Emergency response dispatched. Refrigeration systems offline caused product loss concerns.",
+      outcome: "Transformer replaced. Systems restored. Filed outage report and insurance claim assistance provided.",
+      agent: "Emergency Response Team"
+    },
+    {
       id: "int11a",
       date: "2025-11-15",
       time: "10:00",
@@ -1713,6 +1730,17 @@ export const mockInteractions: Record<string, Interaction[]> = {
   ],
   "12": [
     {
+      id: "int12-power-quality",
+      date: "2025-01-15",
+      time: "03:20 PM",
+      type: "field_visit",
+      channel: "Field Service",
+      reason: "Power Quality Issue - Voltage Fluctuations",
+      description: "Multiple voltage sags detected affecting UPS systems. Customer reported server brownouts. Investigation revealed nearby construction causing grid instability.",
+      outcome: "Installed power monitoring equipment. Coordinating with construction team to mitigate issues. Temporary voltage regulation equipment deployed.",
+      agent: "Power Quality Specialist"
+    },
+    {
       id: "int12a",
       date: "2025-11-10",
       time: "09:00",
@@ -1737,6 +1765,17 @@ export const mockInteractions: Record<string, Interaction[]> = {
     },
   ],
   "13": [
+    {
+      id: "int13-outage",
+      date: "2025-01-19",
+      time: "11:30 PM",
+      type: "field_visit",
+      channel: "Field Service",
+      reason: "Partial Outage - Phase Loss",
+      description: "Single-phase failure affecting warehouse lighting and HVAC systems. Delivery operations temporarily impacted. Underground cable fault identified.",
+      outcome: "Emergency repairs completed within 6 hours. Cable section replaced. Full service restored.",
+      agent: "Underground Cable Team"
+    },
     {
       id: "int13a",
       date: "2025-11-08",
