@@ -27,6 +27,7 @@ export const GlobalSearch = ({ onSelectCustomer }: GlobalSearchProps) => {
       return (
         customer.firstName.toLowerCase().includes(searchLower) ||
         customer.lastName.toLowerCase().includes(searchLower) ||
+        customer.companyName?.toLowerCase().includes(searchLower) ||
         customer.businessPartnerId.includes(searchLower) ||
         customer.email.toLowerCase().includes(searchLower) ||
         customer.phone.includes(searchLower) ||
@@ -67,8 +68,13 @@ export const GlobalSearch = ({ onSelectCustomer }: GlobalSearchProps) => {
               className="w-full px-4 py-3 text-left hover:bg-muted transition-colors border-b border-border last:border-b-0 first:rounded-t-lg last:rounded-b-lg"
             >
               <div className="font-medium text-foreground">
-                {customer.firstName} {customer.lastName}
+                {customer.companyName || `${customer.firstName} ${customer.lastName}`}
               </div>
+              {customer.companyName && (
+                <div className="text-sm text-muted-foreground">
+                  Contact: {customer.firstName} {customer.lastName}
+                </div>
+              )}
               <div className="text-sm text-muted-foreground mt-1">
                 BP: {customer.businessPartnerId} • {customer.premises[0]?.address}, {customer.premises[0]?.city}, {customer.premises[0]?.state}
               </div>

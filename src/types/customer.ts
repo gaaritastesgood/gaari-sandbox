@@ -3,6 +3,7 @@ export interface Customer {
   businessPartnerId: string;
   firstName: string;
   lastName: string;
+  companyName?: string;
   email: string;
   phone: string;
   segment: "residential" | "commercial" | "industrial";

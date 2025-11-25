@@ -28,7 +28,7 @@ export const Customer360Header = ({ customer }: Customer360HeaderProps) => {
         <div>
           <div className="flex items-center gap-2.5 mb-2">
             <h1 className="text-xl font-semibold text-foreground tracking-tight">
-              {customer.firstName} {customer.lastName}
+              {customer.companyName || `${customer.firstName} ${customer.lastName}`}
             </h1>
             <Badge variant="outline" className={`${getStatusBadge(activeAccount.status)} text-xs font-medium`}>
               {activeAccount.status}
@@ -37,6 +37,11 @@ export const Customer360Header = ({ customer }: Customer360HeaderProps) => {
               {customer.segment}
             </Badge>
           </div>
+          {customer.companyName && (
+            <div className="text-sm text-muted-foreground mb-1">
+              Contact: {customer.firstName} {customer.lastName}
+            </div>
+          )}
           <div className="flex items-center gap-4 text-xs text-muted-foreground">
             <span className="flex items-center gap-1.5">
               <Building2 className="h-3.5 w-3.5" />
