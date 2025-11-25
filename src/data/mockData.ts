@@ -849,7 +849,7 @@ export const mockBills: Record<string, Bill[]> = {
         {
           type: "mismatched_meter",
           severity: "error",
-          description: "Reading shows usage tripled. Historical data suggests meter may be reading neighbor's unit (both meters near property line). Field verification and meter swap required.",
+          description: "Reading shows usage quadrupled. Historical data suggests meter may be reading neighbor's unit (both meters near property line). Field verification and meter swap required.",
         },
       ],
     },
@@ -1617,9 +1617,9 @@ export const mockInteractions: Record<string, Interaction[]> = {
       channel: "Phone",
       reason: "Meter Reading Dispute",
       description: "Customer believes gas usage is showing their neighbor's consumption.",
-      outcome: "Field inspection scheduled to verify meter assignment. Historical comparison shows sudden 300% increase coinciding with neighbor move-in.",
+      outcome: "Field inspection scheduled to verify meter assignment. Historical comparison shows sudden 400% increase (from 500 to 2,234 therms) coinciding with neighbor move-in.",
       agent: "Agent: Amanda Foster",
-      customerDescription: "I think you're reading the wrong meter. My bill tripled to over $400 right when my new neighbors moved in. I live alone in a small place, there's no way I'm using 2,200 therms. I bet the meters got mixed up when they were installed. My neighbor has a big family and they're home all day.",
+      customerDescription: "I think you're reading the wrong meter. My bill quadrupled to over $400 right when my new neighbors moved in. I live alone in a small place, there's no way I'm using 2,200 therms. I bet the meters got mixed up when they were installed. My neighbor has a big family and they're home all day.",
     },
   ],
   "6": [
