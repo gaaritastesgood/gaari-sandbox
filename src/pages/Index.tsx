@@ -10,18 +10,21 @@ import { RatesTab } from "@/components/tabs/RatesTab";
 import { PaymentsTab } from "@/components/tabs/PaymentsTab";
 import { MetersTab } from "@/components/tabs/MetersTab";
 import { InteractionsTab } from "@/components/tabs/InteractionsTab";
+import { ProgramsTab } from "@/components/programs/ProgramsTab";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Customer } from "@/types/customer";
 import { mockBills, mockPayments, mockInteractions, mockCases, mockRates, mockMeterReadings } from "@/data/mockData";
-import { MessageSquare } from "lucide-react";
+import { MessageSquare, Users, Zap } from "lucide-react";
 
 const Index = () => {
   const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null);
   const [showInteractionPanel, setShowInteractionPanel] = useState(false);
+  const [mainTab, setMainTab] = useState<"intelligence" | "programs">("intelligence");
 
   const handleSelectCustomer = (customer: Customer) => {
     setSelectedCustomer(customer);
+    setMainTab("intelligence");
   };
 
   const bills = selectedCustomer ? mockBills[selectedCustomer.contractAccounts[0].id] || [] : [];
@@ -41,26 +44,58 @@ const Index = () => {
                 <h1 className="text-xl font-semibold text-header-foreground tracking-tight">Gaari</h1>
               </div>
             </div>
-            <Button 
-              variant="outline" 
-              size="sm"
-              onClick={() => setShowInteractionPanel(!showInteractionPanel)}
-              className={showInteractionPanel ? "bg-primary text-primary-foreground border-primary" : "bg-header-bg text-header-foreground border-border/50 hover:bg-header-bg/80"}
-            >
-              <MessageSquare className="h-4 w-4 mr-1.5" />
-              {showInteractionPanel ? "Close" : "Open"} Interaction
-            </Button>
+            <div className="flex items-center gap-3">
+              {/* Main Navigation Tabs */}
+              <div className="flex bg-muted rounded-lg p-0.5">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setMainTab("intelligence")}
+                  className={`h-7 text-xs gap-1.5 ${mainTab === "intelligence" ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground"}`}
+                >
+                  <Users className="h-3.5 w-3.5" />
+                  Customer Intelligence
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setMainTab("programs")}
+                  className={`h-7 text-xs gap-1.5 ${mainTab === "programs" ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground"}`}
+                >
+                  <Zap className="h-3.5 w-3.5" />
+                  Programs
+                </Button>
+              </div>
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={() => setShowInteractionPanel(!showInteractionPanel)}
+                className={showInteractionPanel ? "bg-primary text-primary-foreground border-primary" : "bg-header-bg text-header-foreground border-border/50 hover:bg-header-bg/80"}
+              >
+                <MessageSquare className="h-4 w-4 mr-1.5" />
+                {showInteractionPanel ? "Close" : "Open"} Interaction
+              </Button>
+            </div>
           </div>
-          <GlobalSearch onSelectCustomer={handleSelectCustomer} />
-          <div className="mt-3">
-            <KPIDashboard />
-          </div>
+          
+          {mainTab === "intelligence" && (
+            <>
+              <GlobalSearch onSelectCustomer={handleSelectCustomer} />
+              <div className="mt-3">
+                <KPIDashboard />
+              </div>
+            </>
+          )}
         </div>
       </header>
 
       <div className="flex flex-1">
         <main className={`flex-1 transition-all ${showInteractionPanel ? "mr-96" : ""}`}>
-          {selectedCustomer ? (
+          {mainTab === "programs" ? (
+            <div className="p-4">
+              <ProgramsTab />
+            </div>
+          ) : selectedCustomer ? (
             <div className="p-4 space-y-4">
               <Customer360Header customer={selectedCustomer} bills={bills} />
 
