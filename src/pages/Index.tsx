@@ -62,7 +62,7 @@ const Index = () => {
         <main className={`flex-1 transition-all ${showInteractionPanel ? "mr-96" : ""}`}>
           {selectedCustomer ? (
             <div className="p-4 space-y-4">
-              <Customer360Header customer={selectedCustomer} />
+              <Customer360Header customer={selectedCustomer} bills={bills} />
 
               <Tabs defaultValue="overview" className="w-full">
                 <TabsList className="bg-muted h-9 p-1">
