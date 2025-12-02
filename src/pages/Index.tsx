@@ -10,18 +10,21 @@ import { RatesTab } from "@/components/tabs/RatesTab";
 import { PaymentsTab } from "@/components/tabs/PaymentsTab";
 import { MetersTab } from "@/components/tabs/MetersTab";
 import { InteractionsTab } from "@/components/tabs/InteractionsTab";
+import { ProgramIntelligence } from "@/components/program-intelligence/ProgramIntelligence";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Customer } from "@/types/customer";
 import { mockBills, mockPayments, mockInteractions, mockCases, mockRates, mockMeterReadings } from "@/data/mockData";
-import { MessageSquare } from "lucide-react";
+import { MessageSquare, Users, BarChart3 } from "lucide-react";
 
 const Index = () => {
   const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null);
   const [showInteractionPanel, setShowInteractionPanel] = useState(false);
+  const [activeView, setActiveView] = useState<'customer' | 'program'>('customer');
 
   const handleSelectCustomer = (customer: Customer) => {
     setSelectedCustomer(customer);
+    setActiveView('customer');
   };
 
   const bills = selectedCustomer ? mockBills[selectedCustomer.contractAccounts[0].id] || [] : [];
@@ -40,6 +43,27 @@ const Index = () => {
               <div className="flex items-center gap-2.5">
                 <h1 className="text-xl font-semibold text-header-foreground tracking-tight">Gaari</h1>
               </div>
+              {/* View Toggle */}
+              <div className="flex items-center bg-muted rounded-lg p-0.5 ml-4">
+                <Button
+                  variant={activeView === 'customer' ? 'default' : 'ghost'}
+                  size="sm"
+                  className="h-7 px-3 text-xs"
+                  onClick={() => setActiveView('customer')}
+                >
+                  <Users className="h-3.5 w-3.5 mr-1.5" />
+                  Customer Intelligence
+                </Button>
+                <Button
+                  variant={activeView === 'program' ? 'default' : 'ghost'}
+                  size="sm"
+                  className="h-7 px-3 text-xs"
+                  onClick={() => setActiveView('program')}
+                >
+                  <BarChart3 className="h-3.5 w-3.5 mr-1.5" />
+                  Program Intelligence
+                </Button>
+              </div>
             </div>
             <Button 
               variant="outline" 
@@ -52,15 +76,19 @@ const Index = () => {
             </Button>
           </div>
           <GlobalSearch onSelectCustomer={handleSelectCustomer} />
-          <div className="mt-3">
-            <KPIDashboard />
-          </div>
+          {activeView === 'customer' && (
+            <div className="mt-3">
+              <KPIDashboard />
+            </div>
+          )}
         </div>
       </header>
 
       <div className="flex flex-1">
         <main className={`flex-1 transition-all ${showInteractionPanel ? "mr-96" : ""}`}>
-          {selectedCustomer ? (
+          {activeView === 'program' ? (
+            <ProgramIntelligence />
+          ) : selectedCustomer ? (
             <div className="p-4 space-y-4">
               <Customer360Header customer={selectedCustomer} bills={bills} />
 
