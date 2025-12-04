@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { GlobalSearch } from "@/components/GlobalSearch";
 import { Customer360Header } from "@/components/Customer360Header";
 import { InteractionPanel } from "@/components/InteractionPanel";
@@ -15,16 +15,26 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Customer } from "@/types/customer";
 import { mockBills, mockPayments, mockInteractions, mockCases, mockRates, mockMeterReadings } from "@/data/mockData";
+import { getCustomerIssues, getCustomerEligibility } from "@/data/customerEligibilityData";
 import { MessageSquare, Users, Zap } from "lucide-react";
 
 const Index = () => {
   const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null);
   const [showInteractionPanel, setShowInteractionPanel] = useState(false);
   const [mainTab, setMainTab] = useState<"intelligence" | "programs">("intelligence");
+  const [customerTab, setCustomerTab] = useState("overview");
+  const tabsRef = useRef<HTMLDivElement>(null);
 
   const handleSelectCustomer = (customer: Customer) => {
     setSelectedCustomer(customer);
     setMainTab("intelligence");
+    setCustomerTab("overview");
+  };
+
+  const handleNavigateToTab = (tab: string) => {
+    setCustomerTab(tab);
+    // Scroll to tabs area
+    tabsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
   const bills = selectedCustomer ? mockBills[selectedCustomer.contractAccounts[0].id] || [] : [];
@@ -33,6 +43,10 @@ const Index = () => {
   const cases = selectedCustomer ? mockCases[selectedCustomer.id] || [] : [];
   const rates = selectedCustomer ? mockRates[selectedCustomer.contractAccounts[0].id] || [] : [];
   const meterReadings = selectedCustomer ? mockMeterReadings[selectedCustomer.premises[0].servicePoints[0].id] || [] : [];
+  
+  // Get customer issues and eligibility data
+  const customerIssues = selectedCustomer ? getCustomerIssues(selectedCustomer.id) : [];
+  const customerEligibility = selectedCustomer ? getCustomerEligibility(selectedCustomer.id) : [];
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -99,53 +113,62 @@ const Index = () => {
             <div className="p-4 space-y-4">
               <Customer360Header customer={selectedCustomer} bills={bills} />
 
-              <Tabs defaultValue="overview" className="w-full">
-                <TabsList className="bg-muted h-9 p-1">
-                  <TabsTrigger value="overview" className="text-xs h-7">Overview</TabsTrigger>
-                  <TabsTrigger value="bills" className="text-xs h-7">Bills & Usage</TabsTrigger>
-                  <TabsTrigger value="rates" className="text-xs h-7">Rates & Tariffs</TabsTrigger>
-                  <TabsTrigger value="payments" className="text-xs h-7">Payments</TabsTrigger>
-                  <TabsTrigger value="meters" className="text-xs h-7">Meters & Readings</TabsTrigger>
-                  <TabsTrigger value="interactions" className="text-xs h-7">Interactions</TabsTrigger>
-                </TabsList>
+              <div ref={tabsRef}>
+                <Tabs value={customerTab} onValueChange={setCustomerTab} className="w-full">
+                  <TabsList className="bg-muted h-9 p-1">
+                    <TabsTrigger value="overview" className="text-xs h-7">Overview</TabsTrigger>
+                    <TabsTrigger value="bills" className="text-xs h-7">Bills & Usage</TabsTrigger>
+                    <TabsTrigger value="rates" className="text-xs h-7">Rates & Tariffs</TabsTrigger>
+                    <TabsTrigger value="payments" className="text-xs h-7">Payments</TabsTrigger>
+                    <TabsTrigger value="meters" className="text-xs h-7">Meters & Readings</TabsTrigger>
+                    <TabsTrigger value="interactions" className="text-xs h-7">Interactions</TabsTrigger>
+                  </TabsList>
 
-                <div className="mt-4">
-                  <TabsContent value="overview">
-                    <OverviewTab customer={selectedCustomer} bills={bills} interactions={interactions} />
-                  </TabsContent>
+                  <div className="mt-4">
+                    <TabsContent value="overview">
+                      <OverviewTab 
+                        customer={selectedCustomer} 
+                        bills={bills} 
+                        interactions={interactions}
+                        issues={customerIssues}
+                        eligibility={customerEligibility}
+                        onNavigateToTab={handleNavigateToTab}
+                      />
+                    </TabsContent>
 
-                  <TabsContent value="bills">
-                    <BillsTab 
-                      bills={bills} 
-                      customerSegment={selectedCustomer.segment}
-                      customerId={selectedCustomer.id}
-                      customerName={`${selectedCustomer.firstName} ${selectedCustomer.lastName}`}
-                    />
-                  </TabsContent>
+                    <TabsContent value="bills">
+                      <BillsTab 
+                        bills={bills} 
+                        customerSegment={selectedCustomer.segment}
+                        customerId={selectedCustomer.id}
+                        customerName={`${selectedCustomer.firstName} ${selectedCustomer.lastName}`}
+                      />
+                    </TabsContent>
 
-                  <TabsContent value="rates">
-                    <RatesTab rates={rates} />
-                  </TabsContent>
+                    <TabsContent value="rates">
+                      <RatesTab rates={rates} />
+                    </TabsContent>
 
-                  <TabsContent value="payments">
-                    <PaymentsTab 
-                      payments={payments} 
-                      balance={selectedCustomer.contractAccounts[0].balance} 
-                    />
-                  </TabsContent>
+                    <TabsContent value="payments">
+                      <PaymentsTab 
+                        payments={payments} 
+                        balance={selectedCustomer.contractAccounts[0].balance} 
+                      />
+                    </TabsContent>
 
-                  <TabsContent value="meters">
-                    <MetersTab 
-                      servicePoints={selectedCustomer.premises[0].servicePoints} 
-                      meterReadings={meterReadings}
-                    />
-                  </TabsContent>
+                    <TabsContent value="meters">
+                      <MetersTab 
+                        servicePoints={selectedCustomer.premises[0].servicePoints} 
+                        meterReadings={meterReadings}
+                      />
+                    </TabsContent>
 
-                  <TabsContent value="interactions">
-                    <InteractionsTab interactions={interactions} cases={cases} />
-                  </TabsContent>
-                </div>
-              </Tabs>
+                    <TabsContent value="interactions">
+                      <InteractionsTab interactions={interactions} cases={cases} />
+                    </TabsContent>
+                  </div>
+                </Tabs>
+              </div>
             </div>
           ) : (
             <EmptyState />

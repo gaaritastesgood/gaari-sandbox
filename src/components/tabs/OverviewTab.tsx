@@ -1,84 +1,44 @@
-import { Customer, Bill, Interaction } from "@/types/customer";
+import { Customer, Bill, Interaction, CustomerIssue, CustomerProgramEligibility } from "@/types/customer";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { DollarSign, FileText, Activity, AlertTriangle, Power, Zap } from "lucide-react";
+import { DollarSign, FileText, Activity } from "lucide-react";
+import { CustomerIssuesPanel } from "@/components/customer/CustomerIssuesPanel";
+import { ProgramEligibilityPanel } from "@/components/customer/ProgramEligibilityPanel";
 
 interface OverviewTabProps {
   customer: Customer;
   bills: Bill[];
   interactions: Interaction[];
+  issues: CustomerIssue[];
+  eligibility: CustomerProgramEligibility[];
+  onNavigateToTab: (tab: string) => void;
 }
 
-export const OverviewTab = ({ customer, bills, interactions }: OverviewTabProps) => {
+export const OverviewTab = ({ 
+  customer, 
+  bills, 
+  interactions, 
+  issues,
+  eligibility,
+  onNavigateToTab 
+}: OverviewTabProps) => {
   const latestBill = bills[0];
   const activeAccount = customer.contractAccounts[0];
-  const lastPayment = interactions.find(i => i.reason.includes("Payment"));
-  
-  // For commercial/industrial customers, check for recent outages
-  const isCommercialOrIndustrial = customer.segment === "commercial" || customer.segment === "industrial";
-  const recentOutages = interactions.filter(i => 
-    i.reason.toLowerCase().includes("outage") || 
-    i.reason.toLowerCase().includes("power quality") ||
-    i.reason.toLowerCase().includes("phase loss") ||
-    i.reason.toLowerCase().includes("voltage")
-  );
-  
-  const recentBillsWithEstimates = bills.slice(0, 3).filter(b => b.readingType === "estimated");
+  const customerName = `${customer.firstName} ${customer.lastName}`;
 
   return (
     <div className="space-y-4">
-      {isCommercialOrIndustrial && (recentOutages.length > 0 || recentBillsWithEstimates.length > 0) && (
-        <Card className="p-4 border-border border-l-4 border-l-status-error bg-status-error-bg/5">
-          <div className="flex items-start gap-3">
-            <Power className="h-5 w-5 text-status-error mt-0.5" />
-            <div className="flex-1">
-              <h3 className="font-semibold text-foreground mb-3">Service Alerts - Commercial/Industrial Account</h3>
-              
-              {recentOutages.length > 0 && (
-                <div className="mb-4">
-                  <div className="flex items-center gap-2 mb-2">
-                    <Zap className="h-4 w-4 text-status-warning" />
-                    <span className="text-sm font-medium text-foreground">Recent Power Events ({recentOutages.length})</span>
-                  </div>
-                  <div className="space-y-2">
-                    {recentOutages.map((outage) => (
-                      <div key={outage.id} className="bg-background rounded-lg p-3 border border-border">
-                        <div className="flex justify-between items-start mb-1">
-                          <span className="font-medium text-sm text-foreground">{outage.reason}</span>
-                          <Badge variant="outline" className="bg-status-error-bg text-status-error text-xs">
-                            {outage.type}
-                          </Badge>
-                        </div>
-                        <div className="text-sm text-muted-foreground mb-1">{outage.description}</div>
-                        <div className="text-xs text-muted-foreground">
-                          {outage.date} {outage.time} • {outage.agent}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-              
-              {recentBillsWithEstimates.length > 0 && (
-                <div>
-                  <div className="flex items-center gap-2 mb-2">
-                    <AlertTriangle className="h-4 w-4 text-status-warning" />
-                    <span className="text-sm font-medium text-foreground">Estimated Meter Readings</span>
-                  </div>
-                  <div className="bg-background rounded-lg p-3 border border-border">
-                    <div className="text-sm text-foreground">
-                      {recentBillsWithEstimates.length} recent bill{recentBillsWithEstimates.length > 1 ? 's' : ''} used estimated readings due to service events or meter access issues.
-                    </div>
-                    <div className="text-xs text-muted-foreground mt-2">
-                      Bills: {recentBillsWithEstimates.map(b => new Date(b.billDate).toLocaleDateString()).join(", ")}
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-        </Card>
-      )}
+      {/* Priority 1: Issues Panel - Top of page */}
+      <CustomerIssuesPanel issues={issues} onNavigateToTab={onNavigateToTab} />
+
+      {/* Priority 2: Program Eligibility */}
+      <ProgramEligibilityPanel 
+        eligibility={eligibility} 
+        customerName={customerName}
+        onNavigateToTab={onNavigateToTab} 
+      />
+
+      {/* Condensed Key Metrics */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Card className="p-4 border-border">
           <div className="flex items-center gap-2 mb-2">
@@ -135,36 +95,11 @@ export const OverviewTab = ({ customer, bills, interactions }: OverviewTabProps)
         </Card>
       </div>
 
-      {latestBill?.issues && latestBill.issues.length > 0 && (
-        <Card className="p-4 border-border border-l-4 border-l-status-warning">
-          <div className="flex items-start gap-3">
-            <AlertTriangle className="h-5 w-5 text-status-warning mt-0.5" />
-            <div>
-              <h3 className="font-medium text-foreground mb-2">Potential Issues Detected</h3>
-              {latestBill.issues.map((issue, idx) => (
-                <div key={idx} className="mb-2 last:mb-0">
-                  <Badge 
-                    variant="outline" 
-                    className={
-                      issue.severity === "error" 
-                        ? "bg-status-error-bg text-status-error mr-2" 
-                        : "bg-status-warning-bg text-status-warning mr-2"
-                    }
-                  >
-                    {issue.severity}
-                  </Badge>
-                  <span className="text-sm text-foreground">{issue.description}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </Card>
-      )}
-
+      {/* Condensed Recent Interactions */}
       <Card className="p-4 border-border">
         <h3 className="font-medium text-foreground mb-3">Recent Interactions</h3>
         <div className="space-y-3">
-          {interactions.slice(0, 3).map((interaction) => (
+          {interactions.slice(0, 2).map((interaction) => (
             <div key={interaction.id} className="flex justify-between items-start border-b border-border pb-3 last:border-b-0 last:pb-0">
               <div>
                 <div className="font-medium text-sm text-foreground">{interaction.reason}</div>
