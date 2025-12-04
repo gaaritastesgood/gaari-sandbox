@@ -1,10 +1,11 @@
 import { Customer, Bill, Interaction } from "@/types/customer";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { DollarSign, FileText, Activity } from "lucide-react";
+import { DollarSign, FileText, Activity, TrendingUp, Zap, BarChart3, Lightbulb } from "lucide-react";
 import { CompactIssuesPanel } from "@/components/customer/CompactIssuesPanel";
 import { CompactProgramsPanel } from "@/components/customer/CompactProgramsPanel";
 import { getConsolidatedIssues, getSimplifiedEligibility } from "@/data/consolidatedCustomerData";
+import { opportunityItems } from "@/data/kamDashboardData";
 
 interface OverviewTabProps {
   customer: Customer;
@@ -12,6 +13,24 @@ interface OverviewTabProps {
   interactions: Interaction[];
   onNavigateToTab: (tab: string) => void;
 }
+
+// Mock account metrics - in production, these would come from the backend
+const getAccountMetrics = (customerId: string, segment: string) => {
+  const metricsMap: Record<string, { revenue: string; usage: string; usageTrend: string; peakDemand: string; demandTrend: string }> = {
+    "11": { revenue: "$2.4M", usage: "245 GWh", usageTrend: "+4.2%", peakDemand: "4.2 MW", demandTrend: "+8%" },
+    "12": { revenue: "$11.3M", usage: "892 GWh", usageTrend: "+12.1%", peakDemand: "21.0 MW", demandTrend: "+15%" },
+    "13": { revenue: "$1.8M", usage: "156 GWh", usageTrend: "+2.8%", peakDemand: "2.8 MW", demandTrend: "+3%" },
+    "2": { revenue: "$8.7K", usage: "245 kWh", usageTrend: "+5.2%", peakDemand: "42 kW", demandTrend: "+12%" },
+    "4": { revenue: "$2.8K", usage: "180 kWh", usageTrend: "-2.1%", peakDemand: "28 kW", demandTrend: "+4%" },
+    "7": { revenue: "$49.5K", usage: "712 kWh", usageTrend: "+8.4%", peakDemand: "85 kW", demandTrend: "+6%" },
+    "10": { revenue: "$21.5K", usage: "456 kWh", usageTrend: "+3.1%", peakDemand: "52 kW", demandTrend: "+2%" },
+  };
+  
+  if (segment === "industrial" || segment === "commercial") {
+    return metricsMap[customerId] || { revenue: "$0", usage: "0 kWh", usageTrend: "0%", peakDemand: "0 kW", demandTrend: "0%" };
+  }
+  return null;
+};
 
 export const OverviewTab = ({ 
   customer, 
@@ -21,14 +40,96 @@ export const OverviewTab = ({
 }: OverviewTabProps) => {
   const latestBill = bills[0];
   const activeAccount = customer.contractAccounts[0];
-  const customerName = `${customer.firstName} ${customer.lastName}`;
+  const customerName = customer.companyName || `${customer.firstName} ${customer.lastName}`;
+  const isCommercialOrIndustrial = customer.segment === "commercial" || customer.segment === "industrial";
+  const accountMetrics = getAccountMetrics(customer.id, customer.segment);
 
   // Get consolidated issues and simplified eligibility
   const consolidatedIssues = getConsolidatedIssues(customer.id);
   const simplifiedEligibility = getSimplifiedEligibility(customer.id);
+  
+  // Get opportunities for this customer
+  const customerOpportunities = opportunityItems.filter(opp => opp.customerId === customer.id);
 
   return (
     <div className="space-y-4">
+      {/* Key Account Metrics - Revenue, Usage, Peak Demand */}
+      {isCommercialOrIndustrial && accountMetrics && (
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <Card className="p-4 border-border bg-gradient-to-br from-primary/5 to-transparent">
+            <div className="flex items-center gap-2 mb-2">
+              <TrendingUp className="h-5 w-5 text-primary" />
+              <h3 className="font-medium text-foreground">Annual Revenue</h3>
+            </div>
+            <div className="text-2xl font-bold text-foreground">{accountMetrics.revenue}</div>
+            <div className="text-sm text-status-success mt-1">YTD Revenue</div>
+          </Card>
+
+          <Card className="p-4 border-border">
+            <div className="flex items-center gap-2 mb-2">
+              <BarChart3 className="h-5 w-5 text-primary" />
+              <h3 className="font-medium text-foreground">Total Usage</h3>
+            </div>
+            <div className="text-2xl font-bold text-foreground">{accountMetrics.usage}</div>
+            <div className="text-sm text-status-success mt-1">{accountMetrics.usageTrend} YoY</div>
+          </Card>
+
+          <Card className="p-4 border-border">
+            <div className="flex items-center gap-2 mb-2">
+              <Zap className="h-5 w-5 text-status-warning" />
+              <h3 className="font-medium text-foreground">Peak Demand</h3>
+            </div>
+            <div className="text-2xl font-bold text-foreground">{accountMetrics.peakDemand}</div>
+            <div className="text-sm text-status-warning mt-1">{accountMetrics.demandTrend} YoY</div>
+          </Card>
+
+          <Card className="p-4 border-border">
+            <div className="flex items-center gap-2 mb-2">
+              <DollarSign className="h-5 w-5 text-primary" />
+              <h3 className="font-medium text-foreground">Current Balance</h3>
+            </div>
+            <div className="text-2xl font-bold text-foreground">
+              ${activeAccount.balance.toLocaleString()}
+            </div>
+            <div className="text-sm text-muted-foreground mt-1">
+              Due: {new Date(activeAccount.dueDate).toLocaleDateString()}
+            </div>
+          </Card>
+        </div>
+      )}
+
+      {/* Opportunities Section */}
+      {customerOpportunities.length > 0 && (
+        <Card className="p-4 border-border border-l-4 border-l-status-success">
+          <div className="flex items-center gap-2 mb-3">
+            <Lightbulb className="h-5 w-5 text-status-success" />
+            <h3 className="font-semibold text-foreground">Opportunities</h3>
+            <Badge className="bg-status-success-bg text-status-success">{customerOpportunities.length}</Badge>
+          </div>
+          <div className="space-y-3">
+            {customerOpportunities.map((opp) => (
+              <div key={opp.id} className="bg-muted/50 rounded-lg p-3">
+                <div className="flex items-start justify-between">
+                  <div>
+                    <div className="font-medium text-foreground">{opp.opportunityName}</div>
+                    <div className="text-sm text-muted-foreground mt-1">{opp.estimatedValue}</div>
+                    {opp.estimatedSavings && (
+                      <div className="text-sm text-status-success">{opp.estimatedSavings}</div>
+                    )}
+                  </div>
+                  <Badge variant="outline" className="bg-status-success-bg text-status-success text-xs">
+                    {opp.confidence}% confidence
+                  </Badge>
+                </div>
+                <div className="mt-2 text-xs text-muted-foreground">
+                  {opp.evidence.slice(0, 2).join(" • ")}
+                </div>
+              </div>
+            ))}
+          </div>
+        </Card>
+      )}
+
       {/* Side-by-side Issues and Programs */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <CompactIssuesPanel 
@@ -42,62 +143,64 @@ export const OverviewTab = ({
         />
       </div>
 
-      {/* Condensed Key Metrics */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Card className="p-4 border-border">
-          <div className="flex items-center gap-2 mb-2">
-            <FileText className="h-5 w-5 text-primary" />
-            <h3 className="font-medium text-foreground">Latest Bill</h3>
-          </div>
-          {latestBill && (
-            <>
-              <div className="text-2xl font-bold text-foreground">
-                ${latestBill.amount.toLocaleString()}
-              </div>
-              <div className="text-sm text-muted-foreground mt-1">
-                {new Date(latestBill.billDate).toLocaleDateString()} • {latestBill.status}
-              </div>
-              <div className="text-sm text-muted-foreground">
-                {latestBill.usage.toLocaleString()} {latestBill.usageUnit}
-              </div>
-            </>
-          )}
-        </Card>
+      {/* Condensed Key Metrics - only for residential */}
+      {!isCommercialOrIndustrial && (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <Card className="p-4 border-border">
+            <div className="flex items-center gap-2 mb-2">
+              <FileText className="h-5 w-5 text-primary" />
+              <h3 className="font-medium text-foreground">Latest Bill</h3>
+            </div>
+            {latestBill && (
+              <>
+                <div className="text-2xl font-bold text-foreground">
+                  ${latestBill.amount.toLocaleString()}
+                </div>
+                <div className="text-sm text-muted-foreground mt-1">
+                  {new Date(latestBill.billDate).toLocaleDateString()} • {latestBill.status}
+                </div>
+                <div className="text-sm text-muted-foreground">
+                  {latestBill.usage.toLocaleString()} {latestBill.usageUnit}
+                </div>
+              </>
+            )}
+          </Card>
 
-        <Card className="p-4 border-border">
-          <div className="flex items-center gap-2 mb-2">
-            <DollarSign className="h-5 w-5 text-primary" />
-            <h3 className="font-medium text-foreground">Current Balance</h3>
-          </div>
-          <div className="text-2xl font-bold text-foreground">
-            ${activeAccount.balance.toLocaleString()}
-          </div>
-          <div className="text-sm text-muted-foreground mt-1">
-            Due: {new Date(activeAccount.dueDate).toLocaleDateString()}
-          </div>
-          {activeAccount.paymentPlan && (
-            <Badge variant="outline" className="mt-2 bg-status-info-bg text-status-info">
-              Payment Plan Active
-            </Badge>
-          )}
-        </Card>
+          <Card className="p-4 border-border">
+            <div className="flex items-center gap-2 mb-2">
+              <DollarSign className="h-5 w-5 text-primary" />
+              <h3 className="font-medium text-foreground">Current Balance</h3>
+            </div>
+            <div className="text-2xl font-bold text-foreground">
+              ${activeAccount.balance.toLocaleString()}
+            </div>
+            <div className="text-sm text-muted-foreground mt-1">
+              Due: {new Date(activeAccount.dueDate).toLocaleDateString()}
+            </div>
+            {activeAccount.paymentPlan && (
+              <Badge variant="outline" className="mt-2 bg-status-info-bg text-status-info">
+                Payment Plan Active
+              </Badge>
+            )}
+          </Card>
 
-        <Card className="p-4 border-border">
-          <div className="flex items-center gap-2 mb-2">
-            <Activity className="h-5 w-5 text-primary" />
-            <h3 className="font-medium text-foreground">Recent Activity</h3>
-          </div>
-          <div className="text-sm text-foreground">
-            Last Interaction: {interactions[0]?.date}
-          </div>
-          <div className="text-sm text-muted-foreground mt-1">
-            {interactions[0]?.reason}
-          </div>
-          <div className="text-sm text-muted-foreground">
-            {interactions[0]?.type} • {interactions[0]?.time}
-          </div>
-        </Card>
-      </div>
+          <Card className="p-4 border-border">
+            <div className="flex items-center gap-2 mb-2">
+              <Activity className="h-5 w-5 text-primary" />
+              <h3 className="font-medium text-foreground">Recent Activity</h3>
+            </div>
+            <div className="text-sm text-foreground">
+              Last Interaction: {interactions[0]?.date}
+            </div>
+            <div className="text-sm text-muted-foreground mt-1">
+              {interactions[0]?.reason}
+            </div>
+            <div className="text-sm text-muted-foreground">
+              {interactions[0]?.type} • {interactions[0]?.time}
+            </div>
+          </Card>
+        </div>
+      )}
 
       {/* Condensed Recent Interactions */}
       <Card className="p-4 border-border">
