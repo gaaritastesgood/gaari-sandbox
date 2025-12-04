@@ -28,6 +28,17 @@ export interface AttentionItem {
     label: string;
     value: string;
   }[];
+  projectedExpansion?: {
+    description: string;
+    timeline: string;
+    additionalLoad: string;
+  };
+  loadGrowthImplications?: {
+    currentLoad: string;
+    projectedLoad: string;
+    growthRate: string;
+    infrastructureNeeds: string[];
+  };
 }
 
 export interface OpportunityItem {
@@ -147,6 +158,21 @@ export const attentionItems: AttentionItem[] = [
       { label: "Monthly Bill", value: "$287K" },
       { label: "Production Loss", value: "$180K" },
     ],
+    projectedExpansion: {
+      description: "New production line installation planned",
+      timeline: "Q2 2025",
+      additionalLoad: "+1.8 MW",
+    },
+    loadGrowthImplications: {
+      currentLoad: "4.2 MW",
+      projectedLoad: "6.0 MW",
+      growthRate: "+43% by Q3 2025",
+      infrastructureNeeds: [
+        "Substation capacity review required",
+        "Dedicated feeder may be needed",
+        "Transformer upgrade recommended",
+      ],
+    },
   },
   {
     id: "att-002",
@@ -171,6 +197,22 @@ export const attentionItems: AttentionItem[] = [
       { label: "Monthly Bill", value: "$945K" },
       { label: "SLA Risk", value: "High" },
     ],
+    projectedExpansion: {
+      description: "Phase 2 data hall construction",
+      timeline: "Q4 2025",
+      additionalLoad: "+8.5 MW",
+    },
+    loadGrowthImplications: {
+      currentLoad: "21.0 MW",
+      projectedLoad: "29.5 MW",
+      growthRate: "+40% by 2026",
+      infrastructureNeeds: [
+        "New 115kV substation required",
+        "Redundant feed installation",
+        "Grid interconnection study needed",
+        "Generation capacity assessment",
+      ],
+    },
   },
 ];
 
