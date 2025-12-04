@@ -1,11 +1,13 @@
+import { useState } from "react";
 import { Customer, Bill, Interaction } from "@/types/customer";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { DollarSign, FileText, Activity, TrendingUp, Zap, BarChart3, Lightbulb } from "lucide-react";
+import { DollarSign, FileText, Activity, TrendingUp, Zap, BarChart3, Lightbulb, ChevronRight } from "lucide-react";
 import { CompactIssuesPanel } from "@/components/customer/CompactIssuesPanel";
 import { CompactProgramsPanel } from "@/components/customer/CompactProgramsPanel";
 import { getConsolidatedIssues, getSimplifiedEligibility } from "@/data/consolidatedCustomerData";
 import { opportunityItems } from "@/data/kamDashboardData";
+import { KPIDetailDialog } from "@/components/KPIDetailDialog";
 
 interface OverviewTabProps {
   customer: Customer;
@@ -51,33 +53,54 @@ export const OverviewTab = ({
   // Get opportunities for this customer
   const customerOpportunities = opportunityItems.filter(opp => opp.customerId === customer.id);
 
+  // KPI detail dialog state
+  const [selectedKPI, setSelectedKPI] = useState<string | null>(null);
+
   return (
     <div className="space-y-4">
       {/* Key Account Metrics - Revenue, Usage, Peak Demand */}
       {isCommercialOrIndustrial && accountMetrics && (
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <Card className="p-4 border-border bg-gradient-to-br from-primary/5 to-transparent">
-            <div className="flex items-center gap-2 mb-2">
-              <TrendingUp className="h-5 w-5 text-primary" />
-              <h3 className="font-medium text-foreground">Annual Revenue</h3>
+          <Card 
+            className="p-4 border-border bg-gradient-to-br from-primary/5 to-transparent cursor-pointer hover:shadow-md transition-shadow group"
+            onClick={() => setSelectedKPI("Total Portfolio Revenue")}
+          >
+            <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center gap-2">
+                <TrendingUp className="h-5 w-5 text-primary" />
+                <h3 className="font-medium text-foreground">Annual Revenue</h3>
+              </div>
+              <ChevronRight className="h-4 w-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
             </div>
             <div className="text-2xl font-bold text-foreground">{accountMetrics.revenue}</div>
             <div className="text-sm text-status-success mt-1">YTD Revenue</div>
           </Card>
 
-          <Card className="p-4 border-border">
-            <div className="flex items-center gap-2 mb-2">
-              <BarChart3 className="h-5 w-5 text-primary" />
-              <h3 className="font-medium text-foreground">Total Usage</h3>
+          <Card 
+            className="p-4 border-border cursor-pointer hover:shadow-md transition-shadow group"
+            onClick={() => setSelectedKPI("Total Usage")}
+          >
+            <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center gap-2">
+                <BarChart3 className="h-5 w-5 text-primary" />
+                <h3 className="font-medium text-foreground">Total Usage</h3>
+              </div>
+              <ChevronRight className="h-4 w-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
             </div>
             <div className="text-2xl font-bold text-foreground">{accountMetrics.usage}</div>
             <div className="text-sm text-status-success mt-1">{accountMetrics.usageTrend} YoY</div>
           </Card>
 
-          <Card className="p-4 border-border">
-            <div className="flex items-center gap-2 mb-2">
-              <Zap className="h-5 w-5 text-status-warning" />
-              <h3 className="font-medium text-foreground">Peak Demand</h3>
+          <Card 
+            className="p-4 border-border cursor-pointer hover:shadow-md transition-shadow group"
+            onClick={() => setSelectedKPI("Peak Demand")}
+          >
+            <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center gap-2">
+                <Zap className="h-5 w-5 text-status-warning" />
+                <h3 className="font-medium text-foreground">Peak Demand</h3>
+              </div>
+              <ChevronRight className="h-4 w-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
             </div>
             <div className="text-2xl font-bold text-foreground">{accountMetrics.peakDemand}</div>
             <div className="text-sm text-status-warning mt-1">{accountMetrics.demandTrend} YoY</div>
@@ -97,6 +120,13 @@ export const OverviewTab = ({
           </Card>
         </div>
       )}
+
+      {/* KPI Detail Dialog */}
+      <KPIDetailDialog
+        open={!!selectedKPI}
+        onOpenChange={(open) => !open && setSelectedKPI(null)}
+        kpiLabel={selectedKPI || ""}
+      />
 
       {/* Opportunities Section */}
       {customerOpportunities.length > 0 && (
