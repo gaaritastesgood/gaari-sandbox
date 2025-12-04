@@ -18,7 +18,6 @@ import { mockCustomers, mockBills, mockPayments, mockInteractions, mockCases, mo
 import { getCustomerIssues, getCustomerEligibility } from "@/data/customerEligibilityData";
 import { MessageSquare, Users, Zap, ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
-import gaariLogo from "@/assets/gaari-logo.png";
 
 const Index = () => {
   const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null);
@@ -78,12 +77,9 @@ const Index = () => {
         <div className="px-6 py-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="flex items-center gap-2.5">
-                <img src={gaariLogo} alt="Gaari" className="h-9 w-9 object-contain rounded" />
-                <h1 className="text-xl font-semibold text-header-foreground tracking-tight">
-                  Gaari
-                </h1>
-              </div>
+              <h1 className="text-xl font-semibold text-header-foreground tracking-tight">
+                Account Manager Pro
+              </h1>
             </div>
             <div className="flex items-center gap-3">
               {/* Main Navigation Tabs */}
