@@ -2,11 +2,13 @@ import { useState } from "react";
 import { Customer, Bill, Interaction } from "@/types/customer";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { DollarSign, FileText, Activity, TrendingUp, Zap, BarChart3, Lightbulb, ChevronRight } from "lucide-react";
+import { DollarSign, FileText, Activity, TrendingUp, Zap, BarChart3, ChevronRight } from "lucide-react";
 import { CompactIssuesPanel } from "@/components/customer/CompactIssuesPanel";
 import { CompactProgramsPanel } from "@/components/customer/CompactProgramsPanel";
+import { IndustrialAlertsPanel } from "@/components/customer/IndustrialAlertsPanel";
+import { ActionableOpportunitiesPanel } from "@/components/customer/ActionableOpportunitiesPanel";
 import { getConsolidatedIssues, getSimplifiedEligibility } from "@/data/consolidatedCustomerData";
-import { opportunityItems } from "@/data/kamDashboardData";
+import { opportunityItems, attentionItems } from "@/data/kamDashboardData";
 import { KPIDetailDialog } from "@/components/KPIDetailDialog";
 
 interface OverviewTabProps {
@@ -50,8 +52,9 @@ export const OverviewTab = ({
   const consolidatedIssues = getConsolidatedIssues(customer.id);
   const simplifiedEligibility = getSimplifiedEligibility(customer.id);
   
-  // Get opportunities for this customer
+  // Get opportunities and alerts for this customer
   const customerOpportunities = opportunityItems.filter(opp => opp.customerId === customer.id);
+  const customerAlerts = attentionItems.filter(alert => alert.customerId === customer.id);
 
   // KPI detail dialog state
   const [selectedKPI, setSelectedKPI] = useState<string | null>(null);
@@ -128,36 +131,22 @@ export const OverviewTab = ({
         kpiLabel={selectedKPI || ""}
       />
 
-      {/* Opportunities Section */}
+      {/* Industrial Alerts Section - for C&I customers */}
+      {isCommercialOrIndustrial && customerAlerts.length > 0 && (
+        <IndustrialAlertsPanel 
+          alerts={customerAlerts} 
+          customerName={customerName} 
+        />
+      )}
+
+      {/* Actionable Opportunities Section */}
       {customerOpportunities.length > 0 && (
-        <Card className="p-4 border-border border-l-4 border-l-status-success">
-          <div className="flex items-center gap-2 mb-3">
-            <Lightbulb className="h-5 w-5 text-status-success" />
-            <h3 className="font-semibold text-foreground">Opportunities</h3>
-            <Badge className="bg-status-success-bg text-status-success">{customerOpportunities.length}</Badge>
-          </div>
-          <div className="space-y-3">
-            {customerOpportunities.map((opp) => (
-              <div key={opp.id} className="bg-muted/50 rounded-lg p-3">
-                <div className="flex items-start justify-between">
-                  <div>
-                    <div className="font-medium text-foreground">{opp.opportunityName}</div>
-                    <div className="text-sm text-muted-foreground mt-1">{opp.estimatedValue}</div>
-                    {opp.estimatedSavings && (
-                      <div className="text-sm text-status-success">{opp.estimatedSavings}</div>
-                    )}
-                  </div>
-                  <Badge variant="outline" className="bg-status-success-bg text-status-success text-xs">
-                    {opp.confidence}% confidence
-                  </Badge>
-                </div>
-                <div className="mt-2 text-xs text-muted-foreground">
-                  {opp.evidence.slice(0, 2).join(" • ")}
-                </div>
-              </div>
-            ))}
-          </div>
-        </Card>
+        <ActionableOpportunitiesPanel
+          opportunities={customerOpportunities}
+          customerName={customerName}
+          customerEmail={customer.email}
+          customerPhone={customer.phone}
+        />
       )}
 
       {/* Side-by-side Issues and Programs */}
