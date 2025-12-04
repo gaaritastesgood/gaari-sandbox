@@ -109,6 +109,29 @@ export const IndustrialAlertsPanel = ({
                         </div>
                       ))}
                     </div>
+
+                    {/* Expansion & Load Growth Preview - Always visible */}
+                    {(alert.projectedExpansion || alert.loadGrowthImplications) && (
+                      <div className="flex flex-wrap gap-3 mt-3 pt-2 border-t border-border/50">
+                        {alert.projectedExpansion && (
+                          <div className="flex items-center gap-1.5 text-sm">
+                            <TrendingUp className="h-3.5 w-3.5 text-status-success" />
+                            <span className="text-muted-foreground">Expansion:</span>
+                            <span className="font-medium text-foreground">{alert.projectedExpansion.additionalLoad}</span>
+                            <span className="text-muted-foreground">({alert.projectedExpansion.timeline})</span>
+                          </div>
+                        )}
+                        {alert.loadGrowthImplications && (
+                          <div className="flex items-center gap-1.5 text-sm">
+                            <Zap className="h-3.5 w-3.5 text-status-warning" />
+                            <span className="text-muted-foreground">Load Growth:</span>
+                            <span className="font-medium text-foreground">
+                              {alert.loadGrowthImplications.currentLoad} → {alert.loadGrowthImplications.projectedLoad}
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                    )}
                   </div>
                   
                   <div className="flex items-center gap-2">
