@@ -34,11 +34,11 @@ export const Customer360Header = ({ customer, bills = [] }: Customer360HeaderPro
   const isOverdue = activeAccount.balance > 0 && new Date(activeAccount.dueDate) < new Date();
 
   return (
-    <div className="bg-card border border-border rounded p-5 shadow-sm">
-      <div className="flex items-start justify-between mb-3">
-        <div>
-          <div className="flex items-center gap-2.5 mb-2">
-            <h1 className="text-xl font-semibold text-foreground tracking-tight">
+    <div className="bg-card border border-border rounded px-5 py-3 shadow-sm">
+      <div className="flex items-center justify-between gap-4">
+        <div className="flex items-center gap-4 flex-1 min-w-0">
+          <div className="flex items-center gap-2.5">
+            <h1 className="text-lg font-semibold text-foreground tracking-tight whitespace-nowrap">
               {customer.companyName || `${customer.firstName} ${customer.lastName}`}
             </h1>
             <Badge variant="outline" className={`${getStatusBadge(activeAccount.status)} text-xs font-medium`}>
@@ -47,86 +47,67 @@ export const Customer360Header = ({ customer, bills = [] }: Customer360HeaderPro
             <Badge variant="outline" className="bg-secondary text-secondary-foreground text-xs font-medium">
               {customer.segment}
             </Badge>
+            {isOverdue && (
+              <Badge variant="outline" className="bg-status-error-bg text-status-error border-status-error text-xs font-medium">
+                Past Due
+              </Badge>
+            )}
+            {activeAccount.paymentPlan && (
+              <Badge variant="outline" className="bg-status-info-bg text-status-info border-status-info text-xs font-medium">
+                Payment Plan
+              </Badge>
+            )}
           </div>
-          {customer.companyName && (
-            <div className="text-sm text-muted-foreground mb-1">
-              Contact: {customer.firstName} {customer.lastName}
-            </div>
-          )}
-          <div className="flex items-center gap-4 text-xs text-muted-foreground">
+          
+          <div className="hidden lg:flex items-center gap-4 text-xs text-muted-foreground border-l border-border pl-4">
             <span className="flex items-center gap-1.5">
               <Building2 className="h-3.5 w-3.5" />
-              BP: {customer.businessPartnerId}
+              {customer.businessPartnerId}
             </span>
             <span className="flex items-center gap-1.5">
-              <FileText className="h-3.5 w-3.5" />
-              Account: {activeAccount.accountNumber}
+              <MapPin className="h-3.5 w-3.5" />
+              {premise?.city}, {premise?.state}
+            </span>
+            <span className="flex items-center gap-1.5">
+              <Mail className="h-3.5 w-3.5" />
+              {customer.email}
+            </span>
+            <span className="flex items-center gap-1.5">
+              <Phone className="h-3.5 w-3.5" />
+              {customer.phone}
             </span>
           </div>
         </div>
         
-        <div className="text-right">
-          <div className="text-xl font-semibold text-foreground">
-            ${activeAccount.balance.toLocaleString()}
+        <div className="flex items-center gap-4">
+          <div className="text-right">
+            <div className="text-lg font-semibold text-foreground">
+              ${activeAccount.balance.toLocaleString()}
+            </div>
+            <div className="text-xs text-muted-foreground">
+              Due {new Date(activeAccount.dueDate).toLocaleDateString()}
+            </div>
           </div>
-          <div className="text-xs text-muted-foreground">
-            Due: {new Date(activeAccount.dueDate).toLocaleDateString()}
+          
+          <div className="flex gap-1.5 border-l border-border pl-4">
+            <Button size="sm" variant="outline" className="h-7 text-xs" onClick={() => setShowAddNote(true)}>
+              <MessageSquare className="h-3.5 w-3.5 mr-1" />
+              Note
+            </Button>
+            <Button size="sm" variant="outline" className="h-7 text-xs" onClick={() => setShowEmailBill(true)}>
+              <FileText className="h-3.5 w-3.5 mr-1" />
+              Email
+            </Button>
+            <Button size="sm" variant="outline" className="h-7 text-xs" onClick={() => setShowIssueAdjustment(true)}>
+              <DollarSign className="h-3.5 w-3.5 mr-1" />
+              Adjust
+            </Button>
+            <Button size="sm" variant="outline" className="h-7 text-xs" onClick={() => setShowCreateCase(true)}>
+              <AlertTriangle className="h-3.5 w-3.5 mr-1" />
+              Case
+            </Button>
           </div>
         </div>
-      </div>
-
-      <div className="grid grid-cols-2 gap-3 mb-3">
-        <div className="flex items-center gap-2 text-xs">
-          <MapPin className="h-3.5 w-3.5 text-muted-foreground" />
-          <span className="text-foreground">
-            {premise?.address}, {premise?.city}, {premise?.state} {premise?.zipCode}
-          </span>
-        </div>
-        <div className="flex items-center gap-2 text-xs">
-          <Mail className="h-3.5 w-3.5 text-muted-foreground" />
-          <span className="text-foreground">{customer.email}</span>
-        </div>
-        <div className="flex items-center gap-2 text-xs">
-          <Phone className="h-3.5 w-3.5 text-muted-foreground" />
-          <span className="text-foreground">{customer.phone}</span>
-        </div>
-      </div>
-
-      <div className="flex flex-wrap gap-1.5 mb-3">
-        {isOverdue && (
-          <Badge variant="outline" className="bg-status-error-bg text-status-error border-status-error text-xs font-medium">
-            Bill Past Due
-          </Badge>
-        )}
-        {activeAccount.paymentPlan && (
-          <Badge variant="outline" className="bg-status-info-bg text-status-info border-status-info text-xs font-medium">
-            On Payment Plan
-          </Badge>
-        )}
-        {premise?.premiseType === "office" && (
-          <Badge variant="outline" className="bg-secondary text-secondary-foreground text-xs font-medium">
-            Commercial Premise
-          </Badge>
-        )}
-      </div>
-
-      <div className="flex gap-2 pt-3 border-t border-border">
-        <Button size="sm" variant="outline" className="h-8 text-xs" onClick={() => setShowAddNote(true)}>
-          <MessageSquare className="h-3.5 w-3.5 mr-1" />
-          Add Note
-        </Button>
-        <Button size="sm" variant="outline" className="h-8 text-xs" onClick={() => setShowEmailBill(true)}>
-          <FileText className="h-3.5 w-3.5 mr-1" />
-          Email Bill
-        </Button>
-        <Button size="sm" variant="outline" className="h-8 text-xs" onClick={() => setShowIssueAdjustment(true)}>
-          <DollarSign className="h-3.5 w-3.5 mr-1" />
-          Issue Adjustment
-        </Button>
-        <Button size="sm" variant="outline" className="h-8 text-xs" onClick={() => setShowCreateCase(true)}>
-          <AlertTriangle className="h-3.5 w-3.5 mr-1" />
-          Create Case
-        </Button>
       </div>
 
       <AddNoteDialog open={showAddNote} onOpenChange={setShowAddNote} customer={customer} />
