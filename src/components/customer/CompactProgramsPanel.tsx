@@ -73,70 +73,70 @@ export const CompactProgramsPanel = ({
 
   return (
     <>
-      <Card className="p-3 border-border">
-        <div className="flex items-center justify-between mb-3">
+      <Card className="p-4 border-border">
+        <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
-            <Zap className="h-4 w-4 text-primary" />
-            <h3 className="font-semibold text-sm text-foreground">Programs</h3>
-            <Badge variant="outline" className="text-xs bg-status-info-bg text-status-info">
+            <Zap className="h-5 w-5 text-primary" />
+            <h3 className="font-semibold text-base text-foreground">Potentially Eligible Programs</h3>
+            <Badge variant="outline" className="text-sm bg-status-info-bg text-status-info">
               {programs.length}
             </Badge>
           </div>
         </div>
 
-        <div className="space-y-2">
+        <div className="space-y-3">
           {programs.map((program) => (
             <Collapsible
               key={program.programId}
               open={expandedPrograms.has(program.programId)}
               onOpenChange={() => toggleExpanded(program.programId)}
             >
-              <div className="rounded-md border border-border p-2 bg-card">
-                <div className="flex items-start gap-2">
-                  <div className="h-4 w-4 rounded-full bg-primary/10 flex items-center justify-center shrink-0 mt-0.5">
-                    <span className="text-xs text-primary">$</span>
+              <div className="rounded-md border border-border p-3 bg-card">
+                <div className="flex items-start gap-3">
+                  <div className="h-5 w-5 rounded-full bg-primary/10 flex items-center justify-center shrink-0 mt-0.5">
+                    <span className="text-sm text-primary">$</span>
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between gap-2">
-                      <h4 className="font-medium text-sm text-foreground truncate">{program.programName}</h4>
-                      <Badge variant="outline" className={`text-xs shrink-0 ${getLikelihoodBadgeClass(program.likelihood)}`}>
+                      <h4 className="font-semibold text-base text-foreground truncate">{program.programName}</h4>
+                      <Badge variant="outline" className={`text-sm shrink-0 ${getLikelihoodBadgeClass(program.likelihood)}`}>
                         {program.likelihood}
                       </Badge>
                     </div>
-                    <p className="text-xs text-status-success font-medium mt-0.5">
+                    <p className="text-sm text-status-success font-medium mt-1">
                       ${program.estimatedSavings}/yr savings
                     </p>
-                    <p className="text-xs text-muted-foreground mt-0.5 line-clamp-2">{program.summary}</p>
+                    <p className="text-sm text-muted-foreground mt-1 line-clamp-2">{program.summary}</p>
                     
-                    <div className="flex items-center justify-between mt-2">
+                    <div className="flex items-center justify-between mt-3">
                       <CollapsibleTrigger asChild>
-                        <Button variant="ghost" size="sm" className="h-6 text-xs text-muted-foreground hover:text-foreground p-0 gap-1">
-                          <ChevronRight className={`h-3 w-3 transition-transform ${expandedPrograms.has(program.programId) ? "rotate-90" : ""}`} />
-                          Evidence ({program.supportingFacts.length})
+                        <Button variant="outline" size="sm" className="h-8 text-sm bg-muted hover:bg-muted/80 gap-1.5">
+                          <ChevronRight className={`h-4 w-4 transition-transform ${expandedPrograms.has(program.programId) ? "rotate-90" : ""}`} />
+                          View Evidence ({program.supportingFacts.length})
                         </Button>
                       </CollapsibleTrigger>
                       <Button
                         size="sm"
-                        className="h-6 text-xs px-2"
+                        className="h-8 text-sm px-3"
                         onClick={() => handleStartEnrollment(program)}
                       >
-                        <TrendingUp className="h-3 w-3 mr-1" />
+                        <TrendingUp className="h-4 w-4 mr-1.5" />
                         Enroll
                       </Button>
                     </div>
 
                     <CollapsibleContent>
-                      <div className="mt-2 pt-2 border-t border-border space-y-1.5">
+                      <div className="mt-3 pt-3 border-t border-border space-y-2">
                         {program.supportingFacts.map((fact, idx) => (
-                          <div key={idx} className="flex items-center justify-between text-xs bg-muted/50 rounded px-2 py-1">
+                          <div key={idx} className="flex items-center justify-between text-sm bg-muted/50 rounded px-3 py-2">
                             <span className="text-foreground">• {fact.fact}</span>
                             <Button
                               variant="ghost"
                               size="sm"
-                              className="h-5 text-xs text-primary hover:text-primary/80 p-0"
+                              className="h-7 text-sm text-primary hover:text-primary/80 px-2"
                               onClick={() => onNavigateToTab(fact.linkTab)}
                             >
-                              <ExternalLink className="h-3 w-3" />
+                              <ExternalLink className="h-4 w-4" />
                             </Button>
                           </div>
                         ))}

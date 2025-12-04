@@ -49,11 +49,11 @@ export const CompactIssuesPanel = ({ issues, onNavigateToTab }: CompactIssuesPan
   const getSeverityIcon = (severity: ConsolidatedIssue["severity"]) => {
     switch (severity) {
       case "error":
-        return <AlertCircle className="h-4 w-4 text-status-error" />;
+        return <AlertCircle className="h-5 w-5 text-status-error" />;
       case "warning":
-        return <AlertTriangle className="h-4 w-4 text-status-warning" />;
+        return <AlertTriangle className="h-5 w-5 text-status-warning" />;
       default:
-        return <Info className="h-4 w-4 text-status-info" />;
+        return <Info className="h-5 w-5 text-status-info" />;
     }
   };
 
@@ -70,10 +70,10 @@ export const CompactIssuesPanel = ({ issues, onNavigateToTab }: CompactIssuesPan
 
   if (openIssues.length === 0) {
     return (
-      <Card className="p-3 border-border bg-status-success-bg/10">
+      <Card className="p-4 border-border bg-status-success-bg/10">
         <div className="flex items-center gap-2">
-          <CheckCircle className="h-4 w-4 text-status-success" />
-          <span className="text-sm font-medium text-foreground">No Open Issues</span>
+          <CheckCircle className="h-5 w-5 text-status-success" />
+          <span className="text-base font-medium text-foreground">No Open Issues</span>
         </div>
       </Card>
     );
@@ -81,80 +81,80 @@ export const CompactIssuesPanel = ({ issues, onNavigateToTab }: CompactIssuesPan
 
   return (
     <>
-      <Card className="p-3 border-border">
-        <div className="flex items-center justify-between mb-3">
+      <Card className="p-4 border-border">
+        <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
-            <AlertTriangle className="h-4 w-4 text-status-warning" />
-            <h3 className="font-semibold text-sm text-foreground">Issues</h3>
-            <Badge variant="outline" className="text-xs bg-status-warning-bg text-status-warning">
+            <AlertTriangle className="h-5 w-5 text-status-warning" />
+            <h3 className="font-semibold text-base text-foreground">Issues</h3>
+            <Badge variant="outline" className="text-sm bg-status-warning-bg text-status-warning">
               {openIssues.length}
             </Badge>
           </div>
         </div>
 
-        <div className="space-y-2">
+        <div className="space-y-3">
           {openIssues.map((issue) => (
             <Collapsible
               key={issue.id}
               open={expandedIssues.has(issue.id)}
               onOpenChange={() => toggleExpanded(issue.id)}
             >
-              <div className="rounded-md border border-border p-2 bg-card">
-                <div className="flex items-start gap-2">
+              <div className="rounded-md border border-border p-3 bg-card">
+                <div className="flex items-start gap-3">
                   {getSeverityIcon(issue.severity)}
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between gap-2">
-                      <h4 className="font-medium text-sm text-foreground truncate">{issue.title}</h4>
-                      <Badge variant="outline" className={`text-xs shrink-0 ${getSeverityBadgeClass(issue.severity)}`}>
+                      <h4 className="font-semibold text-base text-foreground truncate">{issue.title}</h4>
+                      <Badge variant="outline" className={`text-sm shrink-0 ${getSeverityBadgeClass(issue.severity)}`}>
                         {issue.severity === "error" ? "Urgent" : issue.severity === "warning" ? "Attention" : "Info"}
                       </Badge>
                     </div>
-                    <p className="text-xs text-muted-foreground mt-0.5 line-clamp-2">{issue.summary}</p>
+                    <p className="text-sm text-muted-foreground mt-1 line-clamp-2">{issue.summary}</p>
                     
-                    <div className="flex items-center justify-between mt-2">
+                    <div className="flex items-center justify-between mt-3">
                       <CollapsibleTrigger asChild>
-                        <Button variant="ghost" size="sm" className="h-6 text-xs text-muted-foreground hover:text-foreground p-0 gap-1">
-                          <ChevronRight className={`h-3 w-3 transition-transform ${expandedIssues.has(issue.id) ? "rotate-90" : ""}`} />
-                          Evidence ({issue.supportingFacts.length})
+                        <Button variant="outline" size="sm" className="h-8 text-sm bg-muted hover:bg-muted/80 gap-1.5">
+                          <ChevronRight className={`h-4 w-4 transition-transform ${expandedIssues.has(issue.id) ? "rotate-90" : ""}`} />
+                          View Evidence ({issue.supportingFacts.length})
                         </Button>
                       </CollapsibleTrigger>
-                      <div className="flex gap-1">
+                      <div className="flex gap-2">
+                        <Button
+                          size="sm"
+                          className="h-8 text-sm px-3"
+                          onClick={() => handleCreateCase(issue)}
+                        >
+                          <FolderPlus className="h-4 w-4 mr-1.5" />
+                          Create Case
+                        </Button>
                         <Button
                           size="sm"
                           variant="outline"
-                          className="h-6 text-xs px-2"
-                          onClick={() => handleCreateCase(issue)}
-                        >
-                          <FolderPlus className="h-3 w-3 mr-1" />
-                          Case
-                        </Button>
-                        <Button
-                          size="sm"
-                          variant="ghost"
-                          className="h-6 text-xs px-2 text-status-success hover:text-status-success hover:bg-status-success-bg"
+                          className="h-8 text-sm px-3 text-status-success hover:text-status-success hover:bg-status-success-bg border-status-success/30"
                           onClick={() => handleResolve(issue.id)}
                         >
-                          <CheckCircle className="h-3 w-3" />
+                          <CheckCircle className="h-4 w-4 mr-1.5" />
+                          Resolve
                         </Button>
                       </div>
                     </div>
 
                     <CollapsibleContent>
-                      <div className="mt-2 pt-2 border-t border-border space-y-1.5">
+                      <div className="mt-3 pt-3 border-t border-border space-y-2">
                         {issue.supportingFacts.map((fact, idx) => (
-                          <div key={idx} className="flex items-center justify-between text-xs bg-muted/50 rounded px-2 py-1">
+                          <div key={idx} className="flex items-center justify-between text-sm bg-muted/50 rounded px-3 py-2">
                             <span className="text-foreground">• {fact.fact}</span>
                             <Button
                               variant="ghost"
                               size="sm"
-                              className="h-5 text-xs text-primary hover:text-primary/80 p-0"
+                              className="h-7 text-sm text-primary hover:text-primary/80 px-2"
                               onClick={() => onNavigateToTab(fact.linkTab)}
                             >
-                              <ExternalLink className="h-3 w-3" />
+                              <ExternalLink className="h-4 w-4" />
                             </Button>
                           </div>
                         ))}
-                        <p className="text-xs text-muted-foreground italic pt-1">
+                        <p className="text-sm text-muted-foreground italic pt-1">
                           {issue.recommendedAction}
                         </p>
                       </div>
