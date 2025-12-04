@@ -16,8 +16,9 @@ import { Button } from "@/components/ui/button";
 import { Customer } from "@/types/customer";
 import { mockCustomers, mockBills, mockPayments, mockInteractions, mockCases, mockRates, mockMeterReadings } from "@/data/mockData";
 import { getCustomerIssues, getCustomerEligibility } from "@/data/customerEligibilityData";
-import { MessageSquare, Users, Zap, LayoutDashboard, ArrowLeft } from "lucide-react";
+import { MessageSquare, Users, Zap, ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
+import gaariLogo from "@/assets/gaari-logo.png";
 
 const Index = () => {
   const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null);
@@ -78,9 +79,9 @@ const Index = () => {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="flex items-center gap-2.5">
-                <LayoutDashboard className="h-5 w-5 text-header-foreground" />
+                <img src={gaariLogo} alt="Gaari" className="h-9 w-9 object-contain rounded" />
                 <h1 className="text-xl font-semibold text-header-foreground tracking-tight">
-                  Key Account Manager Dashboard
+                  Gaari
                 </h1>
               </div>
             </div>
