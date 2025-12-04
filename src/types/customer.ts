@@ -122,3 +122,40 @@ export interface MeterReading {
   usage: number;
   anomaly?: boolean;
 }
+
+// Customer Issues for Triage Dashboard
+export interface CustomerIssue {
+  id: string;
+  type: string;
+  severity: "info" | "warning" | "error";
+  title: string;
+  description: string;
+  evidence: IssueEvidence[];
+  status: "open" | "resolved";
+  defaultCaseType?: string;
+}
+
+export interface IssueEvidence {
+  label: string;
+  sourceType: "billing" | "meter" | "interaction" | "usage";
+  sourceId: string;
+  linkTab: string;
+}
+
+// Program Eligibility for Customer
+export interface CustomerProgramEligibility {
+  customerId: string;
+  programId: string;
+  programName: string;
+  likelihood: "high" | "medium" | "low";
+  estimatedSavings: number;
+  sources: EligibilitySource[];
+}
+
+export interface EligibilitySource {
+  type: "call_transcript" | "load_analysis" | "billing_pattern" | "meter_data" | "prior_participation";
+  description: string;
+  date: string;
+  sourceId: string;
+  linkTab: string;
+}
