@@ -2,7 +2,7 @@ import { useState, useRef } from "react";
 import { GlobalSearch } from "@/components/GlobalSearch";
 import { Customer360Header } from "@/components/Customer360Header";
 import { InteractionPanel } from "@/components/InteractionPanel";
-import { KPIDashboard } from "@/components/KPIDashboard";
+import { KAMDashboard } from "@/components/dashboard/KAMDashboard";
 import { EmptyState } from "@/components/EmptyState";
 import { OverviewTab } from "@/components/tabs/OverviewTab";
 import { BillsTab } from "@/components/tabs/BillsTab";
@@ -14,9 +14,10 @@ import { ProgramsTab } from "@/components/programs/ProgramsTab";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Customer } from "@/types/customer";
-import { mockBills, mockPayments, mockInteractions, mockCases, mockRates, mockMeterReadings } from "@/data/mockData";
+import { mockCustomers, mockBills, mockPayments, mockInteractions, mockCases, mockRates, mockMeterReadings } from "@/data/mockData";
 import { getCustomerIssues, getCustomerEligibility } from "@/data/customerEligibilityData";
-import { MessageSquare, Users, Zap } from "lucide-react";
+import { MessageSquare, Users, Zap, LayoutDashboard, ArrowLeft } from "lucide-react";
+import { toast } from "sonner";
 
 const Index = () => {
   const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null);
@@ -31,9 +32,32 @@ const Index = () => {
     setCustomerTab("overview");
   };
 
+  const handleNavigateToCustomer = (customerId: string) => {
+    // Find customer by ID in mock data
+    const customer = mockCustomers.find(c => c.id === customerId);
+    if (customer) {
+      setSelectedCustomer(customer);
+      setMainTab("intelligence");
+      setCustomerTab("overview");
+    } else {
+      // For demo purposes, select first customer if not found
+      toast.info("Demo Mode", {
+        description: "Navigating to sample customer profile"
+      });
+      if (mockCustomers.length > 0) {
+        setSelectedCustomer(mockCustomers[0]);
+        setMainTab("intelligence");
+        setCustomerTab("overview");
+      }
+    }
+  };
+
+  const handleBackToDashboard = () => {
+    setSelectedCustomer(null);
+  };
+
   const handleNavigateToTab = (tab: string) => {
     setCustomerTab(tab);
-    // Scroll to tabs area
     tabsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
@@ -44,39 +68,41 @@ const Index = () => {
   const rates = selectedCustomer ? mockRates[selectedCustomer.contractAccounts[0].id] || [] : [];
   const meterReadings = selectedCustomer ? mockMeterReadings[selectedCustomer.premises[0].servicePoints[0].id] || [] : [];
   
-  // Get customer issues and eligibility data
   const customerIssues = selectedCustomer ? getCustomerIssues(selectedCustomer.id) : [];
   const customerEligibility = selectedCustomer ? getCustomerEligibility(selectedCustomer.id) : [];
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <header className="bg-header-bg border-b border-border/50 shadow-sm z-40">
-        <div className="px-6 py-2">
-          <div className="flex items-center justify-between mb-2">
+        <div className="px-6 py-3">
+          <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="flex items-center gap-2.5">
-                <h1 className="text-xl font-semibold text-header-foreground tracking-tight">Gaari</h1>
+                <LayoutDashboard className="h-5 w-5 text-header-foreground" />
+                <h1 className="text-xl font-semibold text-header-foreground tracking-tight">
+                  Key Account Manager Dashboard
+                </h1>
               </div>
             </div>
             <div className="flex items-center gap-3">
               {/* Main Navigation Tabs */}
-              <div className="flex bg-muted rounded-lg p-0.5">
+              <div className="flex bg-muted/20 rounded-lg p-0.5">
                 <Button
                   variant="ghost"
                   size="sm"
                   onClick={() => setMainTab("intelligence")}
-                  className={`h-7 text-xs gap-1.5 ${mainTab === "intelligence" ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground"}`}
+                  className={`h-8 text-sm gap-1.5 ${mainTab === "intelligence" ? "bg-background shadow-sm text-foreground" : "text-header-foreground/70 hover:text-header-foreground hover:bg-muted/30"}`}
                 >
-                  <Users className="h-3.5 w-3.5" />
+                  <Users className="h-4 w-4" />
                   Customer Intelligence
                 </Button>
                 <Button
                   variant="ghost"
                   size="sm"
                   onClick={() => setMainTab("programs")}
-                  className={`h-7 text-xs gap-1.5 ${mainTab === "programs" ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground"}`}
+                  className={`h-8 text-sm gap-1.5 ${mainTab === "programs" ? "bg-background shadow-sm text-foreground" : "text-header-foreground/70 hover:text-header-foreground hover:bg-muted/30"}`}
                 >
-                  <Zap className="h-3.5 w-3.5" />
+                  <Zap className="h-4 w-4" />
                   Programs
                 </Button>
               </div>
@@ -84,44 +110,46 @@ const Index = () => {
                 variant="outline" 
                 size="sm"
                 onClick={() => setShowInteractionPanel(!showInteractionPanel)}
-                className={showInteractionPanel ? "bg-primary text-primary-foreground border-primary" : "bg-header-bg text-header-foreground border-border/50 hover:bg-header-bg/80"}
+                className={showInteractionPanel ? "bg-primary text-primary-foreground border-primary" : "bg-header-bg text-header-foreground border-header-foreground/30 hover:bg-header-bg/80"}
               >
                 <MessageSquare className="h-4 w-4 mr-1.5" />
                 {showInteractionPanel ? "Close" : "Open"} Interaction
               </Button>
             </div>
           </div>
-          
-          {mainTab === "intelligence" && (
-            <>
-              <GlobalSearch onSelectCustomer={handleSelectCustomer} />
-              <div className="mt-3">
-                <KPIDashboard />
-              </div>
-            </>
-          )}
         </div>
       </header>
 
       <div className="flex flex-1">
         <main className={`flex-1 transition-all ${showInteractionPanel ? "mr-96" : ""}`}>
           {mainTab === "programs" ? (
-            <div className="p-4">
+            <div className="p-6">
               <ProgramsTab />
             </div>
           ) : selectedCustomer ? (
-            <div className="p-4 space-y-4">
+            <div className="p-6 space-y-4">
+              {/* Back to Dashboard Button */}
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={handleBackToDashboard}
+                className="text-muted-foreground hover:text-foreground gap-1.5 -ml-2"
+              >
+                <ArrowLeft className="h-4 w-4" />
+                Back to Dashboard
+              </Button>
+
               <Customer360Header customer={selectedCustomer} bills={bills} />
 
               <div ref={tabsRef}>
                 <Tabs value={customerTab} onValueChange={setCustomerTab} className="w-full">
-                  <TabsList className="bg-muted h-9 p-1">
-                    <TabsTrigger value="overview" className="text-xs h-7">Overview</TabsTrigger>
-                    <TabsTrigger value="bills" className="text-xs h-7">Bills & Usage</TabsTrigger>
-                    <TabsTrigger value="rates" className="text-xs h-7">Rates & Tariffs</TabsTrigger>
-                    <TabsTrigger value="payments" className="text-xs h-7">Payments</TabsTrigger>
-                    <TabsTrigger value="meters" className="text-xs h-7">Meters & Readings</TabsTrigger>
-                    <TabsTrigger value="interactions" className="text-xs h-7">Interactions</TabsTrigger>
+                  <TabsList className="bg-muted h-10 p-1">
+                    <TabsTrigger value="overview" className="text-sm h-8">Overview</TabsTrigger>
+                    <TabsTrigger value="bills" className="text-sm h-8">Bills & Usage</TabsTrigger>
+                    <TabsTrigger value="rates" className="text-sm h-8">Rates & Tariffs</TabsTrigger>
+                    <TabsTrigger value="payments" className="text-sm h-8">Payments</TabsTrigger>
+                    <TabsTrigger value="meters" className="text-sm h-8">Meters & Readings</TabsTrigger>
+                    <TabsTrigger value="interactions" className="text-sm h-8">Interactions</TabsTrigger>
                   </TabsList>
 
                   <div className="mt-4">
@@ -169,12 +197,17 @@ const Index = () => {
               </div>
             </div>
           ) : (
-            <EmptyState />
+            <div className="p-6">
+              <KAMDashboard 
+                onSelectCustomer={handleSelectCustomer}
+                onNavigateToCustomer={handleNavigateToCustomer}
+              />
+            </div>
           )}
         </main>
 
         {showInteractionPanel && (
-          <aside className="fixed right-0 top-[180px] bottom-0 z-30">
+          <aside className="fixed right-0 top-[72px] bottom-0 z-30">
             <InteractionPanel 
               onClose={() => setShowInteractionPanel(false)}
               customerId={selectedCustomer?.id}
