@@ -66,85 +66,91 @@ export const KPIDrilldownDialog = ({
         </DialogHeader>
 
         <div className="space-y-6">
-          {/* Summary KPI */}
-          <Card className="bg-muted/30 border-border">
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-muted-foreground">{kpi.label}</p>
-                  <p className="text-3xl font-bold text-foreground">{kpi.primaryMetric}</p>
+          {/* Summary KPI - hide for opportunities */}
+          {kpi.drilldownType !== "opportunities" && (
+            <Card className="bg-muted/30 border-border">
+              <CardContent className="p-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm text-muted-foreground">{kpi.label}</p>
+                    <p className="text-3xl font-bold text-foreground">{kpi.primaryMetric}</p>
+                  </div>
+                  <Badge 
+                    variant="outline" 
+                    className={`text-sm px-3 py-1 gap-1 ${
+                      kpi.status === "good" ? "text-status-success bg-status-success-bg" :
+                      kpi.status === "warning" ? "text-status-warning bg-status-warning-bg" :
+                      kpi.status === "error" ? "text-status-error bg-status-error-bg" :
+                      "text-status-info bg-status-info-bg"
+                    }`}
+                  >
+                    {kpi.trend === "up" ? <TrendingUp className="h-4 w-4" /> : <TrendingDown className="h-4 w-4" />}
+                    {kpi.trendValue}
+                  </Badge>
                 </div>
-                <Badge 
-                  variant="outline" 
-                  className={`text-sm px-3 py-1 gap-1 ${
-                    kpi.status === "good" ? "text-status-success bg-status-success-bg" :
-                    kpi.status === "warning" ? "text-status-warning bg-status-warning-bg" :
-                    kpi.status === "error" ? "text-status-error bg-status-error-bg" :
-                    "text-status-info bg-status-info-bg"
-                  }`}
-                >
-                  {kpi.trend === "up" ? <TrendingUp className="h-4 w-4" /> : <TrendingDown className="h-4 w-4" />}
-                  {kpi.trendValue}
-                </Badge>
-              </div>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+          )}
 
-          {/* Chart */}
-          <Card className="border-border">
-            <CardContent className="p-4">
-              <h4 className="text-sm font-medium text-muted-foreground mb-4">Trend Analysis</h4>
-              <div className="h-48">
-                <ResponsiveContainer width="100%" height="100%">
-                  {kpi.drilldownType === "alerts" || kpi.drilldownType === "opportunities" ? (
-                    <BarChart data={drilldownData.chartData}>
-                      <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
-                      <XAxis dataKey="name" className="text-xs" tick={{ fill: 'hsl(var(--muted-foreground))' }} />
-                      <YAxis className="text-xs" tick={{ fill: 'hsl(var(--muted-foreground))' }} />
-                      <Tooltip 
-                        contentStyle={{ 
-                          backgroundColor: 'hsl(var(--card))', 
-                          border: '1px solid hsl(var(--border))',
-                          borderRadius: '8px'
-                        }}
-                      />
-                      <Bar dataKey="value" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} />
-                    </BarChart>
-                  ) : (
-                    <LineChart data={drilldownData.chartData}>
-                      <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
-                      <XAxis dataKey="name" className="text-xs" tick={{ fill: 'hsl(var(--muted-foreground))' }} />
-                      <YAxis 
-                        className="text-xs" 
-                        tick={{ fill: 'hsl(var(--muted-foreground))' }}
-                        tickFormatter={formatYAxis}
-                      />
-                      <Tooltip 
-                        contentStyle={{ 
-                          backgroundColor: 'hsl(var(--card))', 
-                          border: '1px solid hsl(var(--border))',
-                          borderRadius: '8px'
-                        }}
-                        formatter={(value: number) => formatYAxis(value)}
-                      />
-                      <Line 
-                        type="monotone" 
-                        dataKey="value" 
-                        stroke="hsl(var(--primary))" 
-                        strokeWidth={2}
-                        dot={{ fill: 'hsl(var(--primary))', strokeWidth: 2 }}
-                      />
-                    </LineChart>
-                  )}
-                </ResponsiveContainer>
-              </div>
-            </CardContent>
-          </Card>
+          {/* Chart - hide for opportunities */}
+          {kpi.drilldownType !== "opportunities" && drilldownData.chartData.length > 0 && (
+            <Card className="border-border">
+              <CardContent className="p-4">
+                <h4 className="text-sm font-medium text-muted-foreground mb-4">Trend Analysis</h4>
+                <div className="h-48">
+                  <ResponsiveContainer width="100%" height="100%">
+                    {kpi.drilldownType === "alerts" ? (
+                      <BarChart data={drilldownData.chartData}>
+                        <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
+                        <XAxis dataKey="name" className="text-xs" tick={{ fill: 'hsl(var(--muted-foreground))' }} />
+                        <YAxis className="text-xs" tick={{ fill: 'hsl(var(--muted-foreground))' }} />
+                        <Tooltip 
+                          contentStyle={{ 
+                            backgroundColor: 'hsl(var(--card))', 
+                            border: '1px solid hsl(var(--border))',
+                            borderRadius: '8px'
+                          }}
+                        />
+                        <Bar dataKey="value" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} />
+                      </BarChart>
+                    ) : (
+                      <LineChart data={drilldownData.chartData}>
+                        <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
+                        <XAxis dataKey="name" className="text-xs" tick={{ fill: 'hsl(var(--muted-foreground))' }} />
+                        <YAxis 
+                          className="text-xs" 
+                          tick={{ fill: 'hsl(var(--muted-foreground))' }}
+                          tickFormatter={formatYAxis}
+                        />
+                        <Tooltip 
+                          contentStyle={{ 
+                            backgroundColor: 'hsl(var(--card))', 
+                            border: '1px solid hsl(var(--border))',
+                            borderRadius: '8px'
+                          }}
+                          formatter={(value: number) => formatYAxis(value)}
+                        />
+                        <Line 
+                          type="monotone" 
+                          dataKey="value" 
+                          stroke="hsl(var(--primary))" 
+                          strokeWidth={2}
+                          dot={{ fill: 'hsl(var(--primary))', strokeWidth: 2 }}
+                        />
+                      </LineChart>
+                    )}
+                  </ResponsiveContainer>
+                </div>
+              </CardContent>
+            </Card>
+          )}
 
-          {/* Account List */}
+          {/* Account List - Enhanced for opportunities */}
           <div>
-            <h4 className="text-sm font-medium text-muted-foreground mb-3">Accounts</h4>
-            <ScrollArea className="h-[200px]">
+            <h4 className="text-sm font-medium text-muted-foreground mb-3">
+              {kpi.drilldownType === "opportunities" ? "Opportunities" : "Accounts"}
+            </h4>
+            <ScrollArea className={kpi.drilldownType === "opportunities" ? "h-[400px]" : "h-[200px]"}>
               <div className="space-y-2">
                 {drilldownData.items.map((item) => (
                   <Card 
@@ -155,19 +161,30 @@ export const KPIDrilldownDialog = ({
                       onOpenChange(false);
                     }}
                   >
-                    <CardContent className="p-3">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                          <Badge variant="outline" className={`${getStatusColor(item.status)} text-xs font-medium`}>
-                            {item.metric}
-                          </Badge>
-                          <div>
-                            <p className="font-medium text-foreground">{item.customerName}</p>
-                            <p className="text-xs text-muted-foreground">{item.detail}</p>
+                    <CardContent className={kpi.drilldownType === "opportunities" ? "p-4" : "p-3"}>
+                      {kpi.drilldownType === "opportunities" ? (
+                        <div className="space-y-2">
+                          <div className="flex items-center justify-between">
+                            <h3 className="font-semibold text-foreground text-base">{item.metric}</h3>
+                            <ChevronRight className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
                           </div>
+                          <p className="text-sm text-muted-foreground">{item.customerName}</p>
+                          <p className="text-sm text-foreground/80">{item.detail}</p>
                         </div>
-                        <ChevronRight className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
-                      </div>
+                      ) : (
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-3">
+                            <Badge variant="outline" className={`${getStatusColor(item.status)} text-xs font-medium`}>
+                              {item.metric}
+                            </Badge>
+                            <div>
+                              <p className="font-medium text-foreground">{item.customerName}</p>
+                              <p className="text-xs text-muted-foreground">{item.detail}</p>
+                            </div>
+                          </div>
+                          <ChevronRight className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
+                        </div>
+                      )}
                     </CardContent>
                   </Card>
                 ))}
