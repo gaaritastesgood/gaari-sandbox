@@ -111,6 +111,36 @@ export const consolidatedCustomerIssues: Record<string, ConsolidatedIssue[]> = {
       recommendedAction: "Schedule actual meter read.",
       defaultCaseType: "meter_access"
     }
+  ],
+  "11": [ // Patriot Foods Manufacturing - outage
+    {
+      id: "CONS011",
+      title: "Extended Outage - Production Impact",
+      summary: "6.2 hour service interruption affecting production line operations with significant financial impact.",
+      severity: "error",
+      supportingFacts: [
+        { fact: "Outage duration: 6.2 hours on Dec 2", linkTab: "meters" },
+        { fact: "Production loss estimated at $180K", linkTab: "bills" },
+        { fact: "Emergency backup generation deployed", linkTab: "interactions" }
+      ],
+      recommendedAction: "Review outage report and discuss reliability improvements.",
+      defaultCaseType: "outage_investigation"
+    }
+  ],
+  "12": [ // Silverline Data Center Group - multiple outages
+    {
+      id: "CONS012",
+      title: "Multiple Outage Events - SLA Risk",
+      summary: "3 outage events in past 14 days affecting critical data center operations. SLA compliance at risk.",
+      severity: "error",
+      supportingFacts: [
+        { fact: "3 outage events in past 14 days", linkTab: "meters" },
+        { fact: "UPS systems activated during events", linkTab: "interactions" },
+        { fact: "99.99% uptime SLA requirement", linkTab: "bills" }
+      ],
+      recommendedAction: "Prepare reliability improvement plan and schedule executive review.",
+      defaultCaseType: "reliability_review"
+    }
   ]
 };
 
