@@ -148,7 +148,7 @@ export const KPIDrilldownDialog = ({
           {/* Account List - Enhanced for opportunities */}
           <div>
             <h4 className="text-sm font-medium text-muted-foreground mb-3">
-              {kpi.drilldownType === "opportunities" ? "Opportunities" : "Accounts"}
+              {kpi.drilldownType === "opportunities" ? "Potential Program & Service Opportunities" : "Accounts"}
             </h4>
             <ScrollArea className={kpi.drilldownType === "opportunities" ? "h-[400px]" : "h-[200px]"}>
               <div className="space-y-2">
