@@ -149,32 +149,6 @@ export const attentionItems: AttentionItem[] = [
     ],
   },
   {
-    id: "att-003",
-    customerId: "11",
-    customerName: "Patriot Foods Manufacturing",
-    accountId: "9010001234",
-    industry: "Industrial",
-    annualRevenue: "$2.4M",
-    reason: "Expansion Planned - +1.8 MW By Q2 2025",
-    category: "expansion",
-    severity: "medium",
-    confidence: 88,
-    evidencePoints: [
-      "Expansion permits filed with city planning",
-      "Additional 1.8 MW load expected by Q3 2025",
-      "Current load: 4.2 MW → Projected: 6.0 MW (+43%)",
-      "Substation capacity review required",
-      "Dedicated feeder may be needed",
-      "Transformer upgrade recommended",
-    ],
-    detectedAt: "1 week ago",
-    quickFacts: [
-      { label: "Current Load", value: "4.2 MW" },
-      { label: "Additional Load", value: "+1.8 MW" },
-      { label: "Timeline", value: "Q2 2025" },
-    ],
-  },
-  {
     id: "att-002",
     customerId: "12",
     customerName: "Silverline Data Center Group",
@@ -198,37 +172,44 @@ export const attentionItems: AttentionItem[] = [
       { label: "SLA Risk", value: "High" },
     ],
   },
+];
+
+// Opportunities - Using mockCustomers IDs (Expansion opportunities first)
+export const opportunityItems: OpportunityItem[] = [
   {
-    id: "att-004",
+    id: "opp-006",
+    customerId: "11",
+    customerName: "Patriot Foods Manufacturing",
+    accountId: "9010001234",
+    opportunityType: "expansion",
+    opportunityName: "Production Line Expansion - +1.8 MW By Q2 2025",
+    estimatedValue: "$420K new annual revenue",
+    confidence: 88,
+    evidence: [
+      "Expansion permits filed with city planning",
+      "Additional 1.8 MW load expected",
+      "Current load: 4.2 MW → Projected: 6.0 MW (+43%)",
+      "Infrastructure upgrade needed",
+    ],
+    status: "reviewing",
+  },
+  {
+    id: "opp-007",
     customerId: "12",
     customerName: "Silverline Data Center Group",
     accountId: "9010002345",
-    industry: "Industrial",
-    annualRevenue: "$11.3M",
-    reason: "Expansion Planned - +8.5 MW By Q4 2025",
-    category: "expansion",
-    severity: "high",
+    opportunityType: "expansion",
+    opportunityName: "Phase 2 Data Hall Expansion - +8.5 MW By Q4 2025",
+    estimatedValue: "$1.8M new annual revenue",
     confidence: 92,
-    evidencePoints: [
+    evidence: [
       "Phase 2 data hall construction approved",
-      "Additional 8.5 MW load expected by Q4 2025",
+      "Additional 8.5 MW load expected",
       "Current load: 21.0 MW → Projected: 29.5 MW (+40%)",
       "New 115kV substation required",
-      "Redundant feed installation needed",
-      "Grid interconnection study required",
-      "Generation capacity assessment pending",
     ],
-    detectedAt: "3 days ago",
-    quickFacts: [
-      { label: "Current Load", value: "21.0 MW" },
-      { label: "Additional Load", value: "+8.5 MW" },
-      { label: "Timeline", value: "Q4 2025" },
-    ],
+    status: "reviewing",
   },
-];
-
-// Opportunities - Using mockCustomers IDs
-export const opportunityItems: OpportunityItem[] = [
   {
     id: "opp-001",
     customerId: "11",
@@ -318,23 +299,6 @@ export const opportunityItems: OpportunityItem[] = [
       "No infrastructure changes needed",
     ],
     status: "new",
-  },
-  {
-    id: "opp-006",
-    customerId: "11",
-    customerName: "Patriot Foods Manufacturing",
-    accountId: "9010001234",
-    opportunityType: "expansion",
-    opportunityName: "Production Line Expansion",
-    estimatedValue: "$420K new annual revenue",
-    confidence: 82,
-    evidence: [
-      "Expansion permits filed",
-      "Additional 1.8 MW load expected",
-      "Infrastructure upgrade needed",
-      "Timeline: Q2 2025",
-    ],
-    status: "reviewing",
   },
 ];
 
