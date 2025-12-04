@@ -2,12 +2,11 @@ import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { AlertTriangle, Eye, Users, FileText, CheckCircle, ChevronDown, ChevronUp, Mail } from "lucide-react";
+import { AlertTriangle, Eye, Users, CheckCircle, ChevronDown, ChevronUp, Mail } from "lucide-react";
 import { AttentionItem, categoryConfig, severityConfig } from "@/data/kamDashboardData";
 import { AlertStatusDialog } from "./AlertStatusDialog";
 import { SendTeamDialog } from "./SendTeamDialog";
 import { ContactAlertDialog } from "./ContactAlertDialog";
-import { CaseCreationDialog } from "@/components/CaseCreationDialog";
 
 interface IndustrialAlertsPanelProps {
   alerts: AttentionItem[];
@@ -26,7 +25,6 @@ export const IndustrialAlertsPanel = ({
   const [statusDialogOpen, setStatusDialogOpen] = useState(false);
   const [sendTeamDialogOpen, setSendTeamDialogOpen] = useState(false);
   const [contactDialogOpen, setContactDialogOpen] = useState(false);
-  const [caseDialogOpen, setCaseDialogOpen] = useState(false);
   const [selectedAlert, setSelectedAlert] = useState<AttentionItem | null>(null);
   const [resolvedAlerts, setResolvedAlerts] = useState<Set<string>>(new Set());
 
@@ -54,11 +52,6 @@ export const IndustrialAlertsPanel = ({
   const handleContact = (alert: AttentionItem) => {
     setSelectedAlert(alert);
     setContactDialogOpen(true);
-  };
-
-  const handleCreateCase = (alert: AttentionItem) => {
-    setSelectedAlert(alert);
-    setCaseDialogOpen(true);
   };
 
   const handleResolve = (alertId: string) => {
@@ -99,16 +92,6 @@ export const IndustrialAlertsPanel = ({
                       <span className="text-xs text-muted-foreground">{alert.detectedAt}</span>
                     </div>
                     <div className="font-medium text-foreground">{alert.reason}</div>
-                    
-                    {/* Quick Facts */}
-                    <div className="flex gap-4 mt-2 text-sm">
-                      {alert.quickFacts.map((fact, i) => (
-                        <div key={i}>
-                          <span className="text-muted-foreground">{fact.label}: </span>
-                          <span className="font-medium text-foreground">{fact.value}</span>
-                        </div>
-                      ))}
-                    </div>
                   </div>
                   
                   <div className="flex items-center gap-2">
@@ -128,18 +111,15 @@ export const IndustrialAlertsPanel = ({
                 {/* Expanded Details */}
                 {isExpanded && (
                   <div className="mt-3 pt-3 border-t border-border">
-                    {/* Evidence Points */}
-                    <div>
-                      <div className="text-sm font-medium text-muted-foreground mb-2">More Detail</div>
-                      <ul className="space-y-1 text-sm text-foreground">
-                        {alert.evidencePoints.map((point, i) => (
-                          <li key={i} className="flex items-start gap-2">
-                            <span className="text-muted-foreground">•</span>
-                            {point}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
+                    <div className="text-sm font-medium text-muted-foreground mb-2">More Detail</div>
+                    <ul className="space-y-1 text-sm text-foreground">
+                      {alert.evidencePoints.map((point, i) => (
+                        <li key={i} className="flex items-start gap-2">
+                          <span className="text-muted-foreground">•</span>
+                          {point}
+                        </li>
+                      ))}
+                    </ul>
                   </div>
                 )}
 
@@ -171,15 +151,6 @@ export const IndustrialAlertsPanel = ({
                   >
                     <Users className="h-3 w-3 mr-1" />
                     Send Team
-                  </Button>
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
-                    className="h-7 text-xs"
-                    onClick={() => handleCreateCase(alert)}
-                  >
-                    <FileText className="h-3 w-3 mr-1" />
-                    Create Case
                   </Button>
                   <Button 
                     variant="secondary" 
@@ -217,13 +188,6 @@ export const IndustrialAlertsPanel = ({
         alert={selectedAlert}
         customerEmail={customerEmail}
         customerPhone={customerPhone}
-      />
-
-      <CaseCreationDialog
-        open={caseDialogOpen}
-        onOpenChange={setCaseDialogOpen}
-        customerName={customerName}
-        defaultCaseType={selectedAlert?.category === "outage" ? "outage_power" : "meter_usage"}
       />
     </>
   );
