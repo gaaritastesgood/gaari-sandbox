@@ -1,16 +1,15 @@
-import { Customer, Bill, Interaction, CustomerIssue, CustomerProgramEligibility } from "@/types/customer";
+import { Customer, Bill, Interaction } from "@/types/customer";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { DollarSign, FileText, Activity } from "lucide-react";
-import { CustomerIssuesPanel } from "@/components/customer/CustomerIssuesPanel";
-import { ProgramEligibilityPanel } from "@/components/customer/ProgramEligibilityPanel";
+import { CompactIssuesPanel } from "@/components/customer/CompactIssuesPanel";
+import { CompactProgramsPanel } from "@/components/customer/CompactProgramsPanel";
+import { getConsolidatedIssues, getSimplifiedEligibility } from "@/data/consolidatedCustomerData";
 
 interface OverviewTabProps {
   customer: Customer;
   bills: Bill[];
   interactions: Interaction[];
-  issues: CustomerIssue[];
-  eligibility: CustomerProgramEligibility[];
   onNavigateToTab: (tab: string) => void;
 }
 
@@ -18,42 +17,30 @@ export const OverviewTab = ({
   customer, 
   bills, 
   interactions, 
-  issues,
-  eligibility,
   onNavigateToTab 
 }: OverviewTabProps) => {
   const latestBill = bills[0];
   const activeAccount = customer.contractAccounts[0];
   const customerName = `${customer.firstName} ${customer.lastName}`;
 
-  // Convert bill issues to CustomerIssue format and merge with existing issues
-  const billIssues: CustomerIssue[] = (latestBill?.issues || []).map((issue, idx) => ({
-    id: `bill-issue-${idx}`,
-    type: issue.type,
-    severity: issue.severity,
-    title: issue.type.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
-    description: issue.description,
-    evidence: [
-      { label: "View bill details", sourceType: "billing" as const, sourceId: latestBill.id, linkTab: "bills" }
-    ],
-    status: "open" as const,
-    defaultCaseType: issue.type
-  }));
-
-  // Combine all issues - existing customer issues + bill issues
-  const allIssues = [...issues, ...billIssues];
+  // Get consolidated issues and simplified eligibility
+  const consolidatedIssues = getConsolidatedIssues(customer.id);
+  const simplifiedEligibility = getSimplifiedEligibility(customer.id);
 
   return (
     <div className="space-y-4">
-      {/* Priority 1: Issues Panel - Top of page */}
-      <CustomerIssuesPanel issues={allIssues} onNavigateToTab={onNavigateToTab} />
-
-      {/* Priority 2: Program Eligibility */}
-      <ProgramEligibilityPanel 
-        eligibility={eligibility} 
-        customerName={customerName}
-        onNavigateToTab={onNavigateToTab} 
-      />
+      {/* Side-by-side Issues and Programs */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <CompactIssuesPanel 
+          issues={consolidatedIssues} 
+          onNavigateToTab={onNavigateToTab} 
+        />
+        <CompactProgramsPanel 
+          programs={simplifiedEligibility}
+          customerName={customerName}
+          onNavigateToTab={onNavigateToTab} 
+        />
+      </div>
 
       {/* Condensed Key Metrics */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
