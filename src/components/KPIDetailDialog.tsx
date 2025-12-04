@@ -74,6 +74,44 @@ const generateChartData = (kpiLabel: string) => {
         exportCredits: Math.floor(Math.random() * 8) + 5
       }));
     
+    case "Total Portfolio Revenue":
+      const baseRevenue = 850000;
+      return months.map((month, i) => ({
+        month,
+        currentYear: Math.round(baseRevenue * (0.9 + Math.random() * 0.2 + i * 0.01)),
+        previousYear: Math.round(baseRevenue * (0.85 + Math.random() * 0.15)),
+        forecast: i >= 10 ? Math.round(baseRevenue * (1.05 + Math.random() * 0.1)) : null
+      }));
+    
+    case "Total Usage":
+      const baseUsage = 2800000;
+      return months.map((month, i) => {
+        const seasonalFactor = i >= 5 && i <= 8 ? 1.3 : (i >= 11 || i <= 1) ? 1.2 : 1.0;
+        const totalUsage = Math.round(baseUsage * seasonalFactor * (0.95 + Math.random() * 0.1));
+        return {
+          month,
+          peakUsage: Math.round(totalUsage * 0.35),
+          offPeakUsage: Math.round(totalUsage * 0.45),
+          shoulderUsage: Math.round(totalUsage * 0.20),
+          total: totalUsage
+        };
+      });
+    
+    case "Peak Demand":
+      const baseDemand = 4.2;
+      const contractedCapacity = 5.0;
+      return months.map((month, i) => {
+        const seasonalFactor = i >= 5 && i <= 8 ? 1.15 : 1.0;
+        const peakDemand = Math.round((baseDemand * seasonalFactor * (0.9 + Math.random() * 0.2)) * 100) / 100;
+        return {
+          month,
+          peakDemand,
+          contractedCapacity,
+          demandCharge: Math.round(peakDemand * 12500),
+          exceeded: peakDemand > contractedCapacity
+        };
+      });
+    
     default:
       return [];
   }
@@ -288,6 +326,175 @@ export const KPIDetailDialog = ({ open, onOpenChange, kpiLabel }: KPIDetailDialo
               </LineChart>
             </ResponsiveContainer>
           </ChartContainer>
+        );
+
+      case "Total Portfolio Revenue":
+        const totalRevenue = data.reduce((sum: number, d: any) => sum + (d.currentYear || 0), 0);
+        const prevYearRevenue = data.reduce((sum: number, d: any) => sum + (d.previousYear || 0), 0);
+        const revenueGrowth = ((totalRevenue - prevYearRevenue) / prevYearRevenue * 100).toFixed(1);
+        return (
+          <div className="space-y-6">
+            <ChartContainer config={chartConfig} className="h-[350px] w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={data}>
+                  <defs>
+                    <linearGradient id="revenueGradient" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="hsl(var(--chart-1))" stopOpacity={0.4} />
+                      <stop offset="100%" stopColor="hsl(var(--chart-1))" stopOpacity={0.05} />
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
+                  <XAxis dataKey="month" className="text-xs" />
+                  <YAxis className="text-xs" tickFormatter={(value) => `$${(value / 1000).toFixed(0)}K`} />
+                  <ChartTooltip 
+                    content={<ChartTooltipContent />}
+                    formatter={(value: number) => [`$${value.toLocaleString()}`, '']}
+                  />
+                  <Legend />
+                  <Area 
+                    type="monotone" 
+                    dataKey="currentYear" 
+                    stroke="hsl(var(--chart-1))" 
+                    fill="url(#revenueGradient)"
+                    strokeWidth={2}
+                    name="Current Year" 
+                  />
+                  <Area 
+                    type="monotone" 
+                    dataKey="previousYear" 
+                    stroke="hsl(var(--chart-2))" 
+                    fill="none"
+                    strokeWidth={2}
+                    strokeDasharray="5 5"
+                    name="Previous Year" 
+                  />
+                </AreaChart>
+              </ResponsiveContainer>
+            </ChartContainer>
+            <div className="grid grid-cols-3 gap-4">
+              <div className="p-4 rounded-lg border border-border bg-card">
+                <div className="text-sm text-muted-foreground mb-1">YTD Revenue</div>
+                <div className="text-xl font-semibold text-foreground">${(totalRevenue / 1000000).toFixed(2)}M</div>
+              </div>
+              <div className="p-4 rounded-lg border border-border bg-card">
+                <div className="text-sm text-muted-foreground mb-1">YoY Growth</div>
+                <div className={`text-xl font-semibold ${Number(revenueGrowth) >= 0 ? 'text-emerald-600' : 'text-destructive'}`}>
+                  {Number(revenueGrowth) >= 0 ? '+' : ''}{revenueGrowth}%
+                </div>
+              </div>
+              <div className="p-4 rounded-lg border border-border bg-card">
+                <div className="text-sm text-muted-foreground mb-1">Avg Monthly</div>
+                <div className="text-xl font-semibold text-foreground">${(totalRevenue / 12 / 1000).toFixed(0)}K</div>
+              </div>
+            </div>
+          </div>
+        );
+
+      case "Total Usage":
+        const totalUsageSum = data.reduce((sum: number, d: any) => sum + (d.total || 0), 0);
+        const peakUsageSum = data.reduce((sum: number, d: any) => sum + (d.peakUsage || 0), 0);
+        const peakRatio = ((peakUsageSum / totalUsageSum) * 100).toFixed(1);
+        return (
+          <div className="space-y-6">
+            <ChartContainer config={chartConfig} className="h-[350px] w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={data}>
+                  <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
+                  <XAxis dataKey="month" className="text-xs" />
+                  <YAxis className="text-xs" tickFormatter={(value) => `${(value / 1000000).toFixed(1)}M`} />
+                  <ChartTooltip 
+                    content={<ChartTooltipContent />}
+                    formatter={(value: number) => [`${(value / 1000).toFixed(0)}K kWh`, '']}
+                  />
+                  <Legend />
+                  <Bar dataKey="peakUsage" stackId="usage" fill="hsl(var(--chart-1))" name="Peak Hours" />
+                  <Bar dataKey="shoulderUsage" stackId="usage" fill="hsl(var(--chart-2))" name="Shoulder Hours" />
+                  <Bar dataKey="offPeakUsage" stackId="usage" fill="hsl(var(--chart-3))" name="Off-Peak Hours" />
+                </BarChart>
+              </ResponsiveContainer>
+            </ChartContainer>
+            <div className="grid grid-cols-3 gap-4">
+              <div className="p-4 rounded-lg border border-border bg-card">
+                <div className="text-sm text-muted-foreground mb-1">Total Usage (YTD)</div>
+                <div className="text-xl font-semibold text-foreground">{(totalUsageSum / 1000000).toFixed(1)}M kWh</div>
+              </div>
+              <div className="p-4 rounded-lg border border-border bg-card">
+                <div className="text-sm text-muted-foreground mb-1">Peak Usage Ratio</div>
+                <div className="text-xl font-semibold text-foreground">{peakRatio}%</div>
+                <div className="text-xs text-muted-foreground">of total consumption</div>
+              </div>
+              <div className="p-4 rounded-lg border border-border bg-card">
+                <div className="text-sm text-muted-foreground mb-1">Avg Daily</div>
+                <div className="text-xl font-semibold text-foreground">{((totalUsageSum / 365) / 1000).toFixed(0)}K kWh</div>
+              </div>
+            </div>
+          </div>
+        );
+
+      case "Peak Demand":
+        const maxPeak = Math.max(...data.map((d: any) => d.peakDemand || 0));
+        const avgPeak = (data.reduce((sum: number, d: any) => sum + (d.peakDemand || 0), 0) / data.length).toFixed(2);
+        const exceedances = data.filter((d: any) => d.exceeded).length;
+        return (
+          <div className="space-y-6">
+            <ChartContainer config={chartConfig} className="h-[350px] w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={data}>
+                  <defs>
+                    <linearGradient id="demandGradient" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="hsl(var(--chart-1))" stopOpacity={0.4} />
+                      <stop offset="100%" stopColor="hsl(var(--chart-1))" stopOpacity={0.05} />
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
+                  <XAxis dataKey="month" className="text-xs" />
+                  <YAxis className="text-xs" domain={[0, 6]} tickFormatter={(value) => `${value} MW`} />
+                  <ChartTooltip 
+                    content={<ChartTooltipContent />}
+                    formatter={(value: number, name: string) => [
+                      name === 'Demand Charge' ? `$${value.toLocaleString()}` : `${value} MW`, 
+                      ''
+                    ]}
+                  />
+                  <Legend />
+                  <Area 
+                    type="monotone" 
+                    dataKey="contractedCapacity" 
+                    stroke="hsl(var(--destructive))" 
+                    fill="none"
+                    strokeWidth={2}
+                    strokeDasharray="5 5"
+                    name="Contracted Capacity" 
+                  />
+                  <Area 
+                    type="monotone" 
+                    dataKey="peakDemand" 
+                    stroke="hsl(var(--chart-1))" 
+                    fill="url(#demandGradient)"
+                    strokeWidth={2}
+                    name="Peak Demand" 
+                  />
+                </AreaChart>
+              </ResponsiveContainer>
+            </ChartContainer>
+            <div className="grid grid-cols-3 gap-4">
+              <div className="p-4 rounded-lg border border-border bg-card">
+                <div className="text-sm text-muted-foreground mb-1">Max Peak Demand</div>
+                <div className="text-xl font-semibold text-foreground">{maxPeak} MW</div>
+              </div>
+              <div className="p-4 rounded-lg border border-border bg-card">
+                <div className="text-sm text-muted-foreground mb-1">Avg Peak Demand</div>
+                <div className="text-xl font-semibold text-foreground">{avgPeak} MW</div>
+              </div>
+              <div className="p-4 rounded-lg border border-border bg-card">
+                <div className="text-sm text-muted-foreground mb-1">Capacity Exceedances</div>
+                <div className={`text-xl font-semibold ${exceedances > 0 ? 'text-destructive' : 'text-emerald-600'}`}>
+                  {exceedances} times
+                </div>
+                <div className="text-xs text-muted-foreground">this year</div>
+              </div>
+            </div>
+          </div>
         );
 
       default:
