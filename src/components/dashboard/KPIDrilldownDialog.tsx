@@ -145,48 +145,43 @@ export const KPIDrilldownDialog = ({
             </Card>
           )}
 
-          {/* Account List - Enhanced for opportunities */}
+          {/* Account List - Row format for alerts/opportunities */}
           <div>
             <h4 className="text-sm font-medium text-muted-foreground mb-3">
-              {kpi.drilldownType === "opportunities" ? "Potential Program & Service Opportunities" : "Accounts"}
+              {kpi.drilldownType === "opportunities" ? "Potential Program & Service Opportunities" : 
+               kpi.drilldownType === "alerts" ? "Active Alerts" : "Accounts"}
             </h4>
-            <ScrollArea className={kpi.drilldownType === "opportunities" ? "h-[400px]" : "h-[200px]"}>
-              <div className="space-y-2">
+            <ScrollArea className={(kpi.drilldownType === "opportunities" || kpi.drilldownType === "alerts") ? "h-[400px]" : "h-[200px]"}>
+              <div className="space-y-1">
                 {drilldownData.items.map((item) => (
-                  <Card 
+                  <div 
                     key={item.id}
-                    className="border-border hover:border-primary/50 transition-all cursor-pointer group"
+                    className="flex items-center justify-between p-3 rounded-lg border border-border hover:border-primary/50 hover:bg-muted/30 transition-all cursor-pointer group"
                     onClick={() => {
                       onCustomerClick(item.customerId);
                       onOpenChange(false);
                     }}
                   >
-                    <CardContent className={kpi.drilldownType === "opportunities" ? "p-4" : "p-3"}>
-                      {kpi.drilldownType === "opportunities" ? (
-                        <div className="space-y-2">
-                          <div className="flex items-center justify-between">
-                            <h3 className="font-semibold text-foreground text-base">{item.metric}</h3>
-                            <ChevronRight className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
-                          </div>
-                          <p className="text-sm text-muted-foreground">{item.customerName}</p>
-                          <p className="text-sm text-foreground/80">{item.detail}</p>
+                    <div className="flex items-center gap-4 flex-1 min-w-0">
+                      <Badge variant="outline" className={`${getStatusColor(item.status)} text-xs font-medium shrink-0`}>
+                        {kpi.drilldownType === "alerts" ? item.metric : 
+                         kpi.drilldownType === "opportunities" ? "New" : item.metric}
+                      </Badge>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2">
+                          <span className="font-medium text-foreground truncate">
+                            {kpi.drilldownType === "opportunities" ? item.metric : item.customerName}
+                          </span>
+                          <span className="text-muted-foreground">•</span>
+                          <span className="text-sm text-muted-foreground truncate">
+                            {kpi.drilldownType === "opportunities" ? item.customerName : ""}
+                          </span>
                         </div>
-                      ) : (
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-3">
-                            <Badge variant="outline" className={`${getStatusColor(item.status)} text-xs font-medium`}>
-                              {item.metric}
-                            </Badge>
-                            <div>
-                              <p className="font-medium text-foreground">{item.customerName}</p>
-                              <p className="text-xs text-muted-foreground">{item.detail}</p>
-                            </div>
-                          </div>
-                          <ChevronRight className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
-                        </div>
-                      )}
-                    </CardContent>
-                  </Card>
+                        <p className="text-sm text-muted-foreground truncate">{item.detail}</p>
+                      </div>
+                    </div>
+                    <ChevronRight className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors shrink-0 ml-2" />
+                  </div>
                 ))}
               </div>
             </ScrollArea>

@@ -58,8 +58,28 @@ export interface KPIDrilldownData {
   }[];
 }
 
-// Portfolio KPIs - Alerts first, then Opportunities
+// Portfolio KPIs - Ordered by importance (actionable first)
 export const portfolioKPIs: PortfolioKPI[] = [
+  {
+    id: "alerts",
+    label: "New Alerts",
+    primaryMetric: "4",
+    subtext: "Attention needed",
+    trend: "up",
+    status: "error",
+    trendValue: "+2",
+    drilldownType: "alerts",
+  },
+  {
+    id: "opportunities",
+    label: "New Opportunities",
+    primaryMetric: "6",
+    subtext: "Proactive engagement",
+    trend: "up",
+    status: "good",
+    trendValue: "+2",
+    drilldownType: "opportunities",
+  },
   {
     id: "revenue",
     label: "Total Revenue Managed",
@@ -99,26 +119,6 @@ export const portfolioKPIs: PortfolioKPI[] = [
     status: "error",
     trendValue: "+4",
     drilldownType: "outages",
-  },
-  {
-    id: "alerts",
-    label: "New Alerts",
-    primaryMetric: "4",
-    subtext: "Attention needed",
-    trend: "up",
-    status: "error",
-    trendValue: "+2",
-    drilldownType: "alerts",
-  },
-  {
-    id: "opportunities",
-    label: "New Opportunities",
-    primaryMetric: "6",
-    subtext: "Proactive engagement",
-    trend: "up",
-    status: "good",
-    trendValue: "+2",
-    drilldownType: "opportunities",
   },
 ];
 
