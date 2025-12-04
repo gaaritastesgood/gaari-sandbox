@@ -28,17 +28,6 @@ export interface AttentionItem {
     label: string;
     value: string;
   }[];
-  projectedExpansion?: {
-    description: string;
-    timeline: string;
-    additionalLoad: string;
-  };
-  loadGrowthImplications?: {
-    currentLoad: string;
-    projectedLoad: string;
-    growthRate: string;
-    infrastructureNeeds: string[];
-  };
 }
 
 export interface OpportunityItem {
@@ -158,21 +147,32 @@ export const attentionItems: AttentionItem[] = [
       { label: "Monthly Bill", value: "$287K" },
       { label: "Production Loss", value: "$180K" },
     ],
-    projectedExpansion: {
-      description: "New production line installation planned",
-      timeline: "Q2 2025",
-      additionalLoad: "+1.8 MW",
-    },
-    loadGrowthImplications: {
-      currentLoad: "4.2 MW",
-      projectedLoad: "6.0 MW",
-      growthRate: "+43% by Q3 2025",
-      infrastructureNeeds: [
-        "Substation capacity review required",
-        "Dedicated feeder may be needed",
-        "Transformer upgrade recommended",
-      ],
-    },
+  },
+  {
+    id: "att-003",
+    customerId: "11",
+    customerName: "Patriot Foods Manufacturing",
+    accountId: "9010001234",
+    industry: "Industrial",
+    annualRevenue: "$2.4M",
+    reason: "Projected expansion: New production line installation - +1.8 MW load growth",
+    category: "expansion",
+    severity: "medium",
+    confidence: 88,
+    evidencePoints: [
+      "Expansion permits filed with city planning",
+      "Additional 1.8 MW load expected by Q3 2025",
+      "Current load: 4.2 MW → Projected: 6.0 MW (+43%)",
+      "Substation capacity review required",
+      "Dedicated feeder may be needed",
+      "Transformer upgrade recommended",
+    ],
+    detectedAt: "1 week ago",
+    quickFacts: [
+      { label: "Current Load", value: "4.2 MW" },
+      { label: "Additional Load", value: "+1.8 MW" },
+      { label: "Timeline", value: "Q2 2025" },
+    ],
   },
   {
     id: "att-002",
@@ -197,22 +197,33 @@ export const attentionItems: AttentionItem[] = [
       { label: "Monthly Bill", value: "$945K" },
       { label: "SLA Risk", value: "High" },
     ],
-    projectedExpansion: {
-      description: "Phase 2 data hall construction",
-      timeline: "Q4 2025",
-      additionalLoad: "+8.5 MW",
-    },
-    loadGrowthImplications: {
-      currentLoad: "21.0 MW",
-      projectedLoad: "29.5 MW",
-      growthRate: "+40% by 2026",
-      infrastructureNeeds: [
-        "New 115kV substation required",
-        "Redundant feed installation",
-        "Grid interconnection study needed",
-        "Generation capacity assessment",
-      ],
-    },
+  },
+  {
+    id: "att-004",
+    customerId: "12",
+    customerName: "Silverline Data Center Group",
+    accountId: "9010002345",
+    industry: "Industrial",
+    annualRevenue: "$11.3M",
+    reason: "Projected expansion: Phase 2 data hall construction - +8.5 MW load growth",
+    category: "expansion",
+    severity: "high",
+    confidence: 92,
+    evidencePoints: [
+      "Phase 2 data hall construction approved",
+      "Additional 8.5 MW load expected by Q4 2025",
+      "Current load: 21.0 MW → Projected: 29.5 MW (+40%)",
+      "New 115kV substation required",
+      "Redundant feed installation needed",
+      "Grid interconnection study required",
+      "Generation capacity assessment pending",
+    ],
+    detectedAt: "3 days ago",
+    quickFacts: [
+      { label: "Current Load", value: "21.0 MW" },
+      { label: "Additional Load", value: "+8.5 MW" },
+      { label: "Timeline", value: "Q4 2025" },
+    ],
   },
 ];
 
