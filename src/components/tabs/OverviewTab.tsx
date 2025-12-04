@@ -149,12 +149,14 @@ export const OverviewTab = ({
         />
       )}
 
-      {/* Side-by-side Issues and Programs */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <CompactIssuesPanel 
-          issues={consolidatedIssues} 
-          onNavigateToTab={onNavigateToTab} 
-        />
+      {/* Side-by-side Issues and Programs - Issues only for residential */}
+      <div className={`grid grid-cols-1 ${!isCommercialOrIndustrial ? 'lg:grid-cols-2' : ''} gap-4`}>
+        {!isCommercialOrIndustrial && (
+          <CompactIssuesPanel 
+            issues={consolidatedIssues} 
+            onNavigateToTab={onNavigateToTab} 
+          />
+        )}
         <CompactProgramsPanel 
           programs={simplifiedEligibility}
           customerName={customerName}

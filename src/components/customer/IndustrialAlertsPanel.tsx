@@ -111,10 +111,10 @@ export const IndustrialAlertsPanel = ({ alerts, customerName }: IndustrialAlerts
                   </div>
                 </div>
 
-                {/* Expanded Evidence */}
+                {/* Expanded Details */}
                 {isExpanded && (
                   <div className="mt-3 pt-3 border-t border-border">
-                    <div className="text-sm font-medium text-muted-foreground mb-2">Evidence</div>
+                    <div className="text-sm font-medium text-muted-foreground mb-2">More Detail</div>
                     <ul className="space-y-1 text-sm text-foreground">
                       {alert.evidencePoints.map((point, i) => (
                         <li key={i} className="flex items-start gap-2">
