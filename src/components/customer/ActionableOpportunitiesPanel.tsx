@@ -51,7 +51,7 @@ export const ActionableOpportunitiesPanel = ({
       <Card className="p-4 border-border border-l-4 border-l-status-success">
         <div className="flex items-center gap-2 mb-3">
           <Lightbulb className="h-5 w-5 text-status-success" />
-          <h3 className="font-semibold text-foreground">Opportunities</h3>
+          <h3 className="font-semibold text-foreground">Potential Program & Service Opportunities</h3>
           <Badge className="bg-status-success-bg text-status-success">{opportunities.length}</Badge>
         </div>
         
