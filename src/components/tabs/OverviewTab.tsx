@@ -135,7 +135,9 @@ export const OverviewTab = ({
       {isCommercialOrIndustrial && customerAlerts.length > 0 && (
         <IndustrialAlertsPanel 
           alerts={customerAlerts} 
-          customerName={customerName} 
+          customerName={customerName}
+          customerEmail={customer.email}
+          customerPhone={customer.phone}
         />
       )}
 

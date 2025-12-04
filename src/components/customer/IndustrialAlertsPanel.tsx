@@ -2,21 +2,30 @@ import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { AlertTriangle, Eye, Users, FileText, CheckCircle, ChevronDown, ChevronUp } from "lucide-react";
+import { AlertTriangle, Eye, Users, FileText, CheckCircle, ChevronDown, ChevronUp, Mail, TrendingUp, Zap } from "lucide-react";
 import { AttentionItem, categoryConfig, severityConfig } from "@/data/kamDashboardData";
 import { AlertStatusDialog } from "./AlertStatusDialog";
 import { SendTeamDialog } from "./SendTeamDialog";
+import { ContactAlertDialog } from "./ContactAlertDialog";
 import { CaseCreationDialog } from "@/components/CaseCreationDialog";
 
 interface IndustrialAlertsPanelProps {
   alerts: AttentionItem[];
   customerName: string;
+  customerEmail?: string;
+  customerPhone?: string;
 }
 
-export const IndustrialAlertsPanel = ({ alerts, customerName }: IndustrialAlertsPanelProps) => {
+export const IndustrialAlertsPanel = ({ 
+  alerts, 
+  customerName,
+  customerEmail,
+  customerPhone 
+}: IndustrialAlertsPanelProps) => {
   const [expandedAlert, setExpandedAlert] = useState<string | null>(null);
   const [statusDialogOpen, setStatusDialogOpen] = useState(false);
   const [sendTeamDialogOpen, setSendTeamDialogOpen] = useState(false);
+  const [contactDialogOpen, setContactDialogOpen] = useState(false);
   const [caseDialogOpen, setCaseDialogOpen] = useState(false);
   const [selectedAlert, setSelectedAlert] = useState<AttentionItem | null>(null);
   const [resolvedAlerts, setResolvedAlerts] = useState<Set<string>>(new Set());
@@ -40,6 +49,11 @@ export const IndustrialAlertsPanel = ({ alerts, customerName }: IndustrialAlerts
   const handleSendTeam = (alert: AttentionItem) => {
     setSelectedAlert(alert);
     setSendTeamDialogOpen(true);
+  };
+
+  const handleContact = (alert: AttentionItem) => {
+    setSelectedAlert(alert);
+    setContactDialogOpen(true);
   };
 
   const handleCreateCase = (alert: AttentionItem) => {
@@ -113,21 +127,83 @@ export const IndustrialAlertsPanel = ({ alerts, customerName }: IndustrialAlerts
 
                 {/* Expanded Details */}
                 {isExpanded && (
-                  <div className="mt-3 pt-3 border-t border-border">
-                    <div className="text-sm font-medium text-muted-foreground mb-2">More Detail</div>
-                    <ul className="space-y-1 text-sm text-foreground">
-                      {alert.evidencePoints.map((point, i) => (
-                        <li key={i} className="flex items-start gap-2">
-                          <span className="text-muted-foreground">•</span>
-                          {point}
-                        </li>
-                      ))}
-                    </ul>
+                  <div className="mt-3 pt-3 border-t border-border space-y-4">
+                    {/* Evidence Points */}
+                    <div>
+                      <div className="text-sm font-medium text-muted-foreground mb-2">More Detail</div>
+                      <ul className="space-y-1 text-sm text-foreground">
+                        {alert.evidencePoints.map((point, i) => (
+                          <li key={i} className="flex items-start gap-2">
+                            <span className="text-muted-foreground">•</span>
+                            {point}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+
+                    {/* Projected Expansion */}
+                    {alert.projectedExpansion && (
+                      <div className="bg-status-success-bg/30 rounded-lg p-3 border border-status-success/20">
+                        <div className="flex items-center gap-2 mb-2">
+                          <TrendingUp className="h-4 w-4 text-status-success" />
+                          <span className="text-sm font-medium text-foreground">Projected Expansion</span>
+                        </div>
+                        <div className="grid grid-cols-3 gap-3 text-sm">
+                          <div>
+                            <div className="text-muted-foreground">Description</div>
+                            <div className="font-medium text-foreground">{alert.projectedExpansion.description}</div>
+                          </div>
+                          <div>
+                            <div className="text-muted-foreground">Timeline</div>
+                            <div className="font-medium text-foreground">{alert.projectedExpansion.timeline}</div>
+                          </div>
+                          <div>
+                            <div className="text-muted-foreground">Additional Load</div>
+                            <div className="font-medium text-status-success">{alert.projectedExpansion.additionalLoad}</div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Load Growth Implications */}
+                    {alert.loadGrowthImplications && (
+                      <div className="bg-status-warning-bg/30 rounded-lg p-3 border border-status-warning/20">
+                        <div className="flex items-center gap-2 mb-2">
+                          <Zap className="h-4 w-4 text-status-warning" />
+                          <span className="text-sm font-medium text-foreground">Load Growth Implications</span>
+                        </div>
+                        <div className="grid grid-cols-3 gap-3 text-sm mb-3">
+                          <div>
+                            <div className="text-muted-foreground">Current Load</div>
+                            <div className="font-medium text-foreground">{alert.loadGrowthImplications.currentLoad}</div>
+                          </div>
+                          <div>
+                            <div className="text-muted-foreground">Projected Load</div>
+                            <div className="font-medium text-foreground">{alert.loadGrowthImplications.projectedLoad}</div>
+                          </div>
+                          <div>
+                            <div className="text-muted-foreground">Growth Rate</div>
+                            <div className="font-medium text-status-warning">{alert.loadGrowthImplications.growthRate}</div>
+                          </div>
+                        </div>
+                        <div>
+                          <div className="text-muted-foreground text-sm mb-1">Infrastructure Needs</div>
+                          <ul className="space-y-1 text-sm text-foreground">
+                            {alert.loadGrowthImplications.infrastructureNeeds.map((need, i) => (
+                              <li key={i} className="flex items-start gap-2">
+                                <span className="text-status-warning">•</span>
+                                {need}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 )}
 
                 {/* Action Buttons */}
-                <div className="flex gap-2 mt-3">
+                <div className="flex flex-wrap gap-2 mt-3">
                   <Button 
                     variant="outline" 
                     size="sm" 
@@ -136,6 +212,15 @@ export const IndustrialAlertsPanel = ({ alerts, customerName }: IndustrialAlerts
                   >
                     <Eye className="h-3 w-3 mr-1" />
                     View Status
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="h-7 text-xs"
+                    onClick={() => handleContact(alert)}
+                  >
+                    <Mail className="h-3 w-3 mr-1" />
+                    Contact
                   </Button>
                   <Button 
                     variant="outline" 
@@ -183,6 +268,14 @@ export const IndustrialAlertsPanel = ({ alerts, customerName }: IndustrialAlerts
         onOpenChange={setSendTeamDialogOpen}
         alert={selectedAlert}
         customerName={customerName}
+      />
+
+      <ContactAlertDialog
+        open={contactDialogOpen}
+        onOpenChange={setContactDialogOpen}
+        alert={selectedAlert}
+        customerEmail={customerEmail}
+        customerPhone={customerPhone}
       />
 
       <CaseCreationDialog
