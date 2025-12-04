@@ -58,31 +58,51 @@ export interface KPIDrilldownData {
   }[];
 }
 
-// Portfolio KPIs - Consolidated to 4 key metrics
+// Portfolio KPIs - Alerts first, then Opportunities
 export const portfolioKPIs: PortfolioKPI[] = [
   {
     id: "revenue",
-    label: "Total Revenue",
+    label: "Total Revenue Managed",
     primaryMetric: "$47.2M",
-    subtext: "143 accounts • YTD",
+    subtext: "143 accounts • YTD Revenue",
     trend: "up",
     status: "good",
     trendValue: "+4.2%",
     drilldownType: "revenue",
   },
   {
-    id: "load",
-    label: "Load Metrics",
+    id: "usage",
+    label: "Total Usage",
     primaryMetric: "892 GWh",
-    subtext: "1.24 GW peak • 72% LF",
+    subtext: "Load Factor: 72.4%",
     trend: "up",
     status: "info",
     trendValue: "+2.8%",
     drilldownType: "usage",
   },
   {
+    id: "demand",
+    label: "Peak Demand Trends",
+    primaryMetric: "1.24 GW",
+    subtext: "Portfolio coincident peak",
+    trend: "up",
+    status: "warning",
+    trendValue: "+8.1%",
+    drilldownType: "demand",
+  },
+  {
+    id: "outages",
+    label: "Outage Frequency",
+    primaryMetric: "12",
+    subtext: "Events in last 30 days",
+    trend: "up",
+    status: "error",
+    trendValue: "+4",
+    drilldownType: "outages",
+  },
+  {
     id: "alerts",
-    label: "Alerts",
+    label: "New Alerts",
     primaryMetric: "4",
     subtext: "Attention needed",
     trend: "up",
@@ -92,9 +112,9 @@ export const portfolioKPIs: PortfolioKPI[] = [
   },
   {
     id: "opportunities",
-    label: "Opportunities",
+    label: "New Opportunities",
     primaryMetric: "6",
-    subtext: "New revenue potential",
+    subtext: "Proactive engagement",
     trend: "up",
     status: "good",
     trendValue: "+2",
