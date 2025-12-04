@@ -26,10 +26,27 @@ export const OverviewTab = ({
   const activeAccount = customer.contractAccounts[0];
   const customerName = `${customer.firstName} ${customer.lastName}`;
 
+  // Convert bill issues to CustomerIssue format and merge with existing issues
+  const billIssues: CustomerIssue[] = (latestBill?.issues || []).map((issue, idx) => ({
+    id: `bill-issue-${idx}`,
+    type: issue.type,
+    severity: issue.severity,
+    title: issue.type.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
+    description: issue.description,
+    evidence: [
+      { label: "View bill details", sourceType: "billing" as const, sourceId: latestBill.id, linkTab: "bills" }
+    ],
+    status: "open" as const,
+    defaultCaseType: issue.type
+  }));
+
+  // Combine all issues - existing customer issues + bill issues
+  const allIssues = [...issues, ...billIssues];
+
   return (
     <div className="space-y-4">
       {/* Priority 1: Issues Panel - Top of page */}
-      <CustomerIssuesPanel issues={issues} onNavigateToTab={onNavigateToTab} />
+      <CustomerIssuesPanel issues={allIssues} onNavigateToTab={onNavigateToTab} />
 
       {/* Priority 2: Program Eligibility */}
       <ProgramEligibilityPanel 
