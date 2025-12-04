@@ -127,16 +127,6 @@ export const simplifiedProgramEligibility: Record<string, SimplifiedProgramEligi
         { fact: "Winter bills 3.2× summer average", linkTab: "bills" },
         { fact: "Resistance heat signature detected", linkTab: "meters" }
       ]
-    },
-    {
-      programId: "PROG002",
-      programName: "Insulation & Air Sealing",
-      estimatedSavings: 420,
-      likelihood: "medium",
-      summary: "Thermal decay patterns suggest potential insulation improvements could reduce heating costs.",
-      supportingFacts: [
-        { fact: "HVAC runs frequently after setpoint reached", linkTab: "meters" }
-      ]
     }
   ],
   "2": [ // Aisha Patel
