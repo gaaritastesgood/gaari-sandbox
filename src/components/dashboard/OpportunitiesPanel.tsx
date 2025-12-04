@@ -24,8 +24,8 @@ const getOpportunityIcon = (type: OpportunityItem["opportunityType"]) => {
       return <TrendingUp className="h-4 w-4" />;
     case "tariff":
       return <DollarSign className="h-4 w-4" />;
-    case "expansion":
-      return <Building2 className="h-4 w-4" />;
+    case "load-growth":
+      return <TrendingUp className="h-4 w-4" />;
     default:
       return <Sparkles className="h-4 w-4" />;
   }
