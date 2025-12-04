@@ -142,6 +142,22 @@ export interface IssueEvidence {
   linkTab: string;
 }
 
+// Consolidated Issue - groups related symptoms into single root cause
+export interface ConsolidatedIssue {
+  id: string;
+  title: string;
+  summary: string;
+  severity: "info" | "warning" | "error";
+  supportingFacts: SupportingFact[];
+  recommendedAction: string;
+  defaultCaseType?: string;
+}
+
+export interface SupportingFact {
+  fact: string;
+  linkTab: string;
+}
+
 // Program Eligibility for Customer
 export interface CustomerProgramEligibility {
   customerId: string;
@@ -158,4 +174,14 @@ export interface EligibilitySource {
   date: string;
   sourceId: string;
   linkTab: string;
+}
+
+// Simplified Program Eligibility for compact display
+export interface SimplifiedProgramEligibility {
+  programId: string;
+  programName: string;
+  estimatedSavings: number;
+  likelihood: "high" | "medium" | "low";
+  summary: string;
+  supportingFacts: SupportingFact[];
 }

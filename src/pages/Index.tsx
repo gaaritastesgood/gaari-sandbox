@@ -130,8 +130,6 @@ const Index = () => {
                         customer={selectedCustomer} 
                         bills={bills} 
                         interactions={interactions}
-                        issues={customerIssues}
-                        eligibility={customerEligibility}
                         onNavigateToTab={handleNavigateToTab}
                       />
                     </TabsContent>
