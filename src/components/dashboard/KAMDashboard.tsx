@@ -29,26 +29,29 @@ export const KAMDashboard = ({ onSelectCustomer, onNavigateToCustomer }: KAMDash
   };
 
   const handleAttentionItemClick = (item: AttentionItem) => {
-    // Navigate to Javier Ortiz profile (demo)
-    const javierCustomer = { id: "1" };
-    onNavigateToCustomer(javierCustomer.id);
+    // Navigate to customer profile
+    onNavigateToCustomer(item.customerId);
     toast.info(`Opening ${item.customerName} profile`, {
       description: item.reason
     });
   };
 
   const handleOpportunityClick = (item: OpportunityItem) => {
-    // Navigate to Javier Ortiz profile (demo)
-    const javierCustomer = { id: "1" };
-    onNavigateToCustomer(javierCustomer.id);
+    // Navigate to customer profile
+    onNavigateToCustomer(item.customerId);
     toast.info(`Opening ${item.customerName} profile`, {
       description: item.opportunityName
     });
   };
 
+  const handleStartProject = (item: OpportunityItem) => {
+    toast.success(`Project initiated for ${item.customerName}`, {
+      description: item.opportunityName
+    });
+  };
+
   const handleDrilldownCustomerClick = (customerId: string) => {
-    // Navigate to Javier Ortiz for demo
-    onNavigateToCustomer("1");
+    onNavigateToCustomer(customerId);
   };
 
   return (
@@ -64,8 +67,8 @@ export const KAMDashboard = ({ onSelectCustomer, onNavigateToCustomer }: KAMDash
         <PortfolioKPICards kpis={portfolioKPIs} onKPIClick={handleKPIClick} />
       </div>
 
-      {/* Main Content - Alerts first, then Opportunities */}
-      <div className="space-y-6">
+      {/* Main Content - Attention & Opportunities */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <AttentionNeededPanel 
           items={attentionItems} 
           onItemClick={handleAttentionItemClick} 
@@ -73,6 +76,7 @@ export const KAMDashboard = ({ onSelectCustomer, onNavigateToCustomer }: KAMDash
         <OpportunitiesPanel 
           items={opportunityItems} 
           onItemClick={handleOpportunityClick}
+          onStartProject={handleStartProject}
         />
       </div>
 
