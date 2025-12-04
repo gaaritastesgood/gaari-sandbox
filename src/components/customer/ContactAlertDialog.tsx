@@ -14,7 +14,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { AttentionItem, categoryConfig, severityConfig } from "@/data/kamDashboardData";
-import { Mail, Phone, Calendar, Copy, Check, TrendingUp, Zap } from "lucide-react";
+import { Mail, Phone, Calendar, Copy, Check } from "lucide-react";
 
 interface ContactAlertDialogProps {
   open: boolean;
@@ -39,9 +39,37 @@ export const ContactAlertDialog = ({
 
   const categoryStyle = categoryConfig[alert.category];
   const severityStyle = severityConfig[alert.severity];
+  const isExpansionAlert = alert.category === "expansion";
 
   const generateEmailTemplate = () => {
-    let template = `Dear ${alert.customerName} Team,
+    if (isExpansionAlert) {
+      return `Dear ${alert.customerName} Team,
+
+I'm reaching out regarding your planned expansion that we've identified in our system.
+
+Expansion Summary:
+- ${alert.reason}
+- Detected: ${alert.detectedAt}
+
+Key Details:
+${alert.quickFacts.map(f => `- ${f.label}: ${f.value}`).join('\n')}
+
+Infrastructure Considerations:
+${alert.evidencePoints.map(p => `- ${p}`).join('\n')}
+
+We'd like to schedule a meeting to discuss:
+1. Your expansion timeline and requirements
+2. Infrastructure planning and upgrades needed
+3. Service level commitments during and after expansion
+4. Coordination with our engineering team
+
+Please let me know your availability for a planning discussion.
+
+Best regards,
+Key Account Manager`;
+    }
+
+    return `Dear ${alert.customerName} Team,
 
 I'm reaching out regarding the recent ${alert.category} event that affected your operations.
 
@@ -50,39 +78,17 @@ Alert Summary:
 - Detected: ${alert.detectedAt}
 - Severity: ${severityStyle.label}
 
-We understand the impact this has had on your operations and want to ensure we're addressing your concerns promptly.`;
-
-    if (alert.projectedExpansion) {
-      template += `
-
-Regarding Your Planned Expansion:
-We're aware of your ${alert.projectedExpansion.description} planned for ${alert.projectedExpansion.timeline}, which will add ${alert.projectedExpansion.additionalLoad} to your load.`;
-    }
-
-    if (alert.loadGrowthImplications) {
-      template += `
-
-Load Growth Considerations:
-- Current Load: ${alert.loadGrowthImplications.currentLoad}
-- Projected Load: ${alert.loadGrowthImplications.projectedLoad}
-- Growth Rate: ${alert.loadGrowthImplications.growthRate}
-
-We'd like to discuss infrastructure planning to support your growth and ensure reliability.`;
-    }
-
-    template += `
+We understand the impact this has had on your operations and want to ensure we're addressing your concerns promptly.
 
 I'd like to schedule a call to discuss:
 1. Root cause analysis of the recent event
 2. Preventive measures being implemented
-3. Infrastructure planning for your upcoming needs
+3. Service level commitments going forward
 
 Please let me know your availability.
 
 Best regards,
 Key Account Manager`;
-
-    return template;
   };
 
   const handleSendEmail = () => {
@@ -120,10 +126,10 @@ Key Account Manager`;
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Mail className="h-5 w-5" />
-            Contact About Alert
+            Contact About {isExpansionAlert ? "Expansion" : "Alert"}
           </DialogTitle>
           <DialogDescription>
-            Reach out to {alert.customerName} regarding this alert
+            Reach out to {alert.customerName} regarding this {isExpansionAlert ? "expansion" : "alert"}
           </DialogDescription>
         </DialogHeader>
 
@@ -139,33 +145,15 @@ Key Account Manager`;
           </div>
           <div className="font-medium text-foreground text-sm">{alert.reason}</div>
           
-          {/* Expansion & Load Growth Summary */}
-          {(alert.projectedExpansion || alert.loadGrowthImplications) && (
-            <div className="mt-3 pt-3 border-t border-border space-y-2">
-              {alert.projectedExpansion && (
-                <div className="flex items-start gap-2 text-sm">
-                  <TrendingUp className="h-4 w-4 text-status-success mt-0.5" />
-                  <div>
-                    <span className="font-medium text-foreground">Expansion: </span>
-                    <span className="text-muted-foreground">
-                      {alert.projectedExpansion.description} ({alert.projectedExpansion.timeline}) - {alert.projectedExpansion.additionalLoad}
-                    </span>
-                  </div>
-                </div>
-              )}
-              {alert.loadGrowthImplications && (
-                <div className="flex items-start gap-2 text-sm">
-                  <Zap className="h-4 w-4 text-status-warning mt-0.5" />
-                  <div>
-                    <span className="font-medium text-foreground">Load Growth: </span>
-                    <span className="text-muted-foreground">
-                      {alert.loadGrowthImplications.currentLoad} → {alert.loadGrowthImplications.projectedLoad} ({alert.loadGrowthImplications.growthRate})
-                    </span>
-                  </div>
-                </div>
-              )}
-            </div>
-          )}
+          {/* Quick Facts */}
+          <div className="flex flex-wrap gap-3 mt-2 text-sm">
+            {alert.quickFacts.map((fact, i) => (
+              <div key={i}>
+                <span className="text-muted-foreground">{fact.label}: </span>
+                <span className="font-medium text-foreground">{fact.value}</span>
+              </div>
+            ))}
+          </div>
         </div>
 
         <Tabs defaultValue="email" className="w-full">
@@ -236,20 +224,25 @@ Key Account Manager`;
 
           <TabsContent value="meeting" className="space-y-3">
             <div className="text-sm text-muted-foreground">
-              Schedule a meeting with {alert.customerName} to discuss the alert and expansion planning.
+              Schedule a meeting with {alert.customerName} to discuss {isExpansionAlert ? "expansion planning" : "the alert"}.
             </div>
             <div className="bg-muted/30 rounded-lg p-3 border border-border text-sm">
               <div className="font-medium mb-2">Suggested Agenda:</div>
               <ul className="space-y-1 text-muted-foreground">
-                <li>• Root cause analysis of recent {alert.category} event</li>
-                <li>• Preventive measures and reliability improvements</li>
-                {alert.projectedExpansion && (
-                  <li>• Infrastructure planning for {alert.projectedExpansion.timeline} expansion</li>
+                {isExpansionAlert ? (
+                  <>
+                    <li>• Review expansion timeline and requirements</li>
+                    <li>• Infrastructure planning and upgrades needed</li>
+                    <li>• Coordination with engineering team</li>
+                    <li>• Service level commitments</li>
+                  </>
+                ) : (
+                  <>
+                    <li>• Root cause analysis of recent {alert.category} event</li>
+                    <li>• Preventive measures and reliability improvements</li>
+                    <li>• Service level commitments and next steps</li>
+                  </>
                 )}
-                {alert.loadGrowthImplications && (
-                  <li>• Load growth support: {alert.loadGrowthImplications.currentLoad} → {alert.loadGrowthImplications.projectedLoad}</li>
-                )}
-                <li>• Service level commitments and next steps</li>
               </ul>
             </div>
             <DialogFooter>
