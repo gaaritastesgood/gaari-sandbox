@@ -35,7 +35,7 @@ export interface OpportunityItem {
   customerId: string;
   customerName: string;
   accountId: string;
-  opportunityType: "efficiency" | "demand-response" | "electrification" | "solar" | "tariff" | "expansion";
+  opportunityType: "efficiency" | "demand-response" | "electrification" | "solar" | "tariff" | "load-growth";
   opportunityName: string;
   estimatedValue: string;
   estimatedSavings?: string;
@@ -103,7 +103,7 @@ export const portfolioKPIs: PortfolioKPI[] = [
   {
     id: "alerts",
     label: "New Alerts",
-    primaryMetric: "2",
+    primaryMetric: "4",
     subtext: "Attention needed",
     trend: "up",
     status: "error",
@@ -172,24 +172,72 @@ export const attentionItems: AttentionItem[] = [
       { label: "SLA Risk", value: "High" },
     ],
   },
+  {
+    id: "att-003",
+    customerId: "11",
+    customerName: "Patriot Foods Manufacturing",
+    accountId: "9010001234",
+    industry: "Industrial",
+    annualRevenue: "$2.4M",
+    reason: "Steady Load Growth Detected - +18% Over 6 Months",
+    category: "load",
+    severity: "medium",
+    confidence: 88,
+    evidencePoints: [
+      "Meter data shows 18% load increase since June",
+      "Peak demand trending upward month-over-month",
+      "Baseload has increased from 3.2 MW to 3.8 MW",
+      "Customer mentioned potential growth in Oct call",
+    ],
+    detectedAt: "1 week ago",
+    quickFacts: [
+      { label: "Current Load", value: "4.2 MW" },
+      { label: "6-Month Change", value: "+18%" },
+      { label: "Trend", value: "Growing" },
+    ],
+  },
+  {
+    id: "att-004",
+    customerId: "12",
+    customerName: "Silverline Data Center Group",
+    accountId: "9010002345",
+    industry: "Industrial",
+    annualRevenue: "$11.3M",
+    reason: "Significant Load Growth Pattern - +12% YTD",
+    category: "load",
+    severity: "high",
+    confidence: 91,
+    evidencePoints: [
+      "Meter data shows consistent monthly increases",
+      "Peak demand up 12% year-to-date",
+      "Customer mentioned future capacity needs in Sept call",
+      "Infrastructure planning may be needed",
+    ],
+    detectedAt: "3 days ago",
+    quickFacts: [
+      { label: "Current Load", value: "21.0 MW" },
+      { label: "YTD Change", value: "+12%" },
+      { label: "Trend", value: "Growing" },
+    ],
+  },
 ];
 
-// Opportunities - Using mockCustomers IDs (Expansion opportunities first)
+// Opportunities - Using mockCustomers IDs (Load growth opportunities first, then others)
 export const opportunityItems: OpportunityItem[] = [
   {
     id: "opp-006",
     customerId: "11",
     customerName: "Patriot Foods Manufacturing",
     accountId: "9010001234",
-    opportunityType: "expansion",
-    opportunityName: "Production Line Expansion - +1.8 MW By Q2 2025",
-    estimatedValue: "$420K new annual revenue",
+    opportunityType: "load-growth",
+    opportunityName: "Proactive Capacity Planning - Load Growth Detected",
+    estimatedValue: "$420K potential new annual revenue",
     confidence: 88,
     evidence: [
-      "Expansion permits filed with city planning",
-      "Additional 1.8 MW load expected",
-      "Current load: 4.2 MW → Projected: 6.0 MW (+43%)",
-      "Infrastructure upgrade needed",
+      "Meter data shows 18% load increase over 6 months",
+      "Peak demand trending upward consistently",
+      "Customer mentioned operational growth in Oct call",
+      "May benefit from infrastructure review",
     ],
     status: "reviewing",
   },
@@ -198,15 +246,15 @@ export const opportunityItems: OpportunityItem[] = [
     customerId: "12",
     customerName: "Silverline Data Center Group",
     accountId: "9010002345",
-    opportunityType: "expansion",
-    opportunityName: "Phase 2 Data Hall Expansion - +8.5 MW By Q4 2025",
-    estimatedValue: "$1.8M new annual revenue",
-    confidence: 92,
+    opportunityType: "load-growth",
+    opportunityName: "Capacity Expansion Discussion - +12% YTD Growth",
+    estimatedValue: "$1.8M potential new annual revenue",
+    confidence: 91,
     evidence: [
-      "Phase 2 data hall construction approved",
-      "Additional 8.5 MW load expected",
-      "Current load: 21.0 MW → Projected: 29.5 MW (+40%)",
-      "New 115kV substation required",
+      "Meter data shows 12% load growth year-to-date",
+      "Monthly consumption increasing consistently",
+      "Customer mentioned future capacity needs in Sept call",
+      "Proactive infrastructure planning recommended",
     ],
     status: "reviewing",
   },
@@ -221,10 +269,10 @@ export const opportunityItems: OpportunityItem[] = [
     estimatedSavings: "$245K participation incentive",
     confidence: 91,
     evidence: [
-      "4.2 MW curtailable load identified",
-      "Production schedule flexibility noted",
-      "Backup generation available",
-      "Previous interest in DR programs",
+      "4.2 MW curtailable load identified from meter data",
+      "Customer mentioned flexible production windows in Oct call",
+      "On-site generation noted in account setup records",
+      "Previous interest in DR programs logged in CRM",
     ],
     status: "new",
   },
@@ -239,9 +287,9 @@ export const opportunityItems: OpportunityItem[] = [
     estimatedSavings: "$52K annual energy savings",
     confidence: 87,
     evidence: [
-      "High thermal load detected",
-      "Heat waste identified in audit",
-      "ROI under 3 years",
+      "High thermal load signature detected in meter data",
+      "High baseload suggests waste heat opportunity",
+      "ROI under 3 years based on usage patterns",
       "Rebate eligible up to $45K",
     ],
     status: "new",
@@ -257,9 +305,9 @@ export const opportunityItems: OpportunityItem[] = [
     estimatedSavings: "$890K annual energy savings",
     confidence: 94,
     evidence: [
-      "PUE currently at 1.8 - industry target 1.4",
-      "Hot/cold aisle containment opportunity",
-      "Free cooling potential identified",
+      "High cooling load ratio detected in meter data",
+      "Cooling-to-compute power ratio indicates PUE ~1.8",
+      "Customer discussed efficiency goals in Q2 review",
       "AI-driven cooling optimization eligible",
     ],
     status: "reviewing",
@@ -275,9 +323,9 @@ export const opportunityItems: OpportunityItem[] = [
     estimatedSavings: "$1.2M annual bill reduction",
     confidence: 88,
     evidence: [
-      "Large available roof and land area",
-      "Corporate sustainability mandate",
-      "Peak demand charges significant",
+      "Customer mentioned sustainability goals in Q3 review",
+      "Peak demand charges significant per billing data",
+      "High daytime load profile - good solar alignment",
       "Tax incentives maximize ROI",
     ],
     status: "new",
@@ -293,9 +341,9 @@ export const opportunityItems: OpportunityItem[] = [
     estimatedSavings: "$340K annual savings for customer",
     confidence: 96,
     evidence: [
-      "Load factor exceeds 85%",
+      "Load factor exceeds 85% per meter data",
       "Qualifies for industrial high-load rate",
-      "Current rate suboptimal",
+      "Current rate suboptimal based on usage analysis",
       "No infrastructure changes needed",
     ],
     status: "new",
@@ -379,25 +427,27 @@ export const kpiDrilldownData: Record<string, KPIDrilldownData> = {
     description: "All active alerts requiring attention",
     chartData: [
       { name: "Critical", value: 2 },
-      { name: "High", value: 0 },
-      { name: "Medium", value: 0 },
+      { name: "High", value: 1 },
+      { name: "Medium", value: 1 },
     ],
     items: [
       { id: "1", customerId: "11", customerName: "Patriot Foods Manufacturing", metric: "Critical", detail: "6.2hr outage • $180K production loss", status: "error" },
       { id: "2", customerId: "12", customerName: "Silverline Data Center Group", metric: "Critical", detail: "3 outage events • SLA compliance at risk", status: "error" },
+      { id: "3", customerId: "12", customerName: "Silverline Data Center Group", metric: "High", detail: "Load growth +12% YTD • Capacity planning needed", status: "warning" },
+      { id: "4", customerId: "11", customerName: "Patriot Foods Manufacturing", metric: "Medium", detail: "Load growth +18% over 6 months • Monitor trend", status: "info" },
     ],
   },
   opportunities: {
-    title: "New Opportunities",
-    description: "Proactive engagement opportunities for your portfolio",
+    title: "Potential Program & Service Opportunities",
+    description: "Proactive engagement opportunities based on meter data and customer conversations",
     chartData: [],
     items: [
-      { id: "1", customerId: "12", customerName: "Silverline Data Center Group", metric: "Cooling System Optimization", detail: "$320K project • $890K/yr savings • PUE improvement", status: "good" },
-      { id: "2", customerId: "12", customerName: "Silverline Data Center Group", metric: "On-Site Solar + Battery", detail: "$2.4M project • $1.2M/yr savings • Sustainability", status: "good" },
-      { id: "3", customerId: "11", customerName: "Patriot Foods Manufacturing", metric: "Industrial Demand Response", detail: "$245K/yr incentive • 4.2 MW curtailable", status: "good" },
-      { id: "4", customerId: "11", customerName: "Patriot Foods Manufacturing", metric: "Process Heat Recovery", detail: "$180K project • $52K/yr savings • ROI < 3yr", status: "good" },
-      { id: "5", customerId: "12", customerName: "Silverline Data Center Group", metric: "High Load Factor Rate", detail: "Revenue neutral • $340K/yr customer savings", status: "info" },
-      { id: "6", customerId: "11", customerName: "Patriot Foods Manufacturing", metric: "Production Line Expansion", detail: "$420K new revenue • 1.8 MW additional load", status: "info" },
+      { id: "1", customerId: "12", customerName: "Silverline Data Center Group", metric: "Load Growth Capacity Planning", detail: "+12% YTD growth • $1.8M potential revenue", status: "good" },
+      { id: "2", customerId: "11", customerName: "Patriot Foods Manufacturing", metric: "Load Growth Capacity Planning", detail: "+18% 6-month growth • $420K potential revenue", status: "good" },
+      { id: "3", customerId: "12", customerName: "Silverline Data Center Group", metric: "Cooling System Optimization", detail: "$320K project • $890K/yr savings • High cooling ratio", status: "good" },
+      { id: "4", customerId: "12", customerName: "Silverline Data Center Group", metric: "On-Site Solar + Battery", detail: "$2.4M project • Customer sustainability goals", status: "good" },
+      { id: "5", customerId: "11", customerName: "Patriot Foods Manufacturing", metric: "Industrial Demand Response", detail: "$245K/yr incentive • 4.2 MW curtailable load", status: "good" },
+      { id: "6", customerId: "11", customerName: "Patriot Foods Manufacturing", metric: "Process Heat Recovery", detail: "$180K project • High thermal signature", status: "good" },
     ],
   },
 };
@@ -419,7 +469,7 @@ export const opportunityTypeConfig: Record<OpportunityItem["opportunityType"], {
   electrification: { label: "Electrification", color: "text-primary", bgColor: "bg-primary/10" },
   solar: { label: "Solar/Storage", color: "text-status-warning", bgColor: "bg-status-warning-bg" },
   tariff: { label: "Tariff Optimization", color: "text-status-info", bgColor: "bg-status-info-bg" },
-  expansion: { label: "Expansion", color: "text-status-success", bgColor: "bg-status-success-bg" },
+  "load-growth": { label: "Load Growth", color: "text-status-info", bgColor: "bg-status-info-bg" },
 };
 
 export const severityConfig: Record<AttentionItem["severity"], { label: string; color: string; bgColor: string }> = {
