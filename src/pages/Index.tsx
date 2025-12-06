@@ -78,7 +78,7 @@ const Index = () => {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <h1 className="text-xl font-semibold text-header-foreground tracking-tight">
-                Gaari Account Manager Pro
+                Gaari Customer Intelligence
               </h1>
             </div>
             <div className="flex items-center gap-3">
