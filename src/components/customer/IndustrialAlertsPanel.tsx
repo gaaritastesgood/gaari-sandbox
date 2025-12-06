@@ -2,10 +2,9 @@ import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { AlertTriangle, Eye, Users, CheckCircle, ChevronDown, ChevronUp, Mail } from "lucide-react";
+import { AlertTriangle, Eye, CheckCircle, ChevronDown, ChevronUp, Mail } from "lucide-react";
 import { AttentionItem, categoryConfig, severityConfig } from "@/data/kamDashboardData";
 import { AlertStatusDialog } from "./AlertStatusDialog";
-import { SendTeamDialog } from "./SendTeamDialog";
 import { ContactAlertDialog } from "./ContactAlertDialog";
 
 interface IndustrialAlertsPanelProps {
@@ -23,7 +22,6 @@ export const IndustrialAlertsPanel = ({
 }: IndustrialAlertsPanelProps) => {
   const [expandedAlert, setExpandedAlert] = useState<string | null>(null);
   const [statusDialogOpen, setStatusDialogOpen] = useState(false);
-  const [sendTeamDialogOpen, setSendTeamDialogOpen] = useState(false);
   const [contactDialogOpen, setContactDialogOpen] = useState(false);
   const [selectedAlert, setSelectedAlert] = useState<AttentionItem | null>(null);
   const [resolvedAlerts, setResolvedAlerts] = useState<Set<string>>(new Set());
@@ -42,11 +40,6 @@ export const IndustrialAlertsPanel = ({
   const handleViewStatus = (alert: AttentionItem) => {
     setSelectedAlert(alert);
     setStatusDialogOpen(true);
-  };
-
-  const handleSendTeam = (alert: AttentionItem) => {
-    setSelectedAlert(alert);
-    setSendTeamDialogOpen(true);
   };
 
   const handleContact = (alert: AttentionItem) => {
@@ -144,15 +137,6 @@ export const IndustrialAlertsPanel = ({
                     Contact
                   </Button>
                   <Button 
-                    variant="outline" 
-                    size="sm" 
-                    className="h-7 text-xs"
-                    onClick={() => handleSendTeam(alert)}
-                  >
-                    <Users className="h-3 w-3 mr-1" />
-                    Send Team
-                  </Button>
-                  <Button 
                     variant="secondary" 
                     size="sm" 
                     className="h-7 text-xs"
@@ -175,12 +159,6 @@ export const IndustrialAlertsPanel = ({
         alert={selectedAlert}
       />
       
-      <SendTeamDialog
-        open={sendTeamDialogOpen}
-        onOpenChange={setSendTeamDialogOpen}
-        alert={selectedAlert}
-        customerName={customerName}
-      />
 
       <ContactAlertDialog
         open={contactDialogOpen}
