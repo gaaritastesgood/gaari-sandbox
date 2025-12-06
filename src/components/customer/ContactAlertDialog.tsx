@@ -69,6 +69,42 @@ Best regards,
 Key Account Manager`;
     }
 
+    const isOutageAlert = alert.category === "outage";
+
+    if (isOutageAlert) {
+      return `Dear ${alert.customerName} Team,
+
+I'm reaching out regarding the recent outage event that affected your operations.
+
+Alert Summary:
+- Issue: ${alert.reason}
+- Detected: ${alert.detectedAt}
+- Severity: ${severityStyle.label}
+
+We understand the impact this has had on your operations and want to confirm the following details:
+
+1. SCOPE OF OUTAGE
+   - Affected location(s) and duration
+   - Systems/equipment impacted
+
+2. CRITICAL LOADS IMPACTED
+   - Which critical operations were affected?
+   - Any production or revenue impact?
+
+3. BACKUP SYSTEMS ACTIVATION
+   - Did generators/backup systems activate as expected?
+   - Any issues with backup power transition?
+
+4. SAFETY ISSUES
+   - Were there any safety concerns or incidents onsite?
+   - Any personnel or equipment safety issues to report?
+
+Please reply with any details you can provide, and I'd like to schedule a call to discuss root cause analysis and preventive measures going forward.
+
+Best regards,
+Key Account Manager`;
+    }
+
     return `Dear ${alert.customerName} Team,
 
 I'm reaching out regarding the recent ${alert.category} event that affected your operations.
