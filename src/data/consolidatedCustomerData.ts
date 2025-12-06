@@ -112,15 +112,15 @@ export const consolidatedCustomerIssues: Record<string, ConsolidatedIssue[]> = {
       defaultCaseType: "meter_access"
     }
   ],
-  "11": [ // Patriot Foods Manufacturing - outage
+  "11": [ // Giant Food - outage
     {
       id: "CONS011",
-      title: "Extended Outage - Production Impact",
-      summary: "6.2 hour service interruption affecting production line operations with significant financial impact.",
+      title: "Outage at Chestnut Street Location",
+      summary: "2 hour service interruption at Chestnut Street location with $100K operational loss.",
       severity: "error",
       supportingFacts: [
-        { fact: "Outage duration: 6.2 hours on Dec 2", linkTab: "meters" },
-        { fact: "Production loss estimated at $180K", linkTab: "bills" },
+        { fact: "Outage duration: 2 hours at Chestnut Street", linkTab: "meters" },
+        { fact: "Operational loss estimated at $100K", linkTab: "bills" },
         { fact: "Emergency backup generation deployed", linkTab: "interactions" }
       ],
       recommendedAction: "Review outage report and discuss reliability improvements.",
