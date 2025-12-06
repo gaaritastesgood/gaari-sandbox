@@ -12,9 +12,10 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
+import { Card } from "@/components/ui/card";
 import { toast } from "sonner";
 import { AttentionItem, categoryConfig, severityConfig } from "@/data/kamDashboardData";
-import { Mail, Phone, Calendar, Copy, Check } from "lucide-react";
+import { Mail, Phone, Calendar, Copy, Check, User, AlertTriangle, Clock, DollarSign } from "lucide-react";
 
 interface ContactAlertDialogProps {
   open: boolean;
@@ -23,6 +24,15 @@ interface ContactAlertDialogProps {
   customerEmail?: string;
   customerPhone?: string;
 }
+
+// Facility manager contact info
+const facilityManagerContact = {
+  name: "Marcus Chen",
+  title: "Facility Manager",
+  phone: "(443) 555-0187",
+  email: "m.chen@giantfood.com",
+  directLine: true,
+};
 
 export const ContactAlertDialog = ({
   open,
@@ -156,22 +166,132 @@ Key Account Manager`;
           </div>
         </div>
 
-        <Tabs defaultValue="email" className="w-full">
+        <Tabs defaultValue="call" className="w-full">
           <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="email" className="flex items-center gap-1">
-              <Mail className="h-3 w-3" /> Email
-            </TabsTrigger>
             <TabsTrigger value="call" className="flex items-center gap-1">
               <Phone className="h-3 w-3" /> Call
+            </TabsTrigger>
+            <TabsTrigger value="email" className="flex items-center gap-1">
+              <Mail className="h-3 w-3" /> Email
             </TabsTrigger>
             <TabsTrigger value="meeting" className="flex items-center gap-1">
               <Calendar className="h-3 w-3" /> Meeting
             </TabsTrigger>
           </TabsList>
 
+          <TabsContent value="call" className="space-y-3">
+            {/* Facility Manager Contact */}
+            <Card className="p-3 border-primary/30 bg-primary/5">
+              <div className="flex items-center gap-2 mb-2">
+                <div className="h-8 w-8 rounded-full bg-primary/20 flex items-center justify-center">
+                  <User className="h-4 w-4 text-primary" />
+                </div>
+                <div>
+                  <div className="font-medium text-foreground">{facilityManagerContact.name}</div>
+                  <div className="text-xs text-muted-foreground">{facilityManagerContact.title}</div>
+                </div>
+              </div>
+              <div className="text-sm">
+                <span className="text-muted-foreground">Direct Line: </span>
+                <span className="font-medium text-foreground">{facilityManagerContact.phone}</span>
+              </div>
+            </Card>
+
+            {/* Event Briefing Notes */}
+            <div className="space-y-2">
+              <Label className="flex items-center gap-1">
+                <AlertTriangle className="h-3 w-3 text-status-error" />
+                Event Briefing
+              </Label>
+              <Card className="p-3 bg-muted/50 text-sm space-y-3">
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="flex items-center gap-2">
+                    <Clock className="h-4 w-4 text-muted-foreground" />
+                    <div>
+                      <div className="text-xs text-muted-foreground">Duration</div>
+                      <div className="font-medium text-foreground">20 minutes</div>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <DollarSign className="h-4 w-4 text-status-error" />
+                    <div>
+                      <div className="text-xs text-muted-foreground">Est. Impact</div>
+                      <div className="font-medium text-status-error">$50K</div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="border-t border-border pt-2">
+                  <div className="text-xs text-muted-foreground mb-1">What We Know</div>
+                  <ul className="space-y-1 text-foreground">
+                    <li className="flex items-start gap-2">
+                      <span className="text-muted-foreground">•</span>
+                      Power loss at Chestnut Street distribution center
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-muted-foreground">•</span>
+                      Critical refrigeration systems impacted
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-muted-foreground">•</span>
+                      Backup generators activated successfully
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-muted-foreground">•</span>
+                      Crews dispatched, investigating root cause
+                    </li>
+                  </ul>
+                </div>
+
+                <div className="border-t border-border pt-2">
+                  <div className="text-xs text-muted-foreground mb-1">Key Talking Points</div>
+                  <ul className="space-y-1 text-foreground">
+                    <li className="flex items-start gap-2">
+                      <span className="text-primary">→</span>
+                      Acknowledge impact to their operations
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-primary">→</span>
+                      Confirm backup systems are holding
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-primary">→</span>
+                      Provide estimated restoration timeline
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-primary">→</span>
+                      Offer to schedule post-incident review
+                    </li>
+                  </ul>
+                </div>
+              </Card>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="call-notes">Call Notes</Label>
+              <Textarea
+                id="call-notes"
+                placeholder="Enter notes from your call..."
+                value={callNotes}
+                onChange={(e) => setCallNotes(e.target.value)}
+                rows={4}
+              />
+            </div>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => onOpenChange(false)}>Cancel</Button>
+              <Button variant="outline" asChild>
+                <a href={`tel:${facilityManagerContact.phone}`}>
+                  <Phone className="h-4 w-4 mr-2" />
+                  Call Now
+                </a>
+              </Button>
+              <Button onClick={handleLogCall}>Log Call</Button>
+            </DialogFooter>
+          </TabsContent>
+
           <TabsContent value="email" className="space-y-3">
             <div className="text-sm text-muted-foreground">
-              To: {customerEmail}
+              To: {facilityManagerContact.email}
             </div>
             <div className="space-y-2">
               <div className="flex items-center justify-between">
@@ -198,27 +318,6 @@ Key Account Manager`;
             <DialogFooter>
               <Button variant="outline" onClick={() => onOpenChange(false)}>Cancel</Button>
               <Button onClick={handleSendEmail}>Send Email</Button>
-            </DialogFooter>
-          </TabsContent>
-
-          <TabsContent value="call" className="space-y-3">
-            <div className="text-sm">
-              <span className="text-muted-foreground">Phone: </span>
-              <span className="font-medium text-foreground">{customerPhone}</span>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="call-notes">Call Notes</Label>
-              <Textarea
-                id="call-notes"
-                placeholder="Enter notes from your call..."
-                value={callNotes}
-                onChange={(e) => setCallNotes(e.target.value)}
-                rows={6}
-              />
-            </div>
-            <DialogFooter>
-              <Button variant="outline" onClick={() => onOpenChange(false)}>Cancel</Button>
-              <Button onClick={handleLogCall}>Log Call</Button>
             </DialogFooter>
           </TabsContent>
 
