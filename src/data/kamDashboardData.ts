@@ -127,25 +127,25 @@ export const attentionItems: AttentionItem[] = [
   {
     id: "att-001",
     customerId: "11",
-    customerName: "Patriot Foods Manufacturing",
+    customerName: "Giant Food",
     accountId: "9010001234",
     industry: "Industrial",
     annualRevenue: "$2.4M",
-    reason: "Production Line Outage - 6.2 Hours, $180K Loss",
+    reason: "Outage at Chestnut Street Location - 2 Hours, $100K Loss",
     category: "outage",
     severity: "critical",
     confidence: 96,
     evidencePoints: [
-      "Outage duration: 6.2 hours on 12/02",
-      "Production line downtime estimated at $180K loss",
-      "Critical manufacturing equipment affected",
+      "Outage duration: 2 hours at Chestnut Street location",
+      "Estimated loss: $100K due to operational downtime",
+      "Critical refrigeration equipment affected",
       "Emergency backup generation deployed",
     ],
     detectedAt: "2 hours ago",
     quickFacts: [
       { label: "Peak Demand", value: "4.2 MW" },
       { label: "Monthly Bill", value: "$287K" },
-      { label: "Production Loss", value: "$180K" },
+      { label: "Loss", value: "$100K" },
     ],
   },
   {
@@ -175,7 +175,7 @@ export const attentionItems: AttentionItem[] = [
   {
     id: "att-003",
     customerId: "11",
-    customerName: "Patriot Foods Manufacturing",
+    customerName: "Giant Food",
     accountId: "9010001234",
     industry: "Industrial",
     annualRevenue: "$2.4M",
@@ -227,7 +227,7 @@ export const opportunityItems: OpportunityItem[] = [
   {
     id: "opp-006",
     customerId: "11",
-    customerName: "Patriot Foods Manufacturing",
+    customerName: "Giant Food",
     accountId: "9010001234",
     opportunityType: "load-growth",
     opportunityName: "Proactive Capacity Planning - Load Growth Detected",
@@ -261,7 +261,7 @@ export const opportunityItems: OpportunityItem[] = [
   {
     id: "opp-001",
     customerId: "11",
-    customerName: "Patriot Foods Manufacturing",
+    customerName: "Giant Food",
     accountId: "9010001234",
     opportunityType: "demand-response",
     opportunityName: "Industrial Demand Response Program",
@@ -279,7 +279,7 @@ export const opportunityItems: OpportunityItem[] = [
   {
     id: "opp-002",
     customerId: "11",
-    customerName: "Patriot Foods Manufacturing",
+    customerName: "Giant Food",
     accountId: "9010001234",
     opportunityType: "efficiency",
     opportunityName: "Process Heat Recovery System",
@@ -365,7 +365,7 @@ export const kpiDrilldownData: Record<string, KPIDrilldownData> = {
     ],
     items: [
       { id: "1", customerId: "12", customerName: "Silverline Data Center Group", metric: "$11.3M", detail: "Largest account • +12% YoY", status: "good" },
-      { id: "2", customerId: "11", customerName: "Patriot Foods Manufacturing", metric: "$2.4M", detail: "Expansion planned Q2 2025", status: "good" },
+      { id: "2", customerId: "11", customerName: "Giant Food", metric: "$2.4M", detail: "Expansion planned Q2 2025", status: "good" },
       { id: "3", customerId: "13", customerName: "Riverside Logistics & Warehousing", metric: "$1.8M", detail: "Stable account", status: "good" },
       { id: "4", customerId: "7", customerName: "Kai Thompson", metric: "$49.5K", detail: "Load growth opportunity", status: "info" },
     ],
@@ -383,7 +383,7 @@ export const kpiDrilldownData: Record<string, KPIDrilldownData> = {
     ],
     items: [
       { id: "1", customerId: "12", customerName: "Silverline Data Center Group", metric: "892 GWh", detail: "Load Factor: 91% • Excellent", status: "good" },
-      { id: "2", customerId: "11", customerName: "Patriot Foods Manufacturing", metric: "245 GWh", detail: "Load Factor: 72% • Opportunity", status: "warning" },
+      { id: "2", customerId: "11", customerName: "Giant Food", metric: "245 GWh", detail: "Load Factor: 72% • Opportunity", status: "warning" },
       { id: "3", customerId: "13", customerName: "Riverside Logistics & Warehousing", metric: "156 GWh", detail: "Load Factor: 68% • DR candidate", status: "info" },
       { id: "4", customerId: "7", customerName: "Kai Thompson", metric: "712 kWh", detail: "Usage growing +8.4%", status: "good" },
     ],
@@ -401,7 +401,7 @@ export const kpiDrilldownData: Record<string, KPIDrilldownData> = {
     ],
     items: [
       { id: "1", customerId: "12", customerName: "Silverline Data Center Group", metric: "21.0 MW", detail: "Peak increasing +15% YoY", status: "warning" },
-      { id: "2", customerId: "11", customerName: "Patriot Foods Manufacturing", metric: "4.2 MW", detail: "Peak during production hours", status: "good" },
+      { id: "2", customerId: "11", customerName: "Giant Food", metric: "4.2 MW", detail: "Peak during production hours", status: "good" },
       { id: "3", customerId: "13", customerName: "Riverside Logistics & Warehousing", metric: "2.8 MW", detail: "Curtailable load identified", status: "good" },
       { id: "4", customerId: "7", customerName: "Kai Thompson", metric: "85 kW", detail: "Demand spike detected", status: "warning" },
     ],
@@ -416,7 +416,7 @@ export const kpiDrilldownData: Record<string, KPIDrilldownData> = {
       { name: "Week 4", value: 3 },
     ],
     items: [
-      { id: "1", customerId: "11", customerName: "Patriot Foods Manufacturing", metric: "6.2 hrs", detail: "Production impact • $180K loss • Dec 2", status: "error" },
+      { id: "1", customerId: "11", customerName: "Giant Food", metric: "2 hrs", detail: "Chestnut Street location • $100K loss • Dec 2", status: "error" },
       { id: "2", customerId: "12", customerName: "Silverline Data Center Group", metric: "3 events", detail: "SLA at risk • UPS activated • Past 14 days", status: "error" },
       { id: "3", customerId: "13", customerName: "Riverside Logistics & Warehousing", metric: "2.1 hrs", detail: "Cold storage affected • Nov 28", status: "warning" },
       { id: "4", customerId: "7", customerName: "Kai Thompson", metric: "45 min", detail: "Business affected • Nov 30", status: "warning" },
@@ -431,10 +431,10 @@ export const kpiDrilldownData: Record<string, KPIDrilldownData> = {
       { name: "Medium", value: 1 },
     ],
     items: [
-      { id: "1", customerId: "11", customerName: "Patriot Foods Manufacturing", metric: "Critical", detail: "6.2hr outage • $180K production loss", status: "error" },
+      { id: "1", customerId: "11", customerName: "Giant Food", metric: "Critical", detail: "2hr outage at Chestnut Street • $100K loss", status: "error" },
       { id: "2", customerId: "12", customerName: "Silverline Data Center Group", metric: "Critical", detail: "3 outage events • SLA compliance at risk", status: "error" },
       { id: "3", customerId: "12", customerName: "Silverline Data Center Group", metric: "High", detail: "Load growth +12% YTD • Capacity planning needed", status: "warning" },
-      { id: "4", customerId: "11", customerName: "Patriot Foods Manufacturing", metric: "Medium", detail: "Load growth +18% over 6 months • Monitor trend", status: "info" },
+      { id: "4", customerId: "11", customerName: "Giant Food", metric: "Medium", detail: "Load growth +18% over 6 months • Monitor trend", status: "info" },
     ],
   },
   opportunities: {
@@ -443,11 +443,11 @@ export const kpiDrilldownData: Record<string, KPIDrilldownData> = {
     chartData: [],
     items: [
       { id: "1", customerId: "12", customerName: "Silverline Data Center Group", metric: "Load Growth Capacity Planning", detail: "+12% YTD growth • $1.8M potential revenue", status: "good" },
-      { id: "2", customerId: "11", customerName: "Patriot Foods Manufacturing", metric: "Load Growth Capacity Planning", detail: "+18% 6-month growth • $420K potential revenue", status: "good" },
+      { id: "2", customerId: "11", customerName: "Giant Food", metric: "Load Growth Capacity Planning", detail: "+18% 6-month growth • $420K potential revenue", status: "good" },
       { id: "3", customerId: "12", customerName: "Silverline Data Center Group", metric: "Cooling System Optimization", detail: "$320K project • $890K/yr savings • High cooling ratio", status: "good" },
       { id: "4", customerId: "12", customerName: "Silverline Data Center Group", metric: "On-Site Solar + Battery", detail: "$2.4M project • Customer sustainability goals", status: "good" },
-      { id: "5", customerId: "11", customerName: "Patriot Foods Manufacturing", metric: "Industrial Demand Response", detail: "$245K/yr incentive • 4.2 MW curtailable load", status: "good" },
-      { id: "6", customerId: "11", customerName: "Patriot Foods Manufacturing", metric: "Process Heat Recovery", detail: "$180K project • High thermal signature", status: "good" },
+      { id: "5", customerId: "11", customerName: "Giant Food", metric: "Industrial Demand Response", detail: "$245K/yr incentive • 4.2 MW curtailable load", status: "good" },
+      { id: "6", customerId: "11", customerName: "Giant Food", metric: "Process Heat Recovery", detail: "$180K project • High thermal signature", status: "good" },
     ],
   },
 };
