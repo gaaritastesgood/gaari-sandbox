@@ -15,7 +15,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { toast } from "sonner";
 import { AttentionItem, categoryConfig, severityConfig } from "@/data/kamDashboardData";
-import { Mail, Phone, Calendar, Copy, Check, User, AlertTriangle, Clock, DollarSign } from "lucide-react";
+import { Mail, Phone, Calendar, Copy, Check, User, AlertTriangle } from "lucide-react";
 
 interface ContactAlertDialogProps {
   open: boolean;
@@ -198,74 +198,35 @@ Key Account Manager`;
             </Card>
 
             {/* Event Briefing Notes */}
-            <div className="space-y-2">
-              <Label className="flex items-center gap-1">
+            <Card className="p-3 bg-muted/50 text-sm">
+              <div className="flex items-center gap-1 mb-2">
                 <AlertTriangle className="h-3 w-3 text-status-error" />
-                Event Briefing
-              </Label>
-              <Card className="p-3 bg-muted/50 text-sm space-y-3">
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="flex items-center gap-2">
-                    <Clock className="h-4 w-4 text-muted-foreground" />
-                    <div>
-                      <div className="text-xs text-muted-foreground">Duration</div>
-                      <div className="font-medium text-foreground">20 minutes</div>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <DollarSign className="h-4 w-4 text-status-error" />
-                    <div>
-                      <div className="text-xs text-muted-foreground">Est. Impact</div>
-                      <div className="font-medium text-status-error">$50K</div>
-                    </div>
-                  </div>
+                <span className="font-medium text-foreground">Event Briefing</span>
+              </div>
+              
+              <div className="grid grid-cols-3 gap-2 mb-3">
+                <div className="bg-background rounded p-2 text-center">
+                  <div className="text-xs text-muted-foreground">Duration</div>
+                  <div className="font-semibold text-foreground">20 min</div>
                 </div>
-                
-                <div className="border-t border-border pt-2">
-                  <div className="text-xs text-muted-foreground mb-1">What We Know</div>
-                  <ul className="space-y-1 text-foreground">
-                    <li className="flex items-start gap-2">
-                      <span className="text-muted-foreground">•</span>
-                      Power loss at Chestnut Street distribution center
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-muted-foreground">•</span>
-                      Critical refrigeration systems impacted
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-muted-foreground">•</span>
-                      Backup generators activated successfully
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-muted-foreground">•</span>
-                      Crews dispatched, investigating root cause
-                    </li>
-                  </ul>
+                <div className="bg-background rounded p-2 text-center">
+                  <div className="text-xs text-muted-foreground">Est. Impact</div>
+                  <div className="font-semibold text-status-error">$50K</div>
                 </div>
-
-                <div className="border-t border-border pt-2">
-                  <div className="text-xs text-muted-foreground mb-1">Key Talking Points</div>
-                  <ul className="space-y-1 text-foreground">
-                    <li className="flex items-start gap-2">
-                      <span className="text-primary">→</span>
-                      Acknowledge impact to their operations
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-primary">→</span>
-                      Confirm backup systems are holding
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-primary">→</span>
-                      Provide estimated restoration timeline
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-primary">→</span>
-                      Offer to schedule post-incident review
-                    </li>
-                  </ul>
+                <div className="bg-status-success-bg rounded p-2 text-center">
+                  <div className="text-xs text-muted-foreground">Est. Restore</div>
+                  <div className="font-semibold text-status-success">30 min</div>
                 </div>
-              </Card>
-            </div>
+              </div>
+              
+              <div className="text-xs text-muted-foreground mb-1">What We Know</div>
+              <ul className="space-y-0.5 text-foreground text-xs">
+                <li>• Power loss at Chestnut Street distribution center — 4.2 MW load affected</li>
+                <li>• Critical refrigeration systems impacted — backup generators active</li>
+                <li>• Cause: Equipment failure on feeder circuit 12-A</li>
+                <li>• Crews on-site, replacement parts en route</li>
+              </ul>
+            </Card>
 
             <div className="space-y-2">
               <Label htmlFor="call-notes">Call Notes</Label>
