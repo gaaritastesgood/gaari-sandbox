@@ -117,7 +117,8 @@ export const OverviewTab = ({
         {!isCommercialOrIndustrial && (
           <CompactIssuesPanel 
             issues={consolidatedIssues} 
-            onNavigateToTab={onNavigateToTab} 
+            onNavigateToTab={onNavigateToTab}
+            customerName={customerName}
           />
         )}
         <CompactProgramsPanel 
