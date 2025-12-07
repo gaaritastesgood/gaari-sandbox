@@ -2,11 +2,9 @@ import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Lightbulb, Mail, UserPlus, FileText, ChevronDown, ChevronUp } from "lucide-react";
+import { Lightbulb, Mail, ChevronDown, ChevronUp } from "lucide-react";
 import { OpportunityItem, opportunityTypeConfig } from "@/data/kamDashboardData";
 import { ContactCustomerDialog } from "./ContactCustomerDialog";
-import { CreateProposalDialog } from "./CreateProposalDialog";
-import { toast } from "sonner";
 
 interface ActionableOpportunitiesPanelProps {
   opportunities: OpportunityItem[];
@@ -23,7 +21,6 @@ export const ActionableOpportunitiesPanel = ({
 }: ActionableOpportunitiesPanelProps) => {
   const [expandedOpp, setExpandedOpp] = useState<string | null>(null);
   const [contactDialogOpen, setContactDialogOpen] = useState(false);
-  const [proposalDialogOpen, setProposalDialogOpen] = useState(false);
   const [selectedOpportunity, setSelectedOpportunity] = useState<OpportunityItem | null>(null);
 
   if (opportunities.length === 0) {
@@ -33,17 +30,6 @@ export const ActionableOpportunitiesPanel = ({
   const handleContact = (opp: OpportunityItem) => {
     setSelectedOpportunity(opp);
     setContactDialogOpen(true);
-  };
-
-  const handleEnroll = (opp: OpportunityItem) => {
-    toast.success(`Enrollment initiated for ${opp.opportunityName}`, {
-      description: `${customerName} will be contacted about enrollment details.`,
-    });
-  };
-
-  const handleCreateProposal = (opp: OpportunityItem) => {
-    setSelectedOpportunity(opp);
-    setProposalDialogOpen(true);
   };
 
   return (
@@ -103,7 +89,7 @@ export const ActionableOpportunitiesPanel = ({
                   </div>
                 )}
 
-                {/* Action Buttons */}
+                {/* Action Button */}
                 <div className="flex flex-wrap gap-2 mt-3">
                   <Button 
                     variant="outline" 
@@ -114,24 +100,6 @@ export const ActionableOpportunitiesPanel = ({
                     <Mail className="h-3 w-3 mr-1" />
                     Contact
                   </Button>
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
-                    className="h-7 text-xs"
-                    onClick={() => handleEnroll(opp)}
-                  >
-                    <UserPlus className="h-3 w-3 mr-1" />
-                    Enroll
-                  </Button>
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
-                    className="h-7 text-xs"
-                    onClick={() => handleCreateProposal(opp)}
-                  >
-                    <FileText className="h-3 w-3 mr-1" />
-                    Create Proposal
-                  </Button>
                 </div>
               </div>
             );
@@ -139,7 +107,7 @@ export const ActionableOpportunitiesPanel = ({
         </div>
       </Card>
 
-      {/* Dialogs */}
+      {/* Dialog */}
       <ContactCustomerDialog
         open={contactDialogOpen}
         onOpenChange={setContactDialogOpen}
@@ -147,13 +115,6 @@ export const ActionableOpportunitiesPanel = ({
         customerName={customerName}
         customerEmail={customerEmail}
         customerPhone={customerPhone}
-      />
-      <CreateProposalDialog
-        open={proposalDialogOpen}
-        onOpenChange={setProposalDialogOpen}
-        opportunity={selectedOpportunity}
-        customerName={customerName}
-        customerEmail={customerEmail}
       />
     </>
   );
