@@ -124,6 +124,7 @@ export const OverviewTab = ({
         <CompactProgramsPanel 
           programs={simplifiedEligibility}
           customerName={customerName}
+          customerPhone={customer.phone}
           onNavigateToTab={onNavigateToTab} 
         />
       </div>

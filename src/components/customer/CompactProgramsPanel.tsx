@@ -3,29 +3,47 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { Zap, ChevronRight, ExternalLink, TrendingUp } from "lucide-react";
+import { Zap, ChevronRight, ExternalLink, TrendingUp, ClipboardCheck } from "lucide-react";
 import { SimplifiedProgramEligibility } from "@/types/customer";
 import { ProgramEnrollmentDialog } from "./ProgramEnrollmentDialog";
+import { ScheduleEvaluationDialog } from "./ScheduleEvaluationDialog";
 import { CustomerProgramEligibility } from "@/types/customer";
+import { OpportunityItem } from "@/data/kamDashboardData";
 
 interface CompactProgramsPanelProps {
   programs: SimplifiedProgramEligibility[];
   customerName: string;
+  customerPhone?: string;
   onNavigateToTab: (tab: string) => void;
 }
+
+// Check if program is heating/HVAC related
+const isHeatingRelated = (programName: string): boolean => {
+  const heatingKeywords = ['heat pump', 'hvac', 'heating', 'furnace', 'boiler', 'insulation', 'weatherization'];
+  return heatingKeywords.some(keyword => 
+    programName.toLowerCase().includes(keyword)
+  );
+};
 
 export const CompactProgramsPanel = ({ 
   programs, 
   customerName,
+  customerPhone,
   onNavigateToTab 
 }: CompactProgramsPanelProps) => {
   const [enrollmentDialogOpen, setEnrollmentDialogOpen] = useState(false);
+  const [evaluationDialogOpen, setEvaluationDialogOpen] = useState(false);
   const [selectedProgram, setSelectedProgram] = useState<SimplifiedProgramEligibility | null>(null);
   const [expandedPrograms, setExpandedPrograms] = useState<Set<string>>(new Set());
 
   const handleStartEnrollment = (program: SimplifiedProgramEligibility) => {
     setSelectedProgram(program);
     setEnrollmentDialogOpen(true);
+  };
+
+  const handleScheduleEvaluation = (program: SimplifiedProgramEligibility) => {
+    setSelectedProgram(program);
+    setEvaluationDialogOpen(true);
   };
 
   const toggleExpanded = (programId: string) => {
@@ -71,6 +89,21 @@ export const CompactProgramsPanel = ({
     }))
   });
 
+  // Convert to the format expected by ScheduleEvaluationDialog
+  const convertToOpportunity = (program: SimplifiedProgramEligibility): OpportunityItem => ({
+    id: program.programId,
+    customerId: "",
+    customerName: customerName,
+    accountId: "",
+    opportunityType: "demand-response",
+    opportunityName: program.programName,
+    estimatedValue: `$${program.estimatedSavings}/yr potential savings`,
+    estimatedSavings: `$${program.estimatedSavings}/yr`,
+    confidence: program.likelihood === "high" ? 85 : program.likelihood === "medium" ? 65 : 45,
+    evidence: program.supportingFacts.map(f => f.fact),
+    status: "new"
+  });
+
   return (
     <>
       <Card className="p-4 border-border">
@@ -108,21 +141,34 @@ export const CompactProgramsPanel = ({
                     </p>
                     <p className="text-sm text-muted-foreground mt-1 line-clamp-2">{program.summary}</p>
                     
-                    <div className="flex items-center justify-between mt-3">
+                    <div className="flex items-center justify-between mt-3 gap-2">
                       <CollapsibleTrigger asChild>
                         <Button variant="outline" size="sm" className="h-8 text-sm bg-muted hover:bg-muted/80 gap-1.5">
                           <ChevronRight className={`h-4 w-4 transition-transform ${expandedPrograms.has(program.programId) ? "rotate-90" : ""}`} />
                           View Evidence ({program.supportingFacts.length})
                         </Button>
                       </CollapsibleTrigger>
-                      <Button
-                        size="sm"
-                        className="h-8 text-sm px-3"
-                        onClick={() => handleStartEnrollment(program)}
-                      >
-                        <TrendingUp className="h-4 w-4 mr-1.5" />
-                        Enroll
-                      </Button>
+                      <div className="flex gap-2">
+                        {isHeatingRelated(program.programName) && (
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="h-8 text-sm px-3"
+                            onClick={() => handleScheduleEvaluation(program)}
+                          >
+                            <ClipboardCheck className="h-4 w-4 mr-1.5" />
+                            Evaluate
+                          </Button>
+                        )}
+                        <Button
+                          size="sm"
+                          className="h-8 text-sm px-3"
+                          onClick={() => handleStartEnrollment(program)}
+                        >
+                          <TrendingUp className="h-4 w-4 mr-1.5" />
+                          Enroll
+                        </Button>
+                      </div>
                     </div>
 
                     <CollapsibleContent>
@@ -151,12 +197,21 @@ export const CompactProgramsPanel = ({
       </Card>
 
       {selectedProgram && (
-        <ProgramEnrollmentDialog
-          open={enrollmentDialogOpen}
-          onOpenChange={setEnrollmentDialogOpen}
-          program={convertToEligibility(selectedProgram)}
-          customerName={customerName}
-        />
+        <>
+          <ProgramEnrollmentDialog
+            open={enrollmentDialogOpen}
+            onOpenChange={setEnrollmentDialogOpen}
+            program={convertToEligibility(selectedProgram)}
+            customerName={customerName}
+          />
+          <ScheduleEvaluationDialog
+            open={evaluationDialogOpen}
+            onOpenChange={setEvaluationDialogOpen}
+            opportunity={convertToOpportunity(selectedProgram)}
+            customerName={customerName}
+            customerPhone={customerPhone}
+          />
+        </>
       )}
     </>
   );
