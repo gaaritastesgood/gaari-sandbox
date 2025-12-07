@@ -116,11 +116,11 @@ export const consolidatedCustomerIssues: Record<string, ConsolidatedIssue[]> = {
     {
       id: "CONS011",
       title: "Outage at Chestnut Street Location",
-      summary: "20-minute service interruption at Chestnut Street location with $15K operational loss.",
+      summary: "20-minute service interruption at Chestnut Street location with $10K operational loss.",
       severity: "error",
       supportingFacts: [
         { fact: "Outage duration: 20 minutes at Chestnut Street", linkTab: "meters" },
-        { fact: "Operational loss estimated at $15K", linkTab: "bills" },
+        { fact: "Operational loss estimated at $10K", linkTab: "bills" },
         { fact: "Emergency backup generation deployed", linkTab: "interactions" }
       ],
       recommendedAction: "Review outage report and discuss reliability improvements.",

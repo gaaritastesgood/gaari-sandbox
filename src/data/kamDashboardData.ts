@@ -131,13 +131,13 @@ export const attentionItems: AttentionItem[] = [
     accountId: "9010001234",
     industry: "Industrial",
     annualRevenue: "$2.4M",
-    reason: "Outage at Chestnut Street Location - 20 Minutes, $15K Loss",
+    reason: "Outage at Chestnut Street Location - 20 Minutes, $10K Loss",
     category: "outage",
     severity: "critical",
     confidence: 96,
     evidencePoints: [
       "Outage duration: 20 minutes at Chestnut Street location",
-      "Estimated loss: $15K due to operational downtime",
+      "Estimated loss: $10K due to operational downtime",
       "Critical refrigeration equipment affected",
       "Emergency backup generation deployed",
     ],
@@ -145,7 +145,7 @@ export const attentionItems: AttentionItem[] = [
     quickFacts: [
       { label: "Peak Demand", value: "4.2 MW" },
       { label: "Monthly Bill", value: "$287K" },
-      { label: "Loss", value: "$15K" },
+      { label: "Loss", value: "$10K" },
     ],
   },
   {
@@ -433,7 +433,7 @@ export const kpiDrilldownData: Record<string, KPIDrilldownData> = {
       { name: "Week 4", value: 1 },
     ],
     items: [
-      { id: "1", customerId: "11", customerName: "Giant Food", metric: "20 min", detail: "Chestnut Street location • $15K loss • Active", status: "error" },
+      { id: "1", customerId: "11", customerName: "Giant Food", metric: "20 min", detail: "Chestnut Street location • $10K loss • Active", status: "error" },
       { id: "2", customerId: "12", customerName: "Keystone Manufacturing Group", metric: "2 events", detail: "2nd outage this quarter • Customer concerned", status: "error" },
       { id: "3", customerId: "13", customerName: "Riverside Logistics & Warehousing", metric: "35 min", detail: "Cold storage affected • Nov 28", status: "warning" },
       { id: "4", customerId: "7", customerName: "Wawa Corporate", metric: "15 min", detail: "Distribution center • Nov 30", status: "warning" },
@@ -448,7 +448,7 @@ export const kpiDrilldownData: Record<string, KPIDrilldownData> = {
       { name: "Medium", value: 1 },
     ],
     items: [
-      { id: "1", customerId: "11", customerName: "Giant Food", metric: "Critical", detail: "20min outage at Chestnut Street • $15K loss", status: "error" },
+      { id: "1", customerId: "11", customerName: "Giant Food", metric: "Critical", detail: "20min outage at Chestnut Street • $10K loss", status: "error" },
       { id: "2", customerId: "12", customerName: "Keystone Manufacturing Group", metric: "Critical", detail: "2nd outage this quarter • Escalation likely", status: "error" },
       { id: "3", customerId: "12", customerName: "Keystone Manufacturing Group", metric: "High", detail: "Load growth +8% YTD • Capacity planning needed", status: "warning" },
       { id: "4", customerId: "11", customerName: "Giant Food", metric: "Medium", detail: "Load growth +12% over 6 months • Monitor trend", status: "info" },
