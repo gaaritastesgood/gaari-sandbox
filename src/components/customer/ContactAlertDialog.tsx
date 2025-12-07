@@ -56,35 +56,37 @@ export const ContactAlertDialog = ({
 
   const generateSubjectLine = () => {
     if (isExpansionAlert) {
-      return `Quick chat about your expansion plans?`;
+      return `${alert.customerName} - Supporting Your Expansion Plans`;
     }
-    return `Following up - wanted to connect`;
+    return `${alert.customerName} - Service Follow-Up & Next Steps`;
   };
 
   const generateEmailTemplate = () => {
     if (isExpansionAlert) {
       return `Hi ${firstName},
 
-Hope all is well! I wanted to reach out and see if you have a few minutes to chat about your upcoming plans.
+I wanted to reach out regarding your upcoming expansion plans at ${alert.customerName}. As your dedicated account manager, I'd like to schedule a brief call to discuss how we can best support your growth.
 
-I've been reviewing our accounts and it looks like you might be gearing up for some growth. I'd love to hear more about what you're working on and make sure we're set up to support you.
+Understanding your timeline and requirements early will help us ensure a seamless transition as your energy needs evolve.
 
-Do you have 30 minutes sometime this week or next? Happy to work around your schedule.
+Please let me know your availability for a 30-minute call this week or next at your convenience.
 
-Talk soon,
-[Your Name]`;
+Thank you,
+[Your Name]
+Key Account Manager, PECO`;
     }
 
     return `Hi ${firstName},
 
-Hope you're doing well. I wanted to reach out after the service interruption earlier — I know that kind of thing is never easy to deal with, and I'm sorry for any headaches it caused.
+Thank you for your patience during the recent service interruption at your facility. I wanted to personally follow up to discuss the event and our remediation efforts.
 
-I'd love to hop on a quick call to walk you through what happened and chat about what we're doing to make sure it doesn't happen again. Also happy to answer any questions you might have.
+I'd like to schedule a brief call to review what occurred, address any concerns you may have, and outline the preventive measures we're implementing to enhance service reliability going forward.
 
-Would 20-30 minutes work for you sometime this week? I'm flexible.
+Please let me know your availability for a 20-30 minute call this week. I'm happy to accommodate your schedule.
 
-Let me know what works,
-[Your Name]`;
+Thank you,
+[Your Name]
+Key Account Manager, PECO`;
   };
 
   const handleSendEmail = () => {
