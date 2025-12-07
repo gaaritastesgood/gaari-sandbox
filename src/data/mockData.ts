@@ -425,9 +425,9 @@ export const mockCustomers: Customer[] = [
       {
         id: "prem11",
         address: "8900 Industrial Parkway",
-        city: "Oakland",
-        state: "CA",
-        zipCode: "94621",
+        city: "Philadelphia",
+        state: "PA",
+        zipCode: "19134",
         premiseType: "office",
         servicePoints: [
           {
