@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Lightbulb, Mail, Info } from "lucide-react";
 import { OpportunityItem, opportunityTypeConfig } from "@/data/kamDashboardData";
 import { ContactCustomerDialog } from "./ContactCustomerDialog";
+import { OpportunityDetailDialog } from "./OpportunityDetailDialog";
 
 interface ActionableOpportunitiesPanelProps {
   opportunities: OpportunityItem[];
@@ -19,8 +20,8 @@ export const ActionableOpportunitiesPanel = ({
   customerEmail,
   customerPhone 
 }: ActionableOpportunitiesPanelProps) => {
-  const [expandedOpp, setExpandedOpp] = useState<string | null>(null);
   const [contactDialogOpen, setContactDialogOpen] = useState(false);
+  const [detailDialogOpen, setDetailDialogOpen] = useState(false);
   const [selectedOpportunity, setSelectedOpportunity] = useState<OpportunityItem | null>(null);
 
   if (opportunities.length === 0) {
@@ -30,6 +31,11 @@ export const ActionableOpportunitiesPanel = ({
   const handleContact = (opp: OpportunityItem) => {
     setSelectedOpportunity(opp);
     setContactDialogOpen(true);
+  };
+
+  const handleViewDetails = (opp: OpportunityItem) => {
+    setSelectedOpportunity(opp);
+    setDetailDialogOpen(true);
   };
 
   return (
@@ -44,7 +50,6 @@ export const ActionableOpportunitiesPanel = ({
         <div className="space-y-3">
           {opportunities.map((opp) => {
             const typeConfig = opportunityTypeConfig[opp.opportunityType];
-            const isExpanded = expandedOpp === opp.id;
 
             return (
               <div key={opp.id} className="bg-muted/50 rounded-lg p-3 border border-border">
@@ -63,28 +68,13 @@ export const ActionableOpportunitiesPanel = ({
                   </div>
                 </div>
 
-                {/* Expanded Evidence */}
-                {isExpanded && (
-                  <div className="mt-3 pt-3 border-t border-border">
-                    <div className="text-sm font-medium text-muted-foreground mb-2">Evidence</div>
-                    <ul className="space-y-1 text-sm text-foreground mb-3">
-                      {opp.evidence.map((point, i) => (
-                        <li key={i} className="flex items-start gap-2">
-                          <span className="text-muted-foreground">•</span>
-                          {point}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-
                 {/* Action Buttons */}
                 <div className="flex flex-wrap gap-2 mt-3">
                   <Button 
                     variant="outline" 
                     size="sm" 
                     className="h-7 text-xs"
-                    onClick={() => setExpandedOpp(isExpanded ? null : opp.id)}
+                    onClick={() => handleViewDetails(opp)}
                   >
                     <Info className="h-3 w-3 mr-1" />
                     Info
@@ -105,7 +95,7 @@ export const ActionableOpportunitiesPanel = ({
         </div>
       </Card>
 
-      {/* Dialog */}
+      {/* Dialogs */}
       <ContactCustomerDialog
         open={contactDialogOpen}
         onOpenChange={setContactDialogOpen}
@@ -113,6 +103,13 @@ export const ActionableOpportunitiesPanel = ({
         customerName={customerName}
         customerEmail={customerEmail}
         customerPhone={customerPhone}
+      />
+
+      <OpportunityDetailDialog
+        open={detailDialogOpen}
+        onOpenChange={setDetailDialogOpen}
+        opportunity={selectedOpportunity}
+        customerName={customerName}
       />
     </>
   );
