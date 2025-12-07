@@ -127,18 +127,18 @@ export const consolidatedCustomerIssues: Record<string, ConsolidatedIssue[]> = {
       defaultCaseType: "outage_investigation"
     }
   ],
-  "12": [ // Keystone Manufacturing Group - multiple outages
+  "12": [ // Keystone Manufacturing Group - reliability concern
     {
       id: "CONS012",
-      title: "Multiple Outage Events - Production Risk",
-      summary: "3 outage events in past 14 days affecting manufacturing operations. Production line at risk.",
+      title: "2nd Outage This Quarter - Customer Escalation Expected",
+      summary: "2nd unplanned outage in 90 days affecting manufacturing operations. Customer expressed concern in last review.",
       severity: "error",
       supportingFacts: [
-        { fact: "3 outage events in past 14 days", linkTab: "meters" },
-        { fact: "Backup generators activated during events", linkTab: "interactions" },
-        { fact: "Production equipment requires stable power", linkTab: "bills" }
+        { fact: "2nd outage event in past 90 days", linkTab: "meters" },
+        { fact: "Previous outage Oct 15 lasted 45 minutes", linkTab: "interactions" },
+        { fact: "Production line equipment affected both times", linkTab: "bills" }
       ],
-      recommendedAction: "Prepare reliability improvement plan and schedule executive review.",
+      recommendedAction: "Prepare reliability improvement plan and schedule proactive account review.",
       defaultCaseType: "reliability_review"
     }
   ]
