@@ -225,6 +225,23 @@ export const attentionItems: AttentionItem[] = [
 // Opportunities - Using mockCustomers IDs (Load growth opportunities first, then others)
 export const opportunityItems: OpportunityItem[] = [
   {
+    id: "opp-008",
+    customerId: "11",
+    customerName: "Giant Food",
+    accountId: "9010001234",
+    opportunityType: "load-growth",
+    opportunityName: "New Store Opening - Germantown Location",
+    estimatedValue: "$420K potential new annual revenue",
+    confidence: 94,
+    evidence: [
+      "Giant announced new Germantown store opening Q2 2025",
+      "Estimated 2.5 MW peak demand for new location",
+      "Proactive outreach for infrastructure planning",
+      "Opportunity to secure service agreement early",
+    ],
+    status: "new",
+  },
+  {
     id: "opp-006",
     customerId: "13",
     customerName: "Riverside Logistics & Warehousing",
