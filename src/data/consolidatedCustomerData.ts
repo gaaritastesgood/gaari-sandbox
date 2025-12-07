@@ -152,10 +152,10 @@ export const simplifiedProgramEligibility: Record<string, SimplifiedProgramEligi
       programName: "Heat Pump Rebate",
       estimatedSavings: 850,
       likelihood: "high",
-      summary: "Usage patterns indicate electric resistance heating, which has significantly higher operating costs than heat pump alternatives.",
+      summary: "High winter energy consumption suggests older or less efficient heating equipment that could benefit from a heat pump upgrade.",
       supportingFacts: [
         { fact: "Winter bills 3.2× summer average", linkTab: "bills" },
-        { fact: "Resistance heat signature detected", linkTab: "meters" }
+        { fact: "Home built in 1985 — likely original HVAC", linkTab: "meters" }
       ]
     }
   ],
