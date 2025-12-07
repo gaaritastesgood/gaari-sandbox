@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Lightbulb, Mail, ChevronDown, ChevronUp } from "lucide-react";
+import { Lightbulb, Mail, Info } from "lucide-react";
 import { OpportunityItem, opportunityTypeConfig } from "@/data/kamDashboardData";
 import { ContactCustomerDialog } from "./ContactCustomerDialog";
 
@@ -64,14 +64,6 @@ export const ActionableOpportunitiesPanel = ({
                       <div className="text-sm text-status-success">{opp.estimatedSavings}</div>
                     )}
                   </div>
-                  
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => setExpandedOpp(isExpanded ? null : opp.id)}
-                  >
-                    {isExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
-                  </Button>
                 </div>
 
                 {/* Expanded Evidence */}
@@ -89,8 +81,17 @@ export const ActionableOpportunitiesPanel = ({
                   </div>
                 )}
 
-                {/* Action Button */}
+                {/* Action Buttons */}
                 <div className="flex flex-wrap gap-2 mt-3">
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="h-7 text-xs"
+                    onClick={() => setExpandedOpp(isExpanded ? null : opp.id)}
+                  >
+                    <Info className="h-3 w-3 mr-1" />
+                    Info
+                  </Button>
                   <Button 
                     variant="outline" 
                     size="sm" 
