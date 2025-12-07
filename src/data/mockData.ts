@@ -1700,8 +1700,8 @@ export const mockInteractions: Record<string, Interaction[]> = {
       type: "field_visit",
       channel: "Field Service",
       reason: "Power Outage - Feeder Issue",
-      description: "30-minute power outage at Chestnut Street location due to feeder fault. Emergency response dispatched. Critical refrigeration equipment affected.",
-      outcome: "Service restored within 30 minutes. Backup generation deployed during outage. Estimated $50K operational loss. Follow-up reliability review scheduled.",
+      description: "20-minute power outage at Chestnut Street location due to feeder fault. Emergency response dispatched. Critical refrigeration equipment affected.",
+      outcome: "Service restored within 20 minutes. Backup generation deployed during outage. Estimated $15K operational loss. Follow-up reliability review scheduled.",
       agent: "Emergency Response Team"
     },
     {
