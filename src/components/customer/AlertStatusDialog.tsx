@@ -24,8 +24,8 @@ export const AlertStatusDialog = ({ open, onOpenChange, alert }: AlertStatusDial
     { time: "Today, 08:17 AM", event: "Alert generated and dispatched", status: "completed" },
     { time: "Today, 08:20 AM", event: "Emergency crew notified", status: "completed" },
     { time: "Today, 08:35 AM", event: "Backup generation deployed", status: "completed" },
-    { time: "Today, 08:45 AM", event: "Service restored", status: "completed" },
-    { time: "Pending", event: "Post-incident review scheduled", status: "current" },
+    { time: "In progress", event: "Crew working to restore service", status: "current" },
+    { time: "Pending", event: "Post-incident review", status: "pending" },
   ] : [
     { time: "Today, 09:00 AM", event: "Issue identified", status: "completed" },
     { time: "Today, 09:15 AM", event: "Analysis in progress", status: "current" },
@@ -33,9 +33,9 @@ export const AlertStatusDialog = ({ open, onOpenChange, alert }: AlertStatusDial
   ];
 
   const affectedEquipment = isOutage ? [
-    { name: "Feeder Circuit F-2847", status: "Repaired" },
-    { name: "Sectionalizer S-103", status: "Reset" },
-    { name: "Refrigeration Units (3)", status: "Restored" },
+    { name: "Feeder Circuit F-2847", status: "Under Repair" },
+    { name: "Sectionalizer S-103", status: "Isolated" },
+    { name: "Refrigeration Units (3)", status: "On Backup Power" },
   ] : [
     { name: "Primary Service", status: "Active" },
     { name: "Metering Equipment", status: "Normal" },
@@ -45,8 +45,8 @@ export const AlertStatusDialog = ({ open, onOpenChange, alert }: AlertStatusDial
     team: "Emergency Response Team",
     lead: "Mike Rodriguez",
     members: 3,
-    status: isOutage ? "Completed" : "Standby",
-    eta: isOutage ? "Completed" : "As needed",
+    status: isOutage ? "On-site" : "Standby",
+    eta: isOutage ? "Est. 15 min" : "As needed",
   };
 
   return (
@@ -174,8 +174,8 @@ export const AlertStatusDialog = ({ open, onOpenChange, alert }: AlertStatusDial
                     <div className="text-xs text-muted-foreground">Today, 08:25 AM • Marcus Johnson</div>
                   </div>
                   <div className="p-2 bg-muted/50 rounded">
-                    <div className="text-foreground">Service restoration confirmation sent</div>
-                    <div className="text-xs text-muted-foreground">Today, 08:47 AM • Automated</div>
+                    <div className="text-foreground">Update call to customer scheduled</div>
+                    <div className="text-xs text-muted-foreground">Pending • Next update in ~10 min</div>
                   </div>
                 </>
               ) : (
