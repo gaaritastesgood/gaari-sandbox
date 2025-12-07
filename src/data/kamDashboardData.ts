@@ -141,7 +141,7 @@ export const attentionItems: AttentionItem[] = [
       "Critical refrigeration equipment affected",
       "Emergency backup generation deployed",
     ],
-    detectedAt: "35 minutes ago",
+    detectedAt: "5 minutes ago",
     quickFacts: [
       { label: "Peak Demand", value: "4.2 MW" },
       { label: "Monthly Bill", value: "$287K" },
