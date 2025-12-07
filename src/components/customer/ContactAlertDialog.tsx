@@ -42,8 +42,11 @@ export const ContactAlertDialog = ({
   customerPhone = "(555) 123-4567",
 }: ContactAlertDialogProps) => {
   const [emailBody, setEmailBody] = useState("");
+  const [emailSubject, setEmailSubject] = useState("");
   const [callNotes, setCallNotes] = useState("");
   const [copied, setCopied] = useState(false);
+  
+  const firstName = facilityManagerContact.name.split(" ")[0];
 
   if (!alert) return null;
 
@@ -51,36 +54,37 @@ export const ContactAlertDialog = ({
   const severityStyle = severityConfig[alert.severity];
   const isExpansionAlert = alert.category === "expansion";
 
+  const generateSubjectLine = () => {
+    if (isExpansionAlert) {
+      return `Quick chat about your expansion plans?`;
+    }
+    return `Following up - wanted to connect`;
+  };
+
   const generateEmailTemplate = () => {
     if (isExpansionAlert) {
-      return `Hi ${facilityManagerContact.name},
+      return `Hi ${firstName},
 
-I hope this message finds you well. I wanted to reach out to schedule a quick call to discuss your upcoming expansion plans.
+Hope all is well! I wanted to reach out and see if you have a few minutes to chat about your upcoming plans.
 
-We've been reviewing our accounts and noticed some activity that suggests you may be planning for growth. I'd love to connect to better understand your timeline and ensure we're prepared to support your needs.
+I've been reviewing our accounts and it looks like you might be gearing up for some growth. I'd love to hear more about what you're working on and make sure we're set up to support you.
 
-Would you have 30 minutes this week or next for a brief conversation? I'm happy to work around your schedule.
+Do you have 30 minutes sometime this week or next? Happy to work around your schedule.
 
-Looking forward to connecting.
-
-Best regards,
-[Your Name]
-Key Account Manager`;
+Talk soon,
+[Your Name]`;
     }
 
-    return `Hi ${facilityManagerContact.name},
+    return `Hi ${firstName},
 
-I hope you're doing well. I wanted to reach out following the recent service interruption at your facility.
+Hope you're doing well. I wanted to reach out after the service interruption earlier — I know that kind of thing is never easy to deal with, and I'm sorry for any headaches it caused.
 
-First, I want to apologize for any inconvenience this may have caused your operations. I'd like to schedule a brief call to walk through what happened, answer any questions you might have, and discuss the steps we're taking to prevent similar issues going forward.
+I'd love to hop on a quick call to walk you through what happened and chat about what we're doing to make sure it doesn't happen again. Also happy to answer any questions you might have.
 
-Would you have 20-30 minutes for a quick recap call this week? I'm flexible and happy to work around your availability.
+Would 20-30 minutes work for you sometime this week? I'm flexible.
 
-Please let me know what works best for you.
-
-Best regards,
-[Your Name]
-Key Account Manager`;
+Let me know what works,
+[Your Name]`;
   };
 
   const handleSendEmail = () => {
@@ -237,8 +241,18 @@ Key Account Manager`;
               To: {facilityManagerContact.email}
             </div>
             <div className="space-y-2">
+              <Label htmlFor="email-subject">Subject</Label>
+              <input
+                id="email-subject"
+                type="text"
+                className="flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                value={emailSubject || generateSubjectLine()}
+                onChange={(e) => setEmailSubject(e.target.value)}
+              />
+            </div>
+            <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <Label htmlFor="email-body">Email Body</Label>
+                <Label htmlFor="email-body">Message</Label>
                 <Button
                   variant="ghost"
                   size="sm"
@@ -254,7 +268,7 @@ Key Account Manager`;
                 placeholder="Email content..."
                 value={emailBody || generateEmailTemplate()}
                 onChange={(e) => setEmailBody(e.target.value)}
-                rows={12}
+                rows={10}
                 className="text-sm"
               />
             </div>
