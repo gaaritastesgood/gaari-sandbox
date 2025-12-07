@@ -3,21 +3,57 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { AlertTriangle, AlertCircle, Info, ChevronRight, CheckCircle, FolderPlus, ExternalLink } from "lucide-react";
+import { AlertTriangle, AlertCircle, Info, ChevronRight, CheckCircle, FolderPlus, ExternalLink, Users } from "lucide-react";
 import { ConsolidatedIssue } from "@/types/customer";
 import { CaseCreationDialog } from "@/components/CaseCreationDialog";
+import { SendTeamDialog } from "@/components/customer/SendTeamDialog";
 import { toast } from "@/hooks/use-toast";
+import { AttentionItem } from "@/data/kamDashboardData";
 
 interface CompactIssuesPanelProps {
   issues: ConsolidatedIssue[];
   onNavigateToTab: (tab: string) => void;
+  customerName?: string;
 }
 
-export const CompactIssuesPanel = ({ issues, onNavigateToTab }: CompactIssuesPanelProps) => {
+export const CompactIssuesPanel = ({ issues, onNavigateToTab, customerName = "Customer" }: CompactIssuesPanelProps) => {
   const [caseDialogOpen, setCaseDialogOpen] = useState(false);
   const [selectedCaseType, setSelectedCaseType] = useState<string | undefined>();
   const [resolvedIssues, setResolvedIssues] = useState<Set<string>>(new Set());
   const [expandedIssues, setExpandedIssues] = useState<Set<string>>(new Set());
+  const [sendTeamDialogOpen, setSendTeamDialogOpen] = useState(false);
+  const [selectedIssueForTeam, setSelectedIssueForTeam] = useState<AttentionItem | null>(null);
+
+  const isMeterIssue = (issue: ConsolidatedIssue) => {
+    const meterKeywords = ["meter", "reading", "estimated", "consumption", "usage spike", "anomaly"];
+    return meterKeywords.some(keyword => 
+      issue.title.toLowerCase().includes(keyword) || 
+      issue.summary.toLowerCase().includes(keyword)
+    );
+  };
+
+  const handleSendTeam = (issue: ConsolidatedIssue) => {
+    const alertItem: AttentionItem = {
+      id: issue.id,
+      customerId: "residential",
+      customerName: customerName,
+      accountId: "RES-001",
+      industry: "Residential",
+      annualRevenue: "N/A",
+      reason: issue.summary,
+      category: "anomaly",
+      severity: issue.severity === "error" ? "critical" : issue.severity === "warning" ? "high" : "medium",
+      confidence: 85,
+      evidencePoints: issue.supportingFacts.map(f => f.fact),
+      detectedAt: new Date().toISOString(),
+      quickFacts: [
+        { label: "Issue Type", value: issue.title },
+        { label: "Priority", value: issue.severity }
+      ]
+    };
+    setSelectedIssueForTeam(alertItem);
+    setSendTeamDialogOpen(true);
+  };
 
   const openIssues = issues.filter(issue => !resolvedIssues.has(issue.id));
 
@@ -119,6 +155,17 @@ export const CompactIssuesPanel = ({ issues, onNavigateToTab }: CompactIssuesPan
                         </Button>
                       </CollapsibleTrigger>
                       <div className="flex gap-2">
+                        {isMeterIssue(issue) && (
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="h-8 text-sm px-3"
+                            onClick={() => handleSendTeam(issue)}
+                          >
+                            <Users className="h-4 w-4 mr-1.5" />
+                            Send Team
+                          </Button>
+                        )}
                         <Button
                           size="sm"
                           className="h-8 text-sm px-3"
@@ -171,6 +218,13 @@ export const CompactIssuesPanel = ({ issues, onNavigateToTab }: CompactIssuesPan
         open={caseDialogOpen}
         onOpenChange={setCaseDialogOpen}
         defaultCaseType={selectedCaseType}
+      />
+
+      <SendTeamDialog
+        open={sendTeamDialogOpen}
+        onOpenChange={setSendTeamDialogOpen}
+        alert={selectedIssueForTeam}
+        customerName={customerName}
       />
     </>
   );
