@@ -54,9 +54,6 @@ export const ActionableOpportunitiesPanel = ({
                       <Badge className={`${typeConfig.bgColor} ${typeConfig.color} text-xs`}>
                         {typeConfig.label}
                       </Badge>
-                      <Badge variant="outline" className="text-xs">
-                        {opp.confidence}% confidence
-                      </Badge>
                     </div>
                     <div className="font-medium text-foreground">{opp.opportunityName}</div>
                     <div className="text-sm text-muted-foreground mt-1">{opp.estimatedValue}</div>
