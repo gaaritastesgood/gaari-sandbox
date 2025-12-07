@@ -53,51 +53,33 @@ export const ContactAlertDialog = ({
 
   const generateEmailTemplate = () => {
     if (isExpansionAlert) {
-      return `Dear ${alert.customerName} Team,
+      return `Hi ${facilityManagerContact.name},
 
-I'm reaching out regarding your planned expansion that we've identified in our system.
+I hope this message finds you well. I wanted to reach out to schedule a quick call to discuss your upcoming expansion plans.
 
-Expansion Summary:
-- ${alert.reason}
-- Detected: ${alert.detectedAt}
+We've been reviewing our accounts and noticed some activity that suggests you may be planning for growth. I'd love to connect to better understand your timeline and ensure we're prepared to support your needs.
 
-Key Details:
-${alert.quickFacts.map(f => `- ${f.label}: ${f.value}`).join('\n')}
+Would you have 30 minutes this week or next for a brief conversation? I'm happy to work around your schedule.
 
-Infrastructure Considerations:
-${alert.evidencePoints.map(p => `- ${p}`).join('\n')}
-
-We'd like to schedule a meeting to discuss:
-1. Your expansion timeline and requirements
-2. Infrastructure planning and upgrades needed
-3. Service level commitments during and after expansion
-4. Coordination with our engineering team
-
-Please let me know your availability for a planning discussion.
+Looking forward to connecting.
 
 Best regards,
+[Your Name]
 Key Account Manager`;
     }
 
-    return `Dear ${alert.customerName} Team,
+    return `Hi ${facilityManagerContact.name},
 
-I'm reaching out regarding the recent ${alert.category} event that affected your operations.
+I hope you're doing well. I wanted to reach out following the recent service interruption at your facility.
 
-Alert Summary:
-- Issue: ${alert.reason}
-- Detected: ${alert.detectedAt}
-- Severity: ${severityStyle.label}
+First, I want to apologize for any inconvenience this may have caused your operations. I'd like to schedule a brief call to walk through what happened, answer any questions you might have, and discuss the steps we're taking to prevent similar issues going forward.
 
-We understand the impact this has had on your operations and want to ensure we're addressing your concerns promptly.
+Would you have 20-30 minutes for a quick recap call this week? I'm flexible and happy to work around your availability.
 
-I'd like to schedule a call to discuss:
-1. Root cause analysis of the recent event
-2. Preventive measures being implemented
-3. Service level commitments going forward
-
-Please let me know your availability.
+Please let me know what works best for you.
 
 Best regards,
+[Your Name]
 Key Account Manager`;
   };
 
