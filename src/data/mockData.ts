@@ -1695,13 +1695,13 @@ export const mockInteractions: Record<string, Interaction[]> = {
   "11": [
     {
       id: "int11-outage",
-      date: "2025-01-20",
-      time: "02:45 AM",
+      date: "2025-12-07",
+      time: "08:15 AM",
       type: "field_visit",
       channel: "Field Service",
-      reason: "Power Outage - Equipment Failure",
-      description: "4-hour power outage due to transformer failure. Emergency response dispatched. Refrigeration systems offline caused product loss concerns.",
-      outcome: "Transformer replaced. Systems restored. Filed outage report and insurance claim assistance provided.",
+      reason: "Power Outage - Feeder Issue",
+      description: "30-minute power outage at Chestnut Street location due to feeder fault. Emergency response dispatched. Critical refrigeration equipment affected.",
+      outcome: "Service restored within 30 minutes. Backup generation deployed during outage. Estimated $50K operational loss. Follow-up reliability review scheduled.",
       agent: "Emergency Response Team"
     },
     {
