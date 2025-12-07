@@ -127,16 +127,16 @@ export const consolidatedCustomerIssues: Record<string, ConsolidatedIssue[]> = {
       defaultCaseType: "outage_investigation"
     }
   ],
-  "12": [ // Jefferson Health System - multiple outages
+  "12": [ // Keystone Manufacturing Group - multiple outages
     {
       id: "CONS012",
-      title: "Multiple Outage Events - Critical Care Risk",
-      summary: "3 outage events in past 14 days affecting hospital campus operations. Critical care systems at risk.",
+      title: "Multiple Outage Events - Production Risk",
+      summary: "3 outage events in past 14 days affecting manufacturing operations. Production line at risk.",
       severity: "error",
       supportingFacts: [
         { fact: "3 outage events in past 14 days", linkTab: "meters" },
         { fact: "Backup generators activated during events", linkTab: "interactions" },
-        { fact: "Critical care units require uninterrupted power", linkTab: "bills" }
+        { fact: "Production equipment requires stable power", linkTab: "bills" }
       ],
       recommendedAction: "Prepare reliability improvement plan and schedule executive review.",
       defaultCaseType: "reliability_review"
