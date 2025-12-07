@@ -447,9 +447,9 @@ export const mockCustomers: Customer[] = [
     businessPartnerId: "BP102002",
     firstName: "David",
     lastName: "Martinez",
-    companyName: "Silverline Data Center Group",
-    email: "dmartinez@silverlinedata.com",
-    phone: "+1 (408) 555-8800",
+    companyName: "Jefferson Health System",
+    email: "dmartinez@jeffersonhealth.org",
+    phone: "+1 (215) 555-8800",
     segment: "industrial",
     status: "active",
     contractAccounts: [
@@ -1905,8 +1905,8 @@ export const mockCases: Record<string, Case[]> = {
     {
       id: "case12",
       createdDate: "2025-11-10",
-      type: "Major Project - New Construction",
-      subject: "Silverline Data Center 40 MW service - substation upgrade project",
+      type: "Major Project - Campus Expansion",
+      subject: "Jefferson Health 18 MW service - new patient tower power upgrade",
       status: "in_progress",
       priority: "critical",
       assignedTo: "Major Projects Team",
