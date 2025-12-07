@@ -3,12 +3,10 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { AlertTriangle, AlertCircle, Info, ChevronRight, CheckCircle, FolderPlus, ExternalLink, Users } from "lucide-react";
+import { AlertTriangle, AlertCircle, Info, ChevronRight, CheckCircle, ExternalLink, Wrench } from "lucide-react";
 import { ConsolidatedIssue } from "@/types/customer";
 import { CaseCreationDialog } from "@/components/CaseCreationDialog";
-import { SendTeamDialog } from "@/components/customer/SendTeamDialog";
 import { toast } from "@/hooks/use-toast";
-import { AttentionItem } from "@/data/kamDashboardData";
 
 interface CompactIssuesPanelProps {
   issues: ConsolidatedIssue[];
@@ -21,46 +19,14 @@ export const CompactIssuesPanel = ({ issues, onNavigateToTab, customerName = "Cu
   const [selectedCaseType, setSelectedCaseType] = useState<string | undefined>();
   const [resolvedIssues, setResolvedIssues] = useState<Set<string>>(new Set());
   const [expandedIssues, setExpandedIssues] = useState<Set<string>>(new Set());
-  const [sendTeamDialogOpen, setSendTeamDialogOpen] = useState(false);
-  const [selectedIssueForTeam, setSelectedIssueForTeam] = useState<AttentionItem | null>(null);
 
-  const isMeterIssue = (issue: ConsolidatedIssue) => {
-    const meterKeywords = ["meter", "reading", "estimated", "consumption", "usage spike", "anomaly"];
-    return meterKeywords.some(keyword => 
-      issue.title.toLowerCase().includes(keyword) || 
-      issue.summary.toLowerCase().includes(keyword)
-    );
-  };
-
-  const handleSendTeam = (issue: ConsolidatedIssue) => {
-    const alertItem: AttentionItem = {
-      id: issue.id,
-      customerId: "residential",
-      customerName: customerName,
-      accountId: "RES-001",
-      industry: "Residential",
-      annualRevenue: "N/A",
-      reason: issue.summary,
-      category: "anomaly",
-      severity: issue.severity === "error" ? "critical" : issue.severity === "warning" ? "high" : "medium",
-      confidence: 85,
-      evidencePoints: issue.supportingFacts.map(f => f.fact),
-      detectedAt: new Date().toISOString(),
-      quickFacts: [
-        { label: "Issue Type", value: issue.title },
-        { label: "Priority", value: issue.severity }
-      ]
-    };
-    setSelectedIssueForTeam(alertItem);
-    setSendTeamDialogOpen(true);
+  const handleCreateServiceRequest = (issue: ConsolidatedIssue) => {
+    setSelectedCaseType("service_request");
+    setCaseDialogOpen(true);
   };
 
   const openIssues = issues.filter(issue => !resolvedIssues.has(issue.id));
 
-  const handleCreateCase = (issue: ConsolidatedIssue) => {
-    setSelectedCaseType(issue.defaultCaseType);
-    setCaseDialogOpen(true);
-  };
 
   const handleResolve = (issueId: string) => {
     setResolvedIssues(prev => new Set([...prev, issueId]));
@@ -147,7 +113,7 @@ export const CompactIssuesPanel = ({ issues, onNavigateToTab, customerName = "Cu
                     </div>
                     <p className="text-sm text-muted-foreground mt-1 line-clamp-2">{issue.summary}</p>
                     
-                    <div className="flex items-center justify-between mt-3">
+                      <div className="flex items-center justify-between mt-3">
                       <CollapsibleTrigger asChild>
                         <Button variant="outline" size="sm" className="h-8 text-sm bg-muted hover:bg-muted/80 gap-1.5">
                           <ChevronRight className={`h-4 w-4 transition-transform ${expandedIssues.has(issue.id) ? "rotate-90" : ""}`} />
@@ -155,24 +121,13 @@ export const CompactIssuesPanel = ({ issues, onNavigateToTab, customerName = "Cu
                         </Button>
                       </CollapsibleTrigger>
                       <div className="flex gap-2">
-                        {isMeterIssue(issue) && (
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            className="h-8 text-sm px-3"
-                            onClick={() => handleSendTeam(issue)}
-                          >
-                            <Users className="h-4 w-4 mr-1.5" />
-                            Send Team
-                          </Button>
-                        )}
                         <Button
                           size="sm"
                           className="h-8 text-sm px-3"
-                          onClick={() => handleCreateCase(issue)}
+                          onClick={() => handleCreateServiceRequest(issue)}
                         >
-                          <FolderPlus className="h-4 w-4 mr-1.5" />
-                          Create Case
+                          <Wrench className="h-4 w-4 mr-1.5" />
+                          Create Service Request
                         </Button>
                         <Button
                           size="sm"
@@ -220,12 +175,6 @@ export const CompactIssuesPanel = ({ issues, onNavigateToTab, customerName = "Cu
         defaultCaseType={selectedCaseType}
       />
 
-      <SendTeamDialog
-        open={sendTeamDialogOpen}
-        onOpenChange={setSendTeamDialogOpen}
-        alert={selectedIssueForTeam}
-        customerName={customerName}
-      />
     </>
   );
 };
