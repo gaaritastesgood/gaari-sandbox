@@ -2,10 +2,11 @@ import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Lightbulb, Mail, Info } from "lucide-react";
+import { Lightbulb, Mail, Info, ClipboardCheck } from "lucide-react";
 import { OpportunityItem, opportunityTypeConfig } from "@/data/kamDashboardData";
 import { ContactCustomerDialog } from "./ContactCustomerDialog";
 import { OpportunityDetailDialog } from "./OpportunityDetailDialog";
+import { ScheduleEvaluationDialog } from "./ScheduleEvaluationDialog";
 
 interface ActionableOpportunitiesPanelProps {
   opportunities: OpportunityItem[];
@@ -13,6 +14,16 @@ interface ActionableOpportunitiesPanelProps {
   customerEmail?: string;
   customerPhone?: string;
 }
+
+// Check if opportunity is heating/HVAC related
+const isHeatingRelated = (opp: OpportunityItem): boolean => {
+  const heatingKeywords = ['heat pump', 'hvac', 'heating', 'furnace', 'boiler', 'insulation', 'weatherization'];
+  const nameMatch = heatingKeywords.some(keyword => 
+    opp.opportunityName.toLowerCase().includes(keyword)
+  );
+  const typeMatch = opp.opportunityType === 'demand-response';
+  return nameMatch || (typeMatch && opp.opportunityName.toLowerCase().includes('heat'));
+};
 
 export const ActionableOpportunitiesPanel = ({ 
   opportunities, 
@@ -22,6 +33,7 @@ export const ActionableOpportunitiesPanel = ({
 }: ActionableOpportunitiesPanelProps) => {
   const [contactDialogOpen, setContactDialogOpen] = useState(false);
   const [detailDialogOpen, setDetailDialogOpen] = useState(false);
+  const [evaluationDialogOpen, setEvaluationDialogOpen] = useState(false);
   const [selectedOpportunity, setSelectedOpportunity] = useState<OpportunityItem | null>(null);
 
   if (opportunities.length === 0) {
@@ -36,6 +48,11 @@ export const ActionableOpportunitiesPanel = ({
   const handleViewDetails = (opp: OpportunityItem) => {
     setSelectedOpportunity(opp);
     setDetailDialogOpen(true);
+  };
+
+  const handleScheduleEvaluation = (opp: OpportunityItem) => {
+    setSelectedOpportunity(opp);
+    setEvaluationDialogOpen(true);
   };
 
   return (
@@ -79,6 +96,17 @@ export const ActionableOpportunitiesPanel = ({
                     <Info className="h-3 w-3 mr-1" />
                     Info
                   </Button>
+                  {isHeatingRelated(opp) && (
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="h-7 text-xs"
+                      onClick={() => handleScheduleEvaluation(opp)}
+                    >
+                      <ClipboardCheck className="h-3 w-3 mr-1" />
+                      Schedule Evaluation
+                    </Button>
+                  )}
                   <Button 
                     variant="outline" 
                     size="sm" 
@@ -110,6 +138,14 @@ export const ActionableOpportunitiesPanel = ({
         onOpenChange={setDetailDialogOpen}
         opportunity={selectedOpportunity}
         customerName={customerName}
+      />
+
+      <ScheduleEvaluationDialog
+        open={evaluationDialogOpen}
+        onOpenChange={setEvaluationDialogOpen}
+        opportunity={selectedOpportunity}
+        customerName={customerName}
+        customerPhone={customerPhone}
       />
     </>
   );
