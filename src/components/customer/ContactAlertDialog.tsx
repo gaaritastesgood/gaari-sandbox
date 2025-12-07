@@ -197,7 +197,7 @@ Let me know what works,
                 </div>
                 <div className="bg-background rounded p-2 text-center">
                   <div className="text-xs text-muted-foreground">Est. Impact</div>
-                  <div className="font-semibold text-status-error">$50K</div>
+                  <div className="font-semibold text-status-error">$15K</div>
                 </div>
                 <div className="bg-status-success-bg rounded p-2 text-center">
                   <div className="text-xs text-muted-foreground">Est. Restore</div>
