@@ -16,28 +16,37 @@ export const AlertStatusDialog = ({ open, onOpenChange, alert }: AlertStatusDial
 
   const severityStyle = severityConfig[alert.severity];
 
-  // Mock timeline data based on alert
-  const timeline = [
-    { time: "Dec 2, 08:42 AM", event: "Outage detected", status: "completed" },
-    { time: "Dec 2, 08:45 AM", event: "Alert generated and dispatched", status: "completed" },
-    { time: "Dec 2, 09:15 AM", event: "Field crew dispatched", status: "completed" },
-    { time: "Dec 2, 10:30 AM", event: "Root cause identified - equipment failure", status: "completed" },
-    { time: "Dec 2, 02:54 PM", event: "Service restored", status: "current" },
-    { time: "Pending", event: "Post-incident review", status: "pending" },
+  // Generate timeline based on alert category
+  const isOutage = alert.category === "outage";
+  
+  const timeline = isOutage ? [
+    { time: "Today, 08:15 AM", event: "Outage detected - feeder fault", status: "completed" },
+    { time: "Today, 08:17 AM", event: "Alert generated and dispatched", status: "completed" },
+    { time: "Today, 08:20 AM", event: "Emergency crew notified", status: "completed" },
+    { time: "Today, 08:35 AM", event: "Backup generation deployed", status: "completed" },
+    { time: "Today, 08:45 AM", event: "Service restored", status: "completed" },
+    { time: "Pending", event: "Post-incident review scheduled", status: "current" },
+  ] : [
+    { time: "Today, 09:00 AM", event: "Issue identified", status: "completed" },
+    { time: "Today, 09:15 AM", event: "Analysis in progress", status: "current" },
+    { time: "Pending", event: "Resolution pending", status: "pending" },
   ];
 
-  const affectedEquipment = [
-    { name: "Transformer T-4521", status: "Replaced" },
-    { name: "Breaker B-102", status: "Reset" },
-    { name: "Line Segment LS-78", status: "Inspected" },
+  const affectedEquipment = isOutage ? [
+    { name: "Feeder Circuit F-2847", status: "Repaired" },
+    { name: "Sectionalizer S-103", status: "Reset" },
+    { name: "Refrigeration Units (3)", status: "Restored" },
+  ] : [
+    { name: "Primary Service", status: "Active" },
+    { name: "Metering Equipment", status: "Normal" },
   ];
 
   const fieldCrew = {
-    team: "Line Crew Alpha",
+    team: "Emergency Response Team",
     lead: "Mike Rodriguez",
-    members: 4,
-    status: "On-site",
-    eta: "Completed",
+    members: 3,
+    status: isOutage ? "Completed" : "Standby",
+    eta: isOutage ? "Completed" : "As needed",
   };
 
   return (
@@ -154,18 +163,27 @@ export const AlertStatusDialog = ({ open, onOpenChange, alert }: AlertStatusDial
               Customer Communication
             </h4>
             <div className="space-y-2 text-sm">
-              <div className="p-2 bg-muted/50 rounded">
-                <div className="text-foreground">Outage notification sent</div>
-                <div className="text-xs text-muted-foreground">Dec 2, 08:50 AM • Automated</div>
-              </div>
-              <div className="p-2 bg-muted/50 rounded">
-                <div className="text-foreground">Called customer - spoke with operations manager</div>
-                <div className="text-xs text-muted-foreground">Dec 2, 09:30 AM • Sarah Chen</div>
-              </div>
-              <div className="p-2 bg-muted/50 rounded">
-                <div className="text-foreground">Restoration confirmation sent</div>
-                <div className="text-xs text-muted-foreground">Dec 2, 03:05 PM • Automated</div>
-              </div>
+              {isOutage ? (
+                <>
+                  <div className="p-2 bg-muted/50 rounded">
+                    <div className="text-foreground">Outage notification sent</div>
+                    <div className="text-xs text-muted-foreground">Today, 08:18 AM • Automated</div>
+                  </div>
+                  <div className="p-2 bg-muted/50 rounded">
+                    <div className="text-foreground">Called customer - spoke with operations manager</div>
+                    <div className="text-xs text-muted-foreground">Today, 08:25 AM • Marcus Johnson</div>
+                  </div>
+                  <div className="p-2 bg-muted/50 rounded">
+                    <div className="text-foreground">Service restoration confirmation sent</div>
+                    <div className="text-xs text-muted-foreground">Today, 08:47 AM • Automated</div>
+                  </div>
+                </>
+              ) : (
+                <div className="p-2 bg-muted/50 rounded">
+                  <div className="text-foreground">No customer contact required yet</div>
+                  <div className="text-xs text-muted-foreground">Monitoring in progress</div>
+                </div>
+              )}
             </div>
           </div>
         </div>
