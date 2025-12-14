@@ -275,7 +275,7 @@ const Residential = () => {
                               {searchResults.length} customer{searchResults.length !== 1 ? 's' : ''} found — select one to view
                             </p>
                           </div>
-                          <div className="bg-accent/50 border-2 border-primary/30 rounded-lg p-2 shadow-lg animate-in fade-in slide-in-from-top-2 duration-300">
+                          <div className="bg-card border-2 border-primary rounded-lg p-2 shadow-xl ring-4 ring-primary/20 animate-in fade-in slide-in-from-top-2 duration-300">
                             {searchResults.map((customer) => (
                               <button
                                 key={customer.id}
