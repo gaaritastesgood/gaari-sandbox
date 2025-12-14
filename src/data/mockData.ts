@@ -23,10 +23,10 @@ export const mockCustomers: Customer[] = [
     premises: [
       {
         id: "prem1",
-        address: "1842 Haight Street",
-        city: "San Francisco",
-        state: "CA",
-        zipCode: "94117",
+        address: "1842 South Street",
+        city: "Philadelphia",
+        state: "PA",
+        zipCode: "19146",
         premiseType: "residential",
         servicePoints: [
           {
@@ -63,10 +63,10 @@ export const mockCustomers: Customer[] = [
     premises: [
       {
         id: "prem2",
-        address: "123 Main Street",
-        city: "San Francisco",
-        state: "CA",
-        zipCode: "94101",
+        address: "123 Market Street",
+        city: "Philadelphia",
+        state: "PA",
+        zipCode: "19107",
         premiseType: "commercial",
         servicePoints: [
           {
@@ -103,10 +103,10 @@ export const mockCustomers: Customer[] = [
     premises: [
       {
         id: "prem3",
-        address: "456 Elm Avenue",
-        city: "San Francisco",
-        state: "CA",
-        zipCode: "94102",
+        address: "456 Walnut Street",
+        city: "Philadelphia",
+        state: "PA",
+        zipCode: "19106",
         premiseType: "residential",
         servicePoints: [
           {
@@ -143,10 +143,10 @@ export const mockCustomers: Customer[] = [
     premises: [
       {
         id: "prem4",
-        address: "789 Oak Street",
-        city: "San Francisco",
-        state: "CA",
-        zipCode: "94103",
+        address: "789 Chestnut Street",
+        city: "Philadelphia",
+        state: "PA",
+        zipCode: "19107",
         premiseType: "commercial",
         servicePoints: [
           {
@@ -183,10 +183,10 @@ export const mockCustomers: Customer[] = [
     premises: [
       {
         id: "prem5",
-        address: "101 Pine Avenue",
-        city: "San Francisco",
-        state: "CA",
-        zipCode: "94104",
+        address: "101 Pine Street",
+        city: "Philadelphia",
+        state: "PA",
+        zipCode: "19103",
         premiseType: "residential",
         servicePoints: [
           {
@@ -223,10 +223,10 @@ export const mockCustomers: Customer[] = [
     premises: [
       {
         id: "prem6",
-        address: "234 Maple Drive",
-        city: "San Francisco",
-        state: "CA",
-        zipCode: "94105",
+        address: "234 Spruce Street",
+        city: "Philadelphia",
+        state: "PA",
+        zipCode: "19106",
         premiseType: "residential",
         servicePoints: [
           {
@@ -263,10 +263,10 @@ export const mockCustomers: Customer[] = [
     premises: [
       {
         id: "prem7",
-        address: "567 Business Blvd",
-        city: "San Francisco",
-        state: "CA",
-        zipCode: "94106",
+        address: "567 Broad Street",
+        city: "Philadelphia",
+        state: "PA",
+        zipCode: "19102",
         premiseType: "commercial",
         servicePoints: [
           {
@@ -303,10 +303,10 @@ export const mockCustomers: Customer[] = [
     premises: [
       {
         id: "prem8",
-        address: "890 Cedar Lane",
-        city: "San Francisco",
-        state: "CA",
-        zipCode: "94107",
+        address: "890 Locust Street",
+        city: "Philadelphia",
+        state: "PA",
+        zipCode: "19107",
         premiseType: "residential",
         servicePoints: [
           {
@@ -343,10 +343,10 @@ export const mockCustomers: Customer[] = [
     premises: [
       {
         id: "prem9",
-        address: "123 Birch Court",
-        city: "San Francisco",
-        state: "CA",
-        zipCode: "94108",
+        address: "123 Arch Street",
+        city: "Philadelphia",
+        state: "PA",
+        zipCode: "19106",
         premiseType: "residential",
         servicePoints: [
           {
@@ -383,10 +383,10 @@ export const mockCustomers: Customer[] = [
     premises: [
       {
         id: "prem10",
-        address: "456 Commerce Way",
-        city: "San Francisco",
-        state: "CA",
-        zipCode: "94109",
+        address: "456 Commerce Street",
+        city: "Philadelphia",
+        state: "PA",
+        zipCode: "19103",
         premiseType: "commercial",
         servicePoints: [
           {
@@ -465,10 +465,10 @@ export const mockCustomers: Customer[] = [
     premises: [
       {
         id: "prem12",
-        address: "2400 Data Center Drive",
-        city: "Santa Clara",
-        state: "CA",
-        zipCode: "95054",
+        address: "2400 American Street",
+        city: "Philadelphia",
+        state: "PA",
+        zipCode: "19133",
         premiseType: "office",
         servicePoints: [
           {
@@ -506,10 +506,10 @@ export const mockCustomers: Customer[] = [
     premises: [
       {
         id: "prem13",
-        address: "1500 Riverside Warehouse Blvd",
-        city: "Sacramento",
-        state: "CA",
-        zipCode: "95838",
+        address: "1500 Delaware Avenue",
+        city: "Philadelphia",
+        state: "PA",
+        zipCode: "19125",
         premiseType: "office",
         servicePoints: [
           {
@@ -547,10 +547,10 @@ export const mockCustomers: Customer[] = [
     premises: [
       {
         id: "prem14",
-        address: "3200 Grandview Medical Plaza",
-        city: "San Francisco",
-        state: "CA",
-        zipCode: "94132",
+        address: "3200 Henry Avenue",
+        city: "Philadelphia",
+        state: "PA",
+        zipCode: "19129",
         premiseType: "office",
         servicePoints: [
           {
@@ -588,10 +588,10 @@ export const mockCustomers: Customer[] = [
     premises: [
       {
         id: "prem15",
-        address: "7800 Manufacturing Way",
-        city: "Fremont",
-        state: "CA",
-        zipCode: "94538",
+        address: "7800 State Road",
+        city: "Philadelphia",
+        state: "PA",
+        zipCode: "19136",
         premiseType: "office",
         servicePoints: [
           {
