@@ -66,7 +66,7 @@ export const Customer360Header = ({ customer, bills = [] }: Customer360HeaderPro
             </span>
             <span className="flex items-center gap-1.5">
               <MapPin className="h-3.5 w-3.5" />
-              {premise?.city}, {premise?.state}
+              {premise?.address}, {premise?.city}, {premise?.state} {premise?.zipCode}
             </span>
             <span className="flex items-center gap-1.5">
               <Mail className="h-3.5 w-3.5" />
