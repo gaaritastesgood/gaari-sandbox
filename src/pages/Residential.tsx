@@ -40,7 +40,7 @@ const Residential = () => {
         p.address.toLowerCase().includes(address.toLowerCase()) ||
         p.city.toLowerCase().includes(address.toLowerCase())
       );
-      const bpIdMatch = !bpId || customer.businessPartnerId.includes(bpId);
+      const bpIdMatch = !bpId || customer.businessPartnerId.toLowerCase().includes(bpId.toLowerCase());
 
       return firstNameMatch && lastNameMatch && addressMatch && bpIdMatch;
     });
