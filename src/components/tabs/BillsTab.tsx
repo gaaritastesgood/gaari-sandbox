@@ -1,21 +1,77 @@
 import { useState } from "react";
-import { Bill } from "@/types/customer";
+import { Bill, ConsolidatedIssue } from "@/types/customer";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { FileText, Download, ChevronRight, AlertCircle } from "lucide-react";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { FileText, Download, ChevronRight, AlertCircle, AlertTriangle, CheckCircle, Wrench, ExternalLink } from "lucide-react";
 import { CaseCreationDialog } from "@/components/CaseCreationDialog";
+import { toast } from "@/hooks/use-toast";
 
 interface BillsTabProps {
   bills: Bill[];
   customerSegment?: "residential" | "commercial" | "industrial";
   customerId?: string;
   customerName?: string;
+  issues?: ConsolidatedIssue[];
+  onNavigateToTab?: (tab: string) => void;
 }
 
-export const BillsTab = ({ bills, customerSegment, customerId, customerName }: BillsTabProps) => {
+export const BillsTab = ({ bills, customerSegment, customerId, customerName, issues = [], onNavigateToTab }: BillsTabProps) => {
   const [selectedBill, setSelectedBill] = useState<Bill | null>(null);
   const [showCaseDialog, setShowCaseDialog] = useState(false);
+  const [selectedCaseType, setSelectedCaseType] = useState<string | undefined>("high_bill");
+  const [resolvedIssues, setResolvedIssues] = useState<Set<string>>(new Set());
+  const [expandedIssues, setExpandedIssues] = useState<Set<string>>(new Set());
+
+  const openIssues = issues.filter(issue => !resolvedIssues.has(issue.id));
+
+  const handleCreateServiceRequest = (issue: ConsolidatedIssue) => {
+    setSelectedCaseType("service_problems");
+    setShowCaseDialog(true);
+  };
+
+  const handleResolve = (issueId: string) => {
+    setResolvedIssues(prev => new Set([...prev, issueId]));
+    toast({
+      title: "Issue Resolved",
+      description: "Issue has been marked as resolved.",
+    });
+  };
+
+  const toggleExpanded = (issueId: string) => {
+    setExpandedIssues(prev => {
+      const next = new Set(prev);
+      if (next.has(issueId)) {
+        next.delete(issueId);
+      } else {
+        next.add(issueId);
+      }
+      return next;
+    });
+  };
+
+  const getSeverityIcon = (severity: ConsolidatedIssue["severity"]) => {
+    switch (severity) {
+      case "error":
+        return <AlertCircle className="h-5 w-5 text-status-error" />;
+      case "warning":
+        return <AlertTriangle className="h-5 w-5 text-status-warning" />;
+      default:
+        return <AlertCircle className="h-5 w-5 text-status-info" />;
+    }
+  };
+
+  const getSeverityBadgeClass = (severity: ConsolidatedIssue["severity"]) => {
+    switch (severity) {
+      case "error":
+        return "bg-status-error-bg text-status-error";
+      case "warning":
+        return "bg-status-warning-bg text-status-warning";
+      default:
+        return "bg-status-info-bg text-status-info";
+    }
+  };
 
   const getChargesByCategory = (bill: Bill) => {
     const energyCost = bill.charges.find(c => c.category === "Energy");
@@ -38,9 +94,99 @@ export const BillsTab = ({ bills, customerSegment, customerId, customerName }: B
   };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-      <div className="lg:col-span-2 space-y-4">
-        <div className="bg-card border border-border rounded-lg overflow-hidden">
+    <div className="space-y-4">
+      {/* Issues Alert Panel */}
+      {openIssues.length > 0 && (
+        <Card className="p-4 border-border">
+          <div className="flex items-center gap-2 mb-4">
+            <AlertTriangle className="h-5 w-5 text-status-warning" />
+            <h3 className="font-semibold text-base text-foreground">Billing Issues Detected</h3>
+            <Badge variant="outline" className="text-sm bg-status-warning-bg text-status-warning">
+              {openIssues.length}
+            </Badge>
+          </div>
+
+          <div className="space-y-3">
+            {openIssues.map((issue) => (
+              <Collapsible
+                key={issue.id}
+                open={expandedIssues.has(issue.id)}
+                onOpenChange={() => toggleExpanded(issue.id)}
+              >
+                <div className="rounded-md border border-border p-3 bg-card">
+                  <div className="flex items-start gap-3">
+                    {getSeverityIcon(issue.severity)}
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between gap-2">
+                        <h4 className="font-semibold text-base text-foreground truncate">{issue.title}</h4>
+                        <Badge variant="outline" className={`text-sm shrink-0 ${getSeverityBadgeClass(issue.severity)}`}>
+                          {issue.severity === "error" ? "Urgent" : issue.severity === "warning" ? "Attention" : "Info"}
+                        </Badge>
+                      </div>
+                      <p className="text-sm text-muted-foreground mt-1 line-clamp-2">{issue.summary}</p>
+                      
+                      <div className="flex items-center justify-between mt-3">
+                        <CollapsibleTrigger asChild>
+                          <Button variant="outline" size="sm" className="h-8 text-sm bg-muted hover:bg-muted/80 gap-1.5">
+                            <ChevronRight className={`h-4 w-4 transition-transform ${expandedIssues.has(issue.id) ? "rotate-90" : ""}`} />
+                            View Evidence ({issue.supportingFacts.length})
+                          </Button>
+                        </CollapsibleTrigger>
+                        <div className="flex gap-2">
+                          <Button
+                            size="sm"
+                            className="h-8 text-sm px-3"
+                            onClick={() => handleCreateServiceRequest(issue)}
+                          >
+                            <Wrench className="h-4 w-4 mr-1.5" />
+                            Create Service Request
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="h-8 text-sm px-3 text-status-success hover:text-status-success hover:bg-status-success-bg border-status-success/30"
+                            onClick={() => handleResolve(issue.id)}
+                          >
+                            <CheckCircle className="h-4 w-4 mr-1.5" />
+                            Resolve
+                          </Button>
+                        </div>
+                      </div>
+
+                      <CollapsibleContent>
+                        <div className="mt-3 pt-3 border-t border-border space-y-2">
+                          {issue.supportingFacts.map((fact, idx) => (
+                            <div key={idx} className="flex items-center justify-between text-sm bg-muted/50 rounded px-3 py-2">
+                              <span className="text-foreground">• {fact.fact}</span>
+                              {onNavigateToTab && (
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  className="h-7 text-sm text-primary hover:text-primary/80 px-2"
+                                  onClick={() => onNavigateToTab(fact.linkTab)}
+                                >
+                                  <ExternalLink className="h-4 w-4" />
+                                </Button>
+                              )}
+                            </div>
+                          ))}
+                          <p className="text-sm text-muted-foreground italic pt-1">
+                            {issue.recommendedAction}
+                          </p>
+                        </div>
+                      </CollapsibleContent>
+                    </div>
+                  </div>
+                </div>
+              </Collapsible>
+            ))}
+          </div>
+        </Card>
+      )}
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        <div className="lg:col-span-2 space-y-4">
+          <div className="bg-card border border-border rounded-lg overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead className="bg-muted">
@@ -222,13 +368,6 @@ export const BillsTab = ({ bills, customerSegment, customerId, customerName }: B
               </div>
             </div>
 
-            <CaseCreationDialog
-              open={showCaseDialog}
-              onOpenChange={setShowCaseDialog}
-              customerId={customerId}
-              customerName={customerName}
-              defaultCaseType="high_bill"
-            />
           </Card>
         ) : (
           <Card className="p-8 border-border text-center">
@@ -236,7 +375,16 @@ export const BillsTab = ({ bills, customerSegment, customerId, customerName }: B
             <p className="text-muted-foreground">Select a bill to view details</p>
           </Card>
         )}
+        </div>
       </div>
+
+      <CaseCreationDialog
+        open={showCaseDialog}
+        onOpenChange={setShowCaseDialog}
+        customerId={customerId}
+        customerName={customerName}
+        defaultCaseType={selectedCaseType}
+      />
     </div>
   );
 };
