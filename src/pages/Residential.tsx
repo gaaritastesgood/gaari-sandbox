@@ -47,11 +47,6 @@ const Residential = () => {
 
     setSearchResults(results);
     setHasSearched(true);
-
-    // Auto-select if only one result
-    if (results.length === 1) {
-      setSelectedCustomer(results[0]);
-    }
   };
 
   const handleClearSearch = () => {
@@ -275,23 +270,27 @@ const Residential = () => {
                         </p>
                       ) : (
                         <div className="space-y-2">
-                          <p className="text-sm text-muted-foreground mb-3">
-                            {searchResults.length} customer{searchResults.length !== 1 ? 's' : ''} found
-                          </p>
-                          {searchResults.map((customer) => (
-                            <button
-                              key={customer.id}
-                              onClick={() => handleSelectCustomer(customer)}
-                              className="w-full px-4 py-3 text-left hover:bg-muted transition-colors border border-border rounded-lg"
-                            >
-                              <div className="font-medium text-foreground">
-                                {customer.firstName} {customer.lastName}
-                              </div>
-                              <div className="text-sm text-muted-foreground mt-1">
-                                BP: {customer.businessPartnerId} • {customer.premises[0]?.address}, {customer.premises[0]?.city}
-                              </div>
-                            </button>
-                          ))}
+                          <div className="flex items-center justify-between mb-3">
+                            <p className="text-sm font-medium text-foreground">
+                              {searchResults.length} customer{searchResults.length !== 1 ? 's' : ''} found — select one to view
+                            </p>
+                          </div>
+                          <div className="bg-accent/50 border-2 border-primary/30 rounded-lg p-2 shadow-lg animate-in fade-in slide-in-from-top-2 duration-300">
+                            {searchResults.map((customer) => (
+                              <button
+                                key={customer.id}
+                                onClick={() => handleSelectCustomer(customer)}
+                                className="w-full px-4 py-3 text-left hover:bg-primary/10 transition-colors rounded-md group"
+                              >
+                                <div className="font-medium text-foreground group-hover:text-primary">
+                                  {customer.firstName} {customer.lastName}
+                                </div>
+                                <div className="text-sm text-muted-foreground mt-1">
+                                  BP: {customer.businessPartnerId} • {customer.premises[0]?.address}, {customer.premises[0]?.city}, {customer.premises[0]?.state} {customer.premises[0]?.zipCode}
+                                </div>
+                              </button>
+                            ))}
+                          </div>
                         </div>
                       )}
                     </div>
