@@ -95,27 +95,28 @@ export const BillsTab = ({ bills, customerSegment, customerId, customerName, iss
 
   return (
     <div className="space-y-4">
+      {/* Create Billing Case Button - Always visible */}
+      <div className="flex justify-end">
+        <Button
+          onClick={() => {
+            setSelectedCaseType("high_bill");
+            setShowCaseDialog(true);
+          }}
+        >
+          <FileText className="h-4 w-4 mr-1.5" />
+          Create Billing Case
+        </Button>
+      </div>
+
       {/* Issues Alert Panel */}
       {openIssues.length > 0 && (
         <Card className="p-4 border-border">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-2">
-              <AlertTriangle className="h-5 w-5 text-status-warning" />
-              <h3 className="font-semibold text-base text-foreground">Billing Issues Detected</h3>
-              <Badge variant="outline" className="text-sm bg-status-warning-bg text-status-warning">
-                {openIssues.length}
-              </Badge>
-            </div>
-            <Button
-              size="sm"
-              onClick={() => {
-                setSelectedCaseType("high_bill");
-                setShowCaseDialog(true);
-              }}
-            >
-              <FileText className="h-4 w-4 mr-1.5" />
-              Create Billing Case
-            </Button>
+          <div className="flex items-center gap-2 mb-4">
+            <AlertTriangle className="h-5 w-5 text-status-warning" />
+            <h3 className="font-semibold text-base text-foreground">Billing Issues Detected</h3>
+            <Badge variant="outline" className="text-sm bg-status-warning-bg text-status-warning">
+              {openIssues.length}
+            </Badge>
           </div>
 
           <div className="space-y-3">
