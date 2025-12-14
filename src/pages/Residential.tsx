@@ -15,6 +15,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Customer } from "@/types/customer";
 import { mockCustomers, mockBills, mockPayments, mockInteractions, mockCases, mockRates, mockMeterReadings } from "@/data/mockData";
+import { getConsolidatedIssues } from "@/data/consolidatedCustomerData";
 import { MessageSquare, ArrowLeft, Search, Home } from "lucide-react";
 
 const Residential = () => {
@@ -79,6 +80,7 @@ const Residential = () => {
   const cases = selectedCustomer ? mockCases[selectedCustomer.id] || [] : [];
   const rates = selectedCustomer ? mockRates[selectedCustomer.contractAccounts[0].id] || [] : [];
   const meterReadings = selectedCustomer ? mockMeterReadings[selectedCustomer.premises[0].servicePoints[0].id] || [] : [];
+  const consolidatedIssues = selectedCustomer ? getConsolidatedIssues(selectedCustomer.id) : [];
 
   // Check if search criteria is sufficient (at least 2 fields filled or BP ID)
   const hasEnoughCriteria = bpId.length > 0 || 
@@ -165,6 +167,8 @@ const Residential = () => {
                         customerSegment={selectedCustomer.segment}
                         customerId={selectedCustomer.id}
                         customerName={`${selectedCustomer.firstName} ${selectedCustomer.lastName}`}
+                        issues={consolidatedIssues}
+                        onNavigateToTab={handleNavigateToTab}
                       />
                     </TabsContent>
 
