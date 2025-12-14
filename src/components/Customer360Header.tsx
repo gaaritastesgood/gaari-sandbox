@@ -2,10 +2,7 @@ import { useState } from "react";
 import { Customer, Bill } from "@/types/customer";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Building2, MapPin, Mail, Phone, FileText, MessageSquare, DollarSign, AlertTriangle } from "lucide-react";
-import { AddNoteDialog } from "./AddNoteDialog";
-import { EmailBillDialog } from "./EmailBillDialog";
-import { IssueAdjustmentDialog } from "./IssueAdjustmentDialog";
+import { Building2, MapPin, Mail, Phone, AlertTriangle } from "lucide-react";
 import { CaseCreationDialog } from "./CaseCreationDialog";
 
 interface Customer360HeaderProps {
@@ -14,9 +11,6 @@ interface Customer360HeaderProps {
 }
 
 export const Customer360Header = ({ customer, bills = [] }: Customer360HeaderProps) => {
-  const [showAddNote, setShowAddNote] = useState(false);
-  const [showEmailBill, setShowEmailBill] = useState(false);
-  const [showIssueAdjustment, setShowIssueAdjustment] = useState(false);
   const [showCreateCase, setShowCreateCase] = useState(false);
 
   const activeAccount = customer.contractAccounts[0];
@@ -89,30 +83,15 @@ export const Customer360Header = ({ customer, bills = [] }: Customer360HeaderPro
             </div>
           </div>
           
-          <div className="flex gap-1.5 border-l border-border pl-4">
-            <Button size="sm" variant="outline" className="h-7 text-xs" onClick={() => setShowAddNote(true)}>
-              <MessageSquare className="h-3.5 w-3.5 mr-1" />
-              Note
-            </Button>
-            <Button size="sm" variant="outline" className="h-7 text-xs" onClick={() => setShowEmailBill(true)}>
-              <FileText className="h-3.5 w-3.5 mr-1" />
-              Email
-            </Button>
-            <Button size="sm" variant="outline" className="h-7 text-xs" onClick={() => setShowIssueAdjustment(true)}>
-              <DollarSign className="h-3.5 w-3.5 mr-1" />
-              Adjust
-            </Button>
+          <div className="border-l border-border pl-4">
             <Button size="sm" variant="outline" className="h-7 text-xs" onClick={() => setShowCreateCase(true)}>
               <AlertTriangle className="h-3.5 w-3.5 mr-1" />
-              Case
+              Add Case
             </Button>
           </div>
         </div>
       </div>
 
-      <AddNoteDialog open={showAddNote} onOpenChange={setShowAddNote} customer={customer} />
-      <EmailBillDialog open={showEmailBill} onOpenChange={setShowEmailBill} customer={customer} bills={bills} />
-      <IssueAdjustmentDialog open={showIssueAdjustment} onOpenChange={setShowIssueAdjustment} customer={customer} bills={bills} />
       <CaseCreationDialog open={showCreateCase} onOpenChange={setShowCreateCase} customerName={`${customer.firstName} ${customer.lastName}`} />
     </div>
   );
