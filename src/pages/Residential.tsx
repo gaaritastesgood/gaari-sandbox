@@ -206,45 +206,69 @@ const Residential = () => {
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="firstName">First Name</Label>
-                      <Input
-                        id="firstName"
-                        placeholder="e.g., John"
-                        value={firstName}
-                        onChange={(e) => setFirstName(e.target.value)}
-                      />
+                  {/* Option 1: Name and Address */}
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-2">
+                      <div className="h-6 w-6 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-sm font-medium">1</div>
+                      <span className="font-medium text-foreground">Search by Name & Address</span>
                     </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="lastName">Last Name</Label>
-                      <Input
-                        id="lastName"
-                        placeholder="e.g., Smith"
-                        value={lastName}
-                        onChange={(e) => setLastName(e.target.value)}
-                      />
+                    <div className="pl-8 space-y-4">
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="firstName">First Name</Label>
+                          <Input
+                            id="firstName"
+                            placeholder="e.g., John"
+                            value={firstName}
+                            onChange={(e) => setFirstName(e.target.value)}
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="lastName">Last Name</Label>
+                          <Input
+                            id="lastName"
+                            placeholder="e.g., Smith"
+                            value={lastName}
+                            onChange={(e) => setLastName(e.target.value)}
+                          />
+                        </div>
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="address">Address</Label>
+                        <Input
+                          id="address"
+                          placeholder="e.g., 123 Main Street"
+                          value={address}
+                          onChange={(e) => setAddress(e.target.value)}
+                        />
+                      </div>
                     </div>
                   </div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="address">Address</Label>
-                    <Input
-                      id="address"
-                      placeholder="e.g., 123 Main Street"
-                      value={address}
-                      onChange={(e) => setAddress(e.target.value)}
-                    />
+                  {/* OR Divider */}
+                  <div className="flex items-center gap-4">
+                    <div className="flex-1 h-px bg-border"></div>
+                    <span className="text-sm font-semibold text-muted-foreground px-2">OR</span>
+                    <div className="flex-1 h-px bg-border"></div>
                   </div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="bpId">Business Partner ID</Label>
-                    <Input
-                      id="bpId"
-                      placeholder="e.g., BP001"
-                      value={bpId}
-                      onChange={(e) => setBpId(e.target.value)}
-                    />
+                  {/* Option 2: BP ID */}
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-2">
+                      <div className="h-6 w-6 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-sm font-medium">2</div>
+                      <span className="font-medium text-foreground">Search by Business Partner ID</span>
+                    </div>
+                    <div className="pl-8">
+                      <div className="space-y-2">
+                        <Label htmlFor="bpId">Business Partner ID</Label>
+                        <Input
+                          id="bpId"
+                          placeholder="e.g., BP001234"
+                          value={bpId}
+                          onChange={(e) => setBpId(e.target.value)}
+                        />
+                      </div>
+                    </div>
                   </div>
 
                   <div className="flex gap-3">
