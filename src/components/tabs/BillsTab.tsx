@@ -20,7 +20,7 @@ interface BillsTabProps {
 export const BillsTab = ({ bills, customerSegment, customerId, customerName, issues = [], onNavigateToTab }: BillsTabProps) => {
   const [selectedBill, setSelectedBill] = useState<Bill | null>(null);
   const [showCaseDialog, setShowCaseDialog] = useState(false);
-  const [selectedCaseType, setSelectedCaseType] = useState<string | undefined>("high_bill");
+  const [selectedCaseType, setSelectedCaseType] = useState<string | undefined>("billing");
   const [resolvedIssues, setResolvedIssues] = useState<Set<string>>(new Set());
   const [expandedIssues, setExpandedIssues] = useState<Set<string>>(new Set());
 
@@ -99,7 +99,7 @@ export const BillsTab = ({ bills, customerSegment, customerId, customerName, iss
       <div className="flex justify-end">
         <Button
           onClick={() => {
-            setSelectedCaseType("high_bill");
+            setSelectedCaseType("billing");
             setShowCaseDialog(true);
           }}
         >
