@@ -104,8 +104,10 @@ export const CaseCreationDialog = ({ open, onOpenChange, customerName, defaultCa
   const [hasSafetyHazards, setHasSafetyHazards] = useState<"yes" | "no" | "">("");
   const [neighborsAffected, setNeighborsAffected] = useState<"yes" | "no" | "not_sure" | "">("");
 
-  // Mock customer address
-  const customerAddress = "1234 Oak Street, Apt 5B, Springfield, IL 62701";
+  // Address state - editable
+  const defaultAddress = "1234 Oak Street, Apt 5B, Springfield, IL 62701";
+  const [customerAddress, setCustomerAddress] = useState(defaultAddress);
+  const [isEditingAddress, setIsEditingAddress] = useState(false);
 
   useEffect(() => {
     if (open) {
@@ -516,18 +518,62 @@ export const CaseCreationDialog = ({ open, onOpenChange, customerName, defaultCa
                   </div>
 
                   <div className="rounded-lg border border-border bg-background p-4 space-y-3">
-                    <div className="flex items-center gap-2">
-                      <MapPin className="h-4 w-4 text-primary" />
-                      <Label className="font-medium">Confirm Service Address</Label>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <MapPin className="h-4 w-4 text-primary" />
+                        <Label className="font-medium">Confirm Service Address</Label>
+                      </div>
+                      {!isEditingAddress && (
+                        <Button 
+                          variant="ghost" 
+                          size="sm" 
+                          onClick={() => setIsEditingAddress(true)}
+                          className="text-xs h-7"
+                        >
+                          Edit
+                        </Button>
+                      )}
                     </div>
                     
-                    <div className="bg-muted/30 rounded-md p-3 text-sm">
-                      <div className="font-medium text-foreground">{customerAddress}</div>
-                    </div>
+                    {isEditingAddress ? (
+                      <div className="space-y-2">
+                        <Textarea
+                          value={customerAddress}
+                          onChange={(e) => setCustomerAddress(e.target.value)}
+                          placeholder="Enter service address..."
+                          className="min-h-[60px] bg-background text-sm"
+                        />
+                        <div className="flex gap-2">
+                          <Button 
+                            size="sm" 
+                            variant="outline"
+                            onClick={() => {
+                              setIsEditingAddress(false);
+                              setCustomerAddress(defaultAddress);
+                            }}
+                            className="flex-1"
+                          >
+                            Cancel
+                          </Button>
+                          <Button 
+                            size="sm"
+                            onClick={() => setIsEditingAddress(false)}
+                            className="flex-1"
+                          >
+                            Save
+                          </Button>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="bg-muted/30 rounded-md p-3 text-sm">
+                        <div className="font-medium text-foreground">{customerAddress}</div>
+                      </div>
+                    )}
 
                     <Button 
                       className="w-full" 
                       onClick={handleAddressConfirm}
+                      disabled={isEditingAddress || !customerAddress.trim()}
                     >
                       <CheckCircle2 className="h-4 w-4 mr-2" />
                       Confirm Address & Check Outage Status
