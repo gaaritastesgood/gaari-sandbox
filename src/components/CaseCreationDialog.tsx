@@ -11,6 +11,7 @@ import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { MeterRereadDialog } from "@/components/MeterRereadDialog";
+import { MoveOutDialog } from "@/components/MoveOutDialog";
 
 interface CaseCreationDialogProps {
   open: boolean;
@@ -100,6 +101,7 @@ export const CaseCreationDialog = ({ open, onOpenChange, customerName, defaultCa
   const [explanationMethod, setExplanationMethod] = useState("email");
   const [billingActionSelected, setBillingActionSelected] = useState(false);
   const [showMeterRereadDialog, setShowMeterRereadDialog] = useState(false);
+  const [showMoveOutDialog, setShowMoveOutDialog] = useState(false);
 
   // Outage-specific states
   const [outageStep, setOutageStep] = useState<OutageStep>("address_confirm");
@@ -345,7 +347,13 @@ export const CaseCreationDialog = ({ open, onOpenChange, customerName, defaultCa
                     <button
                       key={option.value}
                       type="button"
-                      onClick={() => setSubOption(option.value)}
+                      onClick={() => {
+                        if (option.value === "move_out") {
+                          setShowMoveOutDialog(true);
+                        } else {
+                          setSubOption(option.value);
+                        }
+                      }}
                       className="w-full flex items-center justify-between p-3 rounded-lg border border-border bg-background hover:bg-muted text-left transition-colors"
                     >
                       <span className="text-sm font-medium">{option.label}</span>
@@ -890,7 +898,17 @@ export const CaseCreationDialog = ({ open, onOpenChange, customerName, defaultCa
       onOpenChange={(open) => {
         setShowMeterRereadDialog(open);
         if (!open) {
-          // Close the case dialog when meter reread dialog closes after completion
+          onOpenChange(false);
+        }
+      }}
+      customerName={customerName}
+    />
+
+    <MoveOutDialog
+      open={showMoveOutDialog}
+      onOpenChange={(open) => {
+        setShowMoveOutDialog(open);
+        if (!open) {
           onOpenChange(false);
         }
       }}

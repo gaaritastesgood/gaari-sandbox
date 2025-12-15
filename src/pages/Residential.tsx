@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { Customer360Header } from "@/components/Customer360Header";
 import { InteractionPanel } from "@/components/InteractionPanel";
 import { MoveInDialog } from "@/components/MoveInDialog";
-import { MoveOutDialog } from "@/components/MoveOutDialog";
 import { OverviewTab } from "@/components/tabs/OverviewTab";
 import { BillsTab } from "@/components/tabs/BillsTab";
 import { RatesTab } from "@/components/tabs/RatesTab";
@@ -18,7 +17,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Customer } from "@/types/customer";
 import { mockCustomers, mockBills, mockPayments, mockInteractions, mockCases, mockRates, mockMeterReadings } from "@/data/mockData";
 import { getConsolidatedIssues } from "@/data/consolidatedCustomerData";
-import { MessageSquare, ArrowLeft, Search, Home, UserPlus, LogOut } from "lucide-react";
+import { MessageSquare, ArrowLeft, Search, Home, UserPlus } from "lucide-react";
 
 const Residential = () => {
   const navigate = useNavigate();
@@ -35,7 +34,6 @@ const Residential = () => {
   const [searchResults, setSearchResults] = useState<Customer[]>([]);
   const [hasSearched, setHasSearched] = useState(false);
   const [showMoveInDialog, setShowMoveInDialog] = useState(false);
-  const [showMoveOutDialog, setShowMoveOutDialog] = useState(false);
 
   const handleSearch = () => {
     const results = mockCustomers.filter((customer) => {
@@ -295,24 +293,14 @@ const Residential = () => {
                     <div className="flex-1 h-px bg-border"></div>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-3">
-                    <Button 
-                      variant="outline" 
-                      className="border-primary text-primary hover:bg-primary/10"
-                      onClick={() => setShowMoveInDialog(true)}
-                    >
-                      <UserPlus className="h-4 w-4 mr-2" />
-                      Move-In
-                    </Button>
-                    <Button 
-                      variant="outline" 
-                      className="border-amber-500 text-amber-600 hover:bg-amber-50"
-                      onClick={() => setShowMoveOutDialog(true)}
-                    >
-                      <LogOut className="h-4 w-4 mr-2" />
-                      Move-Out
-                    </Button>
-                  </div>
+                  <Button 
+                    variant="outline" 
+                    className="w-full border-primary text-primary hover:bg-primary/10"
+                    onClick={() => setShowMoveInDialog(true)}
+                  >
+                    <UserPlus className="h-4 w-4 mr-2" />
+                    New Customer / Move-In
+                  </Button>
 
                   {/* Search Results */}
                   {hasSearched && (
@@ -372,11 +360,6 @@ const Residential = () => {
       <MoveInDialog 
         open={showMoveInDialog} 
         onOpenChange={setShowMoveInDialog} 
-      />
-
-      <MoveOutDialog 
-        open={showMoveOutDialog} 
-        onOpenChange={setShowMoveOutDialog} 
       />
     </div>
   );
