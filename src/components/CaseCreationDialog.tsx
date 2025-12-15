@@ -56,9 +56,6 @@ const CASE_TYPES = [
     subOptions: [
       ...BILLING_SUB_OPTIONS.map(o => ({ value: o.value, label: o.label })),
       { value: "payment_arrangement", label: "Payment Arrangement" },
-      { value: "refund_request", label: "Refund Request" },
-      { value: "payment_issue", label: "Payment Issue" },
-      { value: "deposit_inquiry", label: "Deposit Inquiry" },
     ]
   },
   { 
