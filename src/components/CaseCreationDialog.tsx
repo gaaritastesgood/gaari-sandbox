@@ -87,13 +87,14 @@ export const CaseCreationDialog = ({ open, onOpenChange, customerName, defaultCa
   const [subOption, setSubOption] = useState("");
   const [description, setDescription] = useState("");
   
-  // Billing-specific states
+// Billing-specific states
   const [createWorkOrder, setCreateWorkOrder] = useState(false);
   const [setupPaymentPlan, setSetupPaymentPlan] = useState(false);
   const [paymentPlanDuration, setPaymentPlanDuration] = useState("");
   const [downPayment, setDownPayment] = useState("");
   const [sendExplanation, setSendExplanation] = useState(false);
   const [explanationMethod, setExplanationMethod] = useState("email");
+  const [billingActionSelected, setBillingActionSelected] = useState(false);
 
   // Outage-specific states
   const [outageStep, setOutageStep] = useState<OutageStep>("address_confirm");
@@ -218,6 +219,17 @@ export const CaseCreationDialog = ({ open, onOpenChange, customerName, defaultCa
       }
     }
     
+// Handle billing action step back navigation
+    if (subOption && isBillingCase && billingActionSelected) {
+      setBillingActionSelected(false);
+      setCreateWorkOrder(false);
+      setSetupPaymentPlan(false);
+      setPaymentPlanDuration("");
+      setDownPayment("");
+      setSendExplanation(false);
+      return;
+    }
+    
     if (subOption) {
       setSubOption("");
       setCreateWorkOrder(false);
@@ -225,6 +237,7 @@ export const CaseCreationDialog = ({ open, onOpenChange, customerName, defaultCa
       setPaymentPlanDuration("");
       setDownPayment("");
       setSendExplanation(false);
+      setBillingActionSelected(false);
       // Reset outage states
       setOutageStep("address_confirm");
       setAddressConfirmed(false);
@@ -250,7 +263,7 @@ export const CaseCreationDialog = ({ open, onOpenChange, customerName, defaultCa
 
   const selectedTypeData = CASE_TYPES.find(t => t.value === caseType);
   const selectedBillingOption = BILLING_SUB_OPTIONS.find(o => o.value === subOption);
-  const showBackButton = (caseType && !defaultCaseType) || subOption;
+  const showBackButton = (caseType && !defaultCaseType) || subOption || billingActionSelected;
   const isBillingCase = caseType === "billing";
 
   return (
@@ -338,13 +351,159 @@ export const CaseCreationDialog = ({ open, onOpenChange, customerName, defaultCa
             </div>
           )}
 
-          {/* Step 3: Billing Case Details */}
-          {caseType && subOption && isBillingCase && selectedBillingOption && (
+          {/* Step 3a: Billing Action Items Menu */}
+          {caseType && subOption && isBillingCase && selectedBillingOption && !billingActionSelected && (
             <div className="space-y-4">
               <div className="bg-muted/50 rounded-lg p-3 border border-border">
                 <div className="text-xs text-muted-foreground">Case Type</div>
                 <div className="font-medium text-foreground">{selectedBillingOption.label}</div>
               </div>
+
+              <div className="bg-muted/30 rounded-md p-3 text-sm text-muted-foreground italic border-l-2 border-primary/30">
+                "{selectedBillingOption.explanation}"
+              </div>
+
+              <div className="space-y-2">
+                <Label className="font-medium">Select Action</Label>
+                
+                {/* Meter Reading Error Actions */}
+                {selectedBillingOption.allowsWorkOrder && (
+                  <div className="space-y-2">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setCreateWorkOrder(true);
+                        setBillingActionSelected(true);
+                      }}
+                      className="w-full flex items-center justify-between p-4 rounded-lg border border-border bg-background hover:bg-muted text-left transition-colors"
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className="p-2 rounded-md bg-primary/10">
+                          <ClipboardList className="h-5 w-5 text-primary" />
+                        </div>
+                        <div>
+                          <div className="font-medium text-sm">Create Meter Re-read</div>
+                          <div className="text-xs text-muted-foreground">Schedule a field technician to verify meter reading</div>
+                        </div>
+                      </div>
+                      <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setCreateWorkOrder(true);
+                        setBillingActionSelected(true);
+                      }}
+                      className="w-full flex items-center justify-between p-4 rounded-lg border border-border bg-background hover:bg-muted text-left transition-colors"
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className="p-2 rounded-md bg-amber-500/10">
+                          <Wrench className="h-5 w-5 text-amber-600" />
+                        </div>
+                        <div>
+                          <div className="font-medium text-sm">Create Work Order</div>
+                          <div className="text-xs text-muted-foreground">Dispatch technician to inspect meter equipment</div>
+                        </div>
+                      </div>
+                      <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                    </button>
+                  </div>
+                )}
+
+                {/* Payment Plan Actions (for catch-up and extended billing) */}
+                {selectedBillingOption.allowsPaymentPlan && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSetupPaymentPlan(true);
+                      setBillingActionSelected(true);
+                    }}
+                    className="w-full flex items-center justify-between p-4 rounded-lg border border-border bg-background hover:bg-muted text-left transition-colors"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="p-2 rounded-md bg-green-500/10">
+                        <DollarSign className="h-5 w-5 text-green-600" />
+                      </div>
+                      <div>
+                        <div className="font-medium text-sm">Offer Payment Plan</div>
+                        <div className="text-xs text-muted-foreground">Split balance into 3-12 monthly installments</div>
+                      </div>
+                    </div>
+                    <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                  </button>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Step 3b: Billing Case Details (after action selected) */}
+          {caseType && subOption && isBillingCase && selectedBillingOption && billingActionSelected && (
+            <div className="space-y-4">
+              <div className="bg-muted/50 rounded-lg p-3 border border-border">
+                <div className="text-xs text-muted-foreground">Case Type</div>
+                <div className="font-medium text-foreground">{selectedBillingOption.label}</div>
+              </div>
+
+              {/* Show selected action confirmation */}
+              {createWorkOrder && (
+                <div className="bg-green-500/10 border border-green-500/20 rounded-md p-3 flex items-center gap-2">
+                  <CheckCircle2 className="h-4 w-4 text-green-600" />
+                  <span className="text-sm text-green-700">
+                    {selectedBillingOption.allowsWorkOrder ? "Work order will be created upon case submission" : "Action selected"}
+                  </span>
+                </div>
+              )}
+
+              {/* Payment Plan Details */}
+              {setupPaymentPlan && (
+                <div className="rounded-lg border border-border bg-background p-4 space-y-3">
+                  <div className="flex items-center gap-2">
+                    <DollarSign className="h-4 w-4 text-primary" />
+                    <Label className="font-medium">Payment Plan Setup</Label>
+                  </div>
+                  
+                  <div className="space-y-3">
+                    <div className="space-y-2">
+                      <Label className="text-sm">Payment Duration</Label>
+                      <Select value={paymentPlanDuration} onValueChange={setPaymentPlanDuration}>
+                        <SelectTrigger className="bg-background">
+                          <SelectValue placeholder="Select duration" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {PAYMENT_PLAN_OPTIONS.map(option => (
+                            <SelectItem key={option.value} value={option.value}>
+                              {option.label} ({option.installments} installments)
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label className="text-sm">Down Payment (optional)</Label>
+                      <div className="relative">
+                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">$</span>
+                        <Input
+                          type="number"
+                          value={downPayment}
+                          onChange={(e) => setDownPayment(e.target.value)}
+                          placeholder="0.00"
+                          className="pl-7 bg-background"
+                        />
+                      </div>
+                    </div>
+
+                    {paymentPlanDuration && (
+                      <div className="bg-blue-500/10 border border-blue-500/20 rounded-md p-3">
+                        <div className="text-sm text-blue-700">
+                          <span className="font-medium">Plan Summary:</span> Balance will be split into {PAYMENT_PLAN_OPTIONS.find(p => p.value === paymentPlanDuration)?.installments} equal payments
+                          {downPayment && parseFloat(downPayment) > 0 && ` after $${parseFloat(downPayment).toFixed(2)} down payment`}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
 
               {/* Customer Explanation */}
               <div className="rounded-lg border border-border bg-background p-4 space-y-3">
@@ -400,98 +559,6 @@ export const CaseCreationDialog = ({ open, onOpenChange, customerName, defaultCa
                   </div>
                 )}
               </div>
-
-              {/* Meter Re-read Work Order (for meter reading error) */}
-              {selectedBillingOption.allowsWorkOrder && (
-                <div className="rounded-lg border border-border bg-background p-4 space-y-3">
-                  <div className="flex items-center gap-2">
-                    <ClipboardList className="h-4 w-4 text-primary" />
-                    <Label className="font-medium">Meter Re-read Work Order</Label>
-                  </div>
-                  
-                  <div className="flex items-center justify-between">
-                    <div className="text-sm text-muted-foreground">
-                      Schedule a field technician to verify meter reading
-                    </div>
-                    <Switch
-                      id="work-order"
-                      checked={createWorkOrder}
-                      onCheckedChange={setCreateWorkOrder}
-                    />
-                  </div>
-
-                  {createWorkOrder && (
-                    <div className="bg-green-500/10 border border-green-500/20 rounded-md p-3 flex items-center gap-2">
-                      <CheckCircle2 className="h-4 w-4 text-green-600" />
-                      <span className="text-sm text-green-700">Work order will be created upon case submission</span>
-                    </div>
-                  )}
-                </div>
-              )}
-
-              {/* Payment Plan (for catch-up and extended billing) */}
-              {selectedBillingOption.allowsPaymentPlan && (
-                <div className="rounded-lg border border-border bg-background p-4 space-y-3">
-                  <div className="flex items-center gap-2">
-                    <DollarSign className="h-4 w-4 text-primary" />
-                    <Label className="font-medium">Payment Plan</Label>
-                  </div>
-                  
-                  <div className="flex items-center justify-between">
-                    <div className="text-sm text-muted-foreground">
-                      Set up installment plan for customer
-                    </div>
-                    <Switch
-                      id="payment-plan"
-                      checked={setupPaymentPlan}
-                      onCheckedChange={setSetupPaymentPlan}
-                    />
-                  </div>
-
-                  {setupPaymentPlan && (
-                    <div className="space-y-3 pt-2">
-                      <div className="space-y-2">
-                        <Label className="text-sm">Payment Duration</Label>
-                        <Select value={paymentPlanDuration} onValueChange={setPaymentPlanDuration}>
-                          <SelectTrigger className="bg-background">
-                            <SelectValue placeholder="Select duration" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {PAYMENT_PLAN_OPTIONS.map(option => (
-                              <SelectItem key={option.value} value={option.value}>
-                                {option.label} ({option.installments} installments)
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </div>
-
-                      <div className="space-y-2">
-                        <Label className="text-sm">Down Payment (optional)</Label>
-                        <div className="relative">
-                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">$</span>
-                          <Input
-                            type="number"
-                            value={downPayment}
-                            onChange={(e) => setDownPayment(e.target.value)}
-                            placeholder="0.00"
-                            className="pl-7 bg-background"
-                          />
-                        </div>
-                      </div>
-
-                      {paymentPlanDuration && (
-                        <div className="bg-blue-500/10 border border-blue-500/20 rounded-md p-3">
-                          <div className="text-sm text-blue-700">
-                            <span className="font-medium">Plan Summary:</span> Balance will be split into {PAYMENT_PLAN_OPTIONS.find(p => p.value === paymentPlanDuration)?.installments} equal payments
-                            {downPayment && parseFloat(downPayment) > 0 && ` after $${parseFloat(downPayment).toFixed(2)} down payment`}
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  )}
-                </div>
-              )}
 
               <div className="space-y-2">
                 <Label htmlFor="description">Additional Notes (optional)</Label>
@@ -819,7 +886,7 @@ export const CaseCreationDialog = ({ open, onOpenChange, customerName, defaultCa
           <Button variant="outline" onClick={() => onOpenChange(false)}>
             Cancel
           </Button>
-          {caseType && subOption && subOption !== "outage_report" && (
+          {caseType && subOption && subOption !== "outage_report" && (!isBillingCase || billingActionSelected) && (
             <Button onClick={handleSubmit}>
               Create Case
             </Button>
