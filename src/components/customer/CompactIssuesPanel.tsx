@@ -3,9 +3,10 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { AlertTriangle, AlertCircle, Info, ChevronRight, CheckCircle, ExternalLink, Wrench } from "lucide-react";
+import { AlertTriangle, AlertCircle, Info, ChevronRight, CheckCircle, ExternalLink, Wrench, Gauge } from "lucide-react";
 import { ConsolidatedIssue } from "@/types/customer";
 import { CaseCreationDialog } from "@/components/CaseCreationDialog";
+import { MeterRereadDialog } from "@/components/MeterRereadDialog";
 import { toast } from "@/hooks/use-toast";
 
 interface CompactIssuesPanelProps {
@@ -16,13 +17,18 @@ interface CompactIssuesPanelProps {
 
 export const CompactIssuesPanel = ({ issues, onNavigateToTab, customerName = "Customer" }: CompactIssuesPanelProps) => {
   const [caseDialogOpen, setCaseDialogOpen] = useState(false);
+  const [meterRereadDialogOpen, setMeterRereadDialogOpen] = useState(false);
   const [selectedCaseType, setSelectedCaseType] = useState<string | undefined>();
   const [resolvedIssues, setResolvedIssues] = useState<Set<string>>(new Set());
   const [expandedIssues, setExpandedIssues] = useState<Set<string>>(new Set());
 
-  const handleCreateServiceRequest = (issue: ConsolidatedIssue) => {
-    setSelectedCaseType("service_request");
+  const handleCreateServiceRequest = () => {
+    setSelectedCaseType("service_problems");
     setCaseDialogOpen(true);
+  };
+
+  const handleCreateWorkOrder = () => {
+    setMeterRereadDialogOpen(true);
   };
 
   const openIssues = issues.filter(issue => !resolvedIssues.has(issue.id));
@@ -124,10 +130,19 @@ export const CompactIssuesPanel = ({ issues, onNavigateToTab, customerName = "Cu
                         <Button
                           size="sm"
                           className="h-8 text-sm px-3"
-                          onClick={() => handleCreateServiceRequest(issue)}
+                          onClick={handleCreateServiceRequest}
                         >
                           <Wrench className="h-4 w-4 mr-1.5" />
                           Create Service Request
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="h-8 text-sm px-3"
+                          onClick={handleCreateWorkOrder}
+                        >
+                          <Gauge className="h-4 w-4 mr-1.5" />
+                          Meter Reread / Work Order
                         </Button>
                         <Button
                           size="sm"
@@ -173,6 +188,13 @@ export const CompactIssuesPanel = ({ issues, onNavigateToTab, customerName = "Cu
         open={caseDialogOpen}
         onOpenChange={setCaseDialogOpen}
         defaultCaseType={selectedCaseType}
+        customerName={customerName}
+      />
+
+      <MeterRereadDialog
+        open={meterRereadDialogOpen}
+        onOpenChange={setMeterRereadDialogOpen}
+        customerName={customerName}
       />
 
     </>
