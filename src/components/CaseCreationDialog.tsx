@@ -41,6 +41,13 @@ const BILLING_SUB_OPTIONS = [
     explanation: "Your bill covers an extended period due to a billing cycle adjustment. This means more days of usage are included than a typical monthly bill.",
     allowsPaymentPlan: true
   },
+  { 
+    value: "payment_arrangement", 
+    label: "Payment Arrangement",
+    description: "Customer requesting to set up a payment plan for outstanding balance",
+    explanation: "We can help you set up a payment plan to spread your balance across 3-12 monthly installments.",
+    allowsPaymentPlan: true
+  },
 ];
 
 const PAYMENT_PLAN_OPTIONS = [
@@ -54,10 +61,7 @@ const CASE_TYPES = [
     value: "billing_account", 
     label: "Billing & Account Inquiries", 
     icon: FileText,
-    subOptions: [
-      ...BILLING_SUB_OPTIONS.map(o => ({ value: o.value, label: o.label })),
-      { value: "payment_arrangement", label: "Payment Arrangement" },
-    ]
+    subOptions: BILLING_SUB_OPTIONS.map(o => ({ value: o.value, label: o.label }))
   },
   { 
     value: "service_issues", 
@@ -264,7 +268,7 @@ export const CaseCreationDialog = ({ open, onOpenChange, customerName, defaultCa
   const selectedTypeData = CASE_TYPES.find(t => t.value === caseType);
   const selectedBillingOption = BILLING_SUB_OPTIONS.find(o => o.value === subOption);
   const showBackButton = (caseType && !defaultCaseType) || subOption || billingActionSelected;
-  const isBillingCase = caseType === "billing";
+  const isBillingCase = caseType === "billing_account";
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
