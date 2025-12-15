@@ -326,8 +326,8 @@ export const CaseCreationDialog = ({ open, onOpenChange, customerName, defaultCa
             </div>
           )}
 
-          {/* Step 2: Select Sub-Option */}
-          {caseType && !subOption && selectedTypeData && (
+          {/* Step 2: Select Sub-Option (only for case types with subOptions) */}
+          {caseType && !subOption && selectedTypeData && selectedTypeData.subOptions && (
             <div className="space-y-2">
               <Label>Select {selectedTypeData.label} Issue</Label>
               <div className="space-y-2">
