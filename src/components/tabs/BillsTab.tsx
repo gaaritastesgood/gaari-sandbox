@@ -4,8 +4,9 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { FileText, Download, ChevronRight, AlertCircle, AlertTriangle, CheckCircle, Wrench, ExternalLink } from "lucide-react";
+import { FileText, Download, ChevronRight, AlertCircle, AlertTriangle, CheckCircle, Gauge, ExternalLink } from "lucide-react";
 import { CaseCreationDialog } from "@/components/CaseCreationDialog";
+import { MeterRereadDialog } from "@/components/MeterRereadDialog";
 import { toast } from "@/hooks/use-toast";
 
 interface BillsTabProps {
@@ -20,15 +21,15 @@ interface BillsTabProps {
 export const BillsTab = ({ bills, customerSegment, customerId, customerName, issues = [], onNavigateToTab }: BillsTabProps) => {
   const [selectedBill, setSelectedBill] = useState<Bill | null>(null);
   const [showCaseDialog, setShowCaseDialog] = useState(false);
+  const [showMeterRereadDialog, setShowMeterRereadDialog] = useState(false);
   const [selectedCaseType, setSelectedCaseType] = useState<string | undefined>("billing");
   const [resolvedIssues, setResolvedIssues] = useState<Set<string>>(new Set());
   const [expandedIssues, setExpandedIssues] = useState<Set<string>>(new Set());
 
   const openIssues = issues.filter(issue => !resolvedIssues.has(issue.id));
 
-  const handleCreateRebill = () => {
-    setSelectedCaseType("billing");
-    setShowCaseDialog(true);
+  const handleCreateWorkOrder = () => {
+    setShowMeterRereadDialog(true);
   };
 
   const handleResolve = (issueId: string) => {
@@ -149,10 +150,10 @@ export const BillsTab = ({ bills, customerSegment, customerId, customerName, iss
                           <Button
                             size="sm"
                             className="h-8 text-sm px-3"
-                            onClick={handleCreateRebill}
+                            onClick={handleCreateWorkOrder}
                           >
-                            <FileText className="h-4 w-4 mr-1.5" />
-                            Create Rebill
+                            <Gauge className="h-4 w-4 mr-1.5" />
+                            Create Meter Reread / Work Order
                           </Button>
                           <Button
                             size="sm"
@@ -397,6 +398,12 @@ export const BillsTab = ({ bills, customerSegment, customerId, customerName, iss
         customerId={customerId}
         customerName={customerName}
         defaultCaseType={selectedCaseType}
+      />
+
+      <MeterRereadDialog
+        open={showMeterRereadDialog}
+        onOpenChange={setShowMeterRereadDialog}
+        customerName={customerName}
       />
     </div>
   );
