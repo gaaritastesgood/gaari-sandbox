@@ -50,16 +50,11 @@ const PAYMENT_PLAN_OPTIONS = [
 
 const CASE_TYPES = [
   { 
-    value: "billing", 
-    label: "Billing", 
+    value: "billing_account", 
+    label: "Billing & Account Inquiries", 
     icon: FileText,
-    subOptions: BILLING_SUB_OPTIONS.map(o => ({ value: o.value, label: o.label }))
-  },
-  { 
-    value: "payment", 
-    label: "Payment", 
-    icon: CreditCard,
     subOptions: [
+      ...BILLING_SUB_OPTIONS.map(o => ({ value: o.value, label: o.label })),
       { value: "payment_arrangement", label: "Payment Arrangement" },
       { value: "refund_request", label: "Refund Request" },
       { value: "payment_issue", label: "Payment Issue" },
@@ -67,8 +62,8 @@ const CASE_TYPES = [
     ]
   },
   { 
-    value: "service_problems", 
-    label: "Service Problems", 
+    value: "service_issues", 
+    label: "Service Issues", 
     icon: Wrench,
     subOptions: [
       { value: "outage_report", label: "Outage Report" },
@@ -78,8 +73,8 @@ const CASE_TYPES = [
     ]
   },
   { 
-    value: "account_management", 
-    label: "Account Management", 
+    value: "service_requests", 
+    label: "Service Requests / Changes", 
     icon: Settings,
     subOptions: [
       { value: "name_change", label: "Name Change" },
