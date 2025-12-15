@@ -4,11 +4,12 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/hooks/use-toast";
-import { FileText, CreditCard, Wrench, Settings, ArrowLeft, ChevronRight, Calendar, ClipboardList, MessageSquare, DollarSign, CheckCircle2 } from "lucide-react";
+import { FileText, CreditCard, Wrench, Settings, ArrowLeft, ChevronRight, Calendar, ClipboardList, MessageSquare, DollarSign, CheckCircle2, MapPin, AlertTriangle, Clock, Zap, Users, Loader2 } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 interface CaseCreationDialogProps {
   open: boolean;
@@ -78,6 +79,9 @@ const CASE_TYPES = [
   },
 ];
 
+// Outage workflow steps
+type OutageStep = "address_confirm" | "checking" | "new_outage_questions" | "known_outage_questions" | "complete";
+
 export const CaseCreationDialog = ({ open, onOpenChange, customerName, defaultCaseType }: CaseCreationDialogProps) => {
   const [caseType, setCaseType] = useState<string | null>(null);
   const [subOption, setSubOption] = useState("");
@@ -90,6 +94,18 @@ export const CaseCreationDialog = ({ open, onOpenChange, customerName, defaultCa
   const [downPayment, setDownPayment] = useState("");
   const [sendExplanation, setSendExplanation] = useState(false);
   const [explanationMethod, setExplanationMethod] = useState("email");
+
+  // Outage-specific states
+  const [outageStep, setOutageStep] = useState<OutageStep>("address_confirm");
+  const [addressConfirmed, setAddressConfirmed] = useState(false);
+  const [isKnownOutage, setIsKnownOutage] = useState(false);
+  const [outageStartTime, setOutageStartTime] = useState("");
+  const [serviceStatus, setServiceStatus] = useState<"full" | "partial" | "">("");
+  const [hasSafetyHazards, setHasSafetyHazards] = useState<"yes" | "no" | "">("");
+  const [neighborsAffected, setNeighborsAffected] = useState<"yes" | "no" | "not_sure" | "">("");
+
+  // Mock customer address
+  const customerAddress = "1234 Oak Street, Apt 5B, Springfield, IL 62701";
 
   useEffect(() => {
     if (open) {
@@ -113,8 +129,28 @@ export const CaseCreationDialog = ({ open, onOpenChange, customerName, defaultCa
       setDownPayment("");
       setSendExplanation(false);
       setExplanationMethod("email");
+      // Reset outage states
+      setOutageStep("address_confirm");
+      setAddressConfirmed(false);
+      setIsKnownOutage(false);
+      setOutageStartTime("");
+      setServiceStatus("");
+      setHasSafetyHazards("");
+      setNeighborsAffected("");
     }
   }, [open, defaultCaseType]);
+
+  const handleAddressConfirm = () => {
+    setAddressConfirmed(true);
+    setOutageStep("checking");
+    
+    // Simulate checking for known outages (50% chance for demo)
+    setTimeout(() => {
+      const hasKnownOutage = Math.random() > 0.5;
+      setIsKnownOutage(hasKnownOutage);
+      setOutageStep(hasKnownOutage ? "known_outage_questions" : "new_outage_questions");
+    }, 1500);
+  };
 
   const handleSubmit = () => {
     if (!caseType || !subOption) {
@@ -131,15 +167,30 @@ export const CaseCreationDialog = ({ open, onOpenChange, customerName, defaultCa
     
     let successMessage = `${selectedSubOption?.label} case has been created successfully`;
     
-    if (createWorkOrder) {
-      successMessage += ". Meter re-read work order scheduled.";
-    }
-    if (setupPaymentPlan && paymentPlanDuration) {
-      const plan = PAYMENT_PLAN_OPTIONS.find(p => p.value === paymentPlanDuration);
-      successMessage += `. Payment plan set up for ${plan?.label}.`;
-    }
-    if (sendExplanation) {
-      successMessage += ` Explanation sent via ${explanationMethod}.`;
+    // Outage-specific success message
+    if (subOption === "outage_report") {
+      if (isKnownOutage) {
+        successMessage = "Outage report submitted. Your information has been added to the existing outage case.";
+        if (hasSafetyHazards === "yes") {
+          successMessage += " Safety team has been notified of the hazard.";
+        }
+      } else {
+        successMessage = "New outage reported and sent to response teams.";
+        if (hasSafetyHazards === "yes") {
+          successMessage += " Safety team has been dispatched.";
+        }
+      }
+    } else {
+      if (createWorkOrder) {
+        successMessage += ". Meter re-read work order scheduled.";
+      }
+      if (setupPaymentPlan && paymentPlanDuration) {
+        const plan = PAYMENT_PLAN_OPTIONS.find(p => p.value === paymentPlanDuration);
+        successMessage += `. Payment plan set up for ${plan?.label}.`;
+      }
+      if (sendExplanation) {
+        successMessage += ` Explanation sent via ${explanationMethod}.`;
+      }
     }
     
     toast({
@@ -151,6 +202,20 @@ export const CaseCreationDialog = ({ open, onOpenChange, customerName, defaultCa
   };
 
   const handleBack = () => {
+    // Handle outage workflow back navigation
+    if (subOption === "outage_report") {
+      if (outageStep === "new_outage_questions" || outageStep === "known_outage_questions") {
+        setOutageStep("address_confirm");
+        setAddressConfirmed(false);
+        setIsKnownOutage(false);
+        return;
+      } else if (outageStep === "address_confirm") {
+        setSubOption("");
+        setOutageStep("address_confirm");
+        return;
+      }
+    }
+    
     if (subOption) {
       setSubOption("");
       setCreateWorkOrder(false);
@@ -158,10 +223,26 @@ export const CaseCreationDialog = ({ open, onOpenChange, customerName, defaultCa
       setPaymentPlanDuration("");
       setDownPayment("");
       setSendExplanation(false);
+      // Reset outage states
+      setOutageStep("address_confirm");
+      setAddressConfirmed(false);
+      setIsKnownOutage(false);
+      setOutageStartTime("");
+      setServiceStatus("");
+      setHasSafetyHazards("");
+      setNeighborsAffected("");
     } else if (caseType) {
       if (!defaultCaseType) {
         setCaseType(null);
       }
+    }
+  };
+
+  const isOutageQuestionsComplete = () => {
+    if (isKnownOutage) {
+      return hasSafetyHazards !== "";
+    } else {
+      return outageStartTime !== "" && serviceStatus !== "" && hasSafetyHazards !== "" && neighborsAffected !== "";
     }
   };
 
@@ -423,8 +504,230 @@ export const CaseCreationDialog = ({ open, onOpenChange, customerName, defaultCa
             </div>
           )}
 
-          {/* Step 3: Non-Billing Case Notes */}
-          {caseType && subOption && !isBillingCase && (
+          {/* Step 3: Outage Report Workflow */}
+          {caseType && subOption === "outage_report" && (
+            <div className="space-y-4">
+              {/* Address Confirmation Step */}
+              {outageStep === "address_confirm" && (
+                <div className="space-y-4">
+                  <div className="bg-muted/50 rounded-lg p-3 border border-border">
+                    <div className="text-xs text-muted-foreground">Case Type</div>
+                    <div className="font-medium text-foreground">Outage / Service Issue → Outage Report</div>
+                  </div>
+
+                  <div className="rounded-lg border border-border bg-background p-4 space-y-3">
+                    <div className="flex items-center gap-2">
+                      <MapPin className="h-4 w-4 text-primary" />
+                      <Label className="font-medium">Confirm Service Address</Label>
+                    </div>
+                    
+                    <div className="bg-muted/30 rounded-md p-3 text-sm">
+                      <div className="font-medium text-foreground">{customerAddress}</div>
+                    </div>
+
+                    <Button 
+                      className="w-full" 
+                      onClick={handleAddressConfirm}
+                    >
+                      <CheckCircle2 className="h-4 w-4 mr-2" />
+                      Confirm Address & Check Outage Status
+                    </Button>
+                  </div>
+                </div>
+              )}
+
+              {/* Checking for Known Outages */}
+              {outageStep === "checking" && (
+                <div className="space-y-4">
+                  <div className="bg-muted/50 rounded-lg p-3 border border-border">
+                    <div className="text-xs text-muted-foreground">Case Type</div>
+                    <div className="font-medium text-foreground">Outage / Service Issue → Outage Report</div>
+                  </div>
+
+                  <div className="rounded-lg border border-border bg-background p-6 flex flex-col items-center justify-center space-y-3">
+                    <Loader2 className="h-8 w-8 text-primary animate-spin" />
+                    <div className="text-sm text-muted-foreground text-center">
+                      Checking for known outages in your area...
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* New Outage Questionnaire */}
+              {outageStep === "new_outage_questions" && (
+                <div className="space-y-4">
+                  <div className="bg-muted/50 rounded-lg p-3 border border-border">
+                    <div className="text-xs text-muted-foreground">Case Type</div>
+                    <div className="font-medium text-foreground">Outage / Service Issue → Outage Report</div>
+                  </div>
+
+                  <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-3 flex items-start gap-2">
+                    <Zap className="h-4 w-4 text-blue-600 mt-0.5" />
+                    <div className="text-sm text-blue-700">
+                      <span className="font-medium">No known outage found.</span> Please provide details so we can dispatch a response team.
+                    </div>
+                  </div>
+
+                  {/* When did outage start */}
+                  <div className="rounded-lg border border-border bg-background p-4 space-y-3">
+                    <div className="flex items-center gap-2">
+                      <Clock className="h-4 w-4 text-primary" />
+                      <Label className="font-medium">When did the outage start, approximately?</Label>
+                    </div>
+                    <Select value={outageStartTime} onValueChange={setOutageStartTime}>
+                      <SelectTrigger className="bg-background">
+                        <SelectValue placeholder="Select time" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="5_min">Last 5 minutes</SelectItem>
+                        <SelectItem value="15_min">Last 15 minutes</SelectItem>
+                        <SelectItem value="30_min">Last 30 minutes</SelectItem>
+                        <SelectItem value="1_hour">Last hour</SelectItem>
+                        <SelectItem value="2_hours">Last 2 hours</SelectItem>
+                        <SelectItem value="longer">More than 2 hours ago</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  {/* Service status */}
+                  <div className="rounded-lg border border-border bg-background p-4 space-y-3">
+                    <div className="flex items-center gap-2">
+                      <Zap className="h-4 w-4 text-primary" />
+                      <Label className="font-medium">Is service completely out or partial?</Label>
+                    </div>
+                    <RadioGroup value={serviceStatus} onValueChange={(v) => setServiceStatus(v as "full" | "partial")}>
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="full" id="full" />
+                        <Label htmlFor="full" className="font-normal cursor-pointer">Full outage (no power at all)</Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="partial" id="partial" />
+                        <Label htmlFor="partial" className="font-normal cursor-pointer">Partial (flickering, low lights, intermittent)</Label>
+                      </div>
+                    </RadioGroup>
+                  </div>
+
+                  {/* Safety hazards */}
+                  <div className="rounded-lg border border-border bg-background p-4 space-y-3">
+                    <div className="flex items-center gap-2">
+                      <AlertTriangle className="h-4 w-4 text-destructive" />
+                      <Label className="font-medium">Any safety hazards present?</Label>
+                    </div>
+                    <div className="text-xs text-muted-foreground">Downed power lines, exposed wires, fires, gas smell</div>
+                    <RadioGroup value={hasSafetyHazards} onValueChange={(v) => setHasSafetyHazards(v as "yes" | "no")}>
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="yes" id="hazard_yes" />
+                        <Label htmlFor="hazard_yes" className="font-normal cursor-pointer">Yes</Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="no" id="hazard_no" />
+                        <Label htmlFor="hazard_no" className="font-normal cursor-pointer">No</Label>
+                      </div>
+                    </RadioGroup>
+                    {hasSafetyHazards === "yes" && (
+                      <div className="bg-destructive/10 border border-destructive/20 rounded-md p-3 flex items-center gap-2">
+                        <AlertTriangle className="h-4 w-4 text-destructive" />
+                        <span className="text-sm text-destructive">Safety team will be immediately notified</span>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Neighbors affected */}
+                  <div className="rounded-lg border border-border bg-background p-4 space-y-3">
+                    <div className="flex items-center gap-2">
+                      <Users className="h-4 w-4 text-primary" />
+                      <Label className="font-medium">Are neighbors affected?</Label>
+                    </div>
+                    <RadioGroup value={neighborsAffected} onValueChange={(v) => setNeighborsAffected(v as "yes" | "no" | "not_sure")}>
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="yes" id="neighbors_yes" />
+                        <Label htmlFor="neighbors_yes" className="font-normal cursor-pointer">Yes</Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="no" id="neighbors_no" />
+                        <Label htmlFor="neighbors_no" className="font-normal cursor-pointer">No</Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="not_sure" id="neighbors_not_sure" />
+                        <Label htmlFor="neighbors_not_sure" className="font-normal cursor-pointer">Not sure</Label>
+                      </div>
+                    </RadioGroup>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="description">Additional Notes (optional)</Label>
+                    <Textarea
+                      id="description"
+                      value={description}
+                      onChange={(e) => setDescription(e.target.value)}
+                      placeholder="Any other details about the outage..."
+                      className="min-h-[60px] bg-background"
+                    />
+                  </div>
+                </div>
+              )}
+
+              {/* Known Outage - Abbreviated Questionnaire */}
+              {outageStep === "known_outage_questions" && (
+                <div className="space-y-4">
+                  <div className="bg-muted/50 rounded-lg p-3 border border-border">
+                    <div className="text-xs text-muted-foreground">Case Type</div>
+                    <div className="font-medium text-foreground">Outage / Service Issue → Outage Report</div>
+                  </div>
+
+                  <div className="bg-amber-500/10 border border-amber-500/20 rounded-lg p-4 space-y-2">
+                    <div className="flex items-center gap-2">
+                      <AlertTriangle className="h-4 w-4 text-amber-600" />
+                      <span className="font-medium text-amber-700">Known Outage in Your Area</span>
+                    </div>
+                    <div className="text-sm text-amber-700">
+                      We're already aware of an outage affecting your area. Crews are working to restore service. 
+                      Estimated restoration: <span className="font-medium">2-3 hours</span>
+                    </div>
+                  </div>
+
+                  {/* Safety hazards check only */}
+                  <div className="rounded-lg border border-border bg-background p-4 space-y-3">
+                    <div className="flex items-center gap-2">
+                      <AlertTriangle className="h-4 w-4 text-destructive" />
+                      <Label className="font-medium">Any safety hazards present?</Label>
+                    </div>
+                    <div className="text-xs text-muted-foreground">Downed power lines, exposed wires, fires, gas smell</div>
+                    <RadioGroup value={hasSafetyHazards} onValueChange={(v) => setHasSafetyHazards(v as "yes" | "no")}>
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="yes" id="known_hazard_yes" />
+                        <Label htmlFor="known_hazard_yes" className="font-normal cursor-pointer">Yes</Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="no" id="known_hazard_no" />
+                        <Label htmlFor="known_hazard_no" className="font-normal cursor-pointer">No</Label>
+                      </div>
+                    </RadioGroup>
+                    {hasSafetyHazards === "yes" && (
+                      <div className="bg-destructive/10 border border-destructive/20 rounded-md p-3 flex items-center gap-2">
+                        <AlertTriangle className="h-4 w-4 text-destructive" />
+                        <span className="text-sm text-destructive">Safety team will be immediately notified</span>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="description">Additional Notes (optional)</Label>
+                    <Textarea
+                      id="description"
+                      value={description}
+                      onChange={(e) => setDescription(e.target.value)}
+                      placeholder="Any additional information to report..."
+                      className="min-h-[60px] bg-background"
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Step 3: Other Non-Billing Case Notes */}
+          {caseType && subOption && !isBillingCase && subOption !== "outage_report" && (
             <div className="space-y-4">
               <div className="bg-muted/50 rounded-lg p-3 border border-border">
                 <div className="text-xs text-muted-foreground">Case Type</div>
@@ -451,9 +754,17 @@ export const CaseCreationDialog = ({ open, onOpenChange, customerName, defaultCa
           <Button variant="outline" onClick={() => onOpenChange(false)}>
             Cancel
           </Button>
-          {caseType && subOption && (
+          {caseType && subOption && subOption !== "outage_report" && (
             <Button onClick={handleSubmit}>
               Create Case
+            </Button>
+          )}
+          {subOption === "outage_report" && (outageStep === "new_outage_questions" || outageStep === "known_outage_questions") && (
+            <Button 
+              onClick={handleSubmit}
+              disabled={!isOutageQuestionsComplete()}
+            >
+              {isKnownOutage ? "Submit Report" : "Report Outage"}
             </Button>
           )}
         </DialogFooter>
