@@ -130,19 +130,10 @@ export const CompactIssuesPanel = ({ issues, onNavigateToTab, customerName = "Cu
                         <Button
                           size="sm"
                           className="h-8 text-sm px-3"
-                          onClick={handleCreateServiceRequest}
-                        >
-                          <Wrench className="h-4 w-4 mr-1.5" />
-                          Create Service Request
-                        </Button>
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          className="h-8 text-sm px-3"
                           onClick={handleCreateWorkOrder}
                         >
                           <Gauge className="h-4 w-4 mr-1.5" />
-                          Meter Reread / Work Order
+                          Create Meter Reread / Work Order
                         </Button>
                         <Button
                           size="sm"
