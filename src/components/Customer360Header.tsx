@@ -74,20 +74,18 @@ export const Customer360Header = ({ customer, bills = [] }: Customer360HeaderPro
         </div>
         
         <div className="flex items-center gap-4">
-          <div className="text-right">
+          <Button size="default" onClick={() => setShowCreateCase(true)}>
+            <AlertTriangle className="h-4 w-4 mr-1.5" />
+            Add Case
+          </Button>
+          
+          <div className="text-right border-l border-border pl-4">
             <div className="text-lg font-semibold text-foreground">
               ${activeAccount.balance.toLocaleString()}
             </div>
             <div className="text-xs text-muted-foreground">
               Due {new Date(activeAccount.dueDate).toLocaleDateString()}
             </div>
-          </div>
-          
-          <div className="border-l border-border pl-4">
-            <Button size="sm" variant="outline" className="h-7 text-xs" onClick={() => setShowCreateCase(true)}>
-              <AlertTriangle className="h-3.5 w-3.5 mr-1" />
-              Add Case
-            </Button>
           </div>
         </div>
       </div>
