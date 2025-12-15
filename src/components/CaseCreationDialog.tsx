@@ -66,21 +66,16 @@ const CASE_TYPES = [
     subOptions: BILLING_SUB_OPTIONS.map(o => ({ value: o.value, label: o.label }))
   },
   { 
-    value: "service_issues", 
-    label: "Outage / Service Issue",
+    value: "outage_report", 
+    label: "Outage Report",
     icon: Wrench,
-    subOptions: [
-      { value: "outage_report", label: "Outage Report" },
-    ]
+    directAction: true
   },
   { 
-    value: "service_requests", 
-    label: "Service Requests / Changes", 
+    value: "move_out", 
+    label: "Move Out", 
     icon: Settings,
-    subOptions: [
-      { value: "address_update", label: "Address Update" },
-      { value: "move_out", label: "Move Out" },
-    ]
+    directAction: true
   },
 ];
 
@@ -307,7 +302,16 @@ export const CaseCreationDialog = ({ open, onOpenChange, customerName, defaultCa
                     <button
                       key={type.value}
                       type="button"
-                      onClick={() => setCaseType(type.value)}
+                      onClick={() => {
+                        if (type.value === "move_out") {
+                          setShowMoveOutDialog(true);
+                        } else if (type.value === "outage_report") {
+                          setCaseType("outage_report");
+                          setSubOption("outage_report");
+                        } else {
+                          setCaseType(type.value);
+                        }
+                      }}
                       className="flex items-center justify-between gap-2 p-3 rounded-lg border border-border bg-background hover:bg-muted text-left transition-colors"
                     >
                       <div className="flex items-center gap-2">
