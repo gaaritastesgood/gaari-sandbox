@@ -78,7 +78,6 @@ const CASE_TYPES = [
     icon: Settings,
     subOptions: [
       { value: "address_update", label: "Address Update" },
-      { value: "move_in", label: "Move In" },
       { value: "move_out", label: "Move Out" },
     ]
   },
