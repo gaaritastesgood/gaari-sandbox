@@ -60,7 +60,7 @@ const CASE_TYPES = [
   },
   { 
     value: "service_issues", 
-    label: "Service Issues", 
+    label: "Outage / Service Issue",
     icon: Wrench,
     subOptions: [
       { value: "outage_report", label: "Outage Report" },
