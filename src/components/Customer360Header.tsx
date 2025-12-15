@@ -76,7 +76,7 @@ export const Customer360Header = ({ customer, bills = [] }: Customer360HeaderPro
         <div className="flex items-center gap-4">
           <Button size="default" onClick={() => setShowCreateCase(true)}>
             <AlertTriangle className="h-4 w-4 mr-1.5" />
-            Add Case
+            Create Case
           </Button>
           
           <div className="text-right border-l border-border pl-4">
