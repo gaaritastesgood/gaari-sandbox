@@ -71,10 +71,9 @@ const CASE_TYPES = [
     label: "Service Requests / Changes", 
     icon: Settings,
     subOptions: [
-      { value: "name_change", label: "Name Change" },
       { value: "address_update", label: "Address Update" },
-      { value: "start_service", label: "Start Service" },
-      { value: "stop_service", label: "Stop Service" },
+      { value: "move_in", label: "Move In" },
+      { value: "move_out", label: "Move Out" },
     ]
   },
 ];
