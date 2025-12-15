@@ -4,12 +4,13 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/hooks/use-toast";
-import { FileText, CreditCard, Wrench, Settings, ArrowLeft, ChevronRight, Calendar, ClipboardList, MessageSquare, DollarSign, CheckCircle2, MapPin, AlertTriangle, Clock, Zap, Users, Loader2 } from "lucide-react";
+import { FileText, CreditCard, Wrench, Settings, ArrowLeft, ChevronRight, Calendar, ClipboardList, MessageSquare, DollarSign, CheckCircle2, MapPin, AlertTriangle, Clock, Zap, Users, Loader2, Gauge } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { MeterRereadDialog } from "@/components/MeterRereadDialog";
 
 interface CaseCreationDialogProps {
   open: boolean;
@@ -99,6 +100,7 @@ export const CaseCreationDialog = ({ open, onOpenChange, customerName, defaultCa
   const [sendExplanation, setSendExplanation] = useState(false);
   const [explanationMethod, setExplanationMethod] = useState("email");
   const [billingActionSelected, setBillingActionSelected] = useState(false);
+  const [showMeterRereadDialog, setShowMeterRereadDialog] = useState(false);
 
   // Outage-specific states
   const [outageStep, setOutageStep] = useState<OutageStep>("address_confirm");
@@ -271,6 +273,7 @@ export const CaseCreationDialog = ({ open, onOpenChange, customerName, defaultCa
   const isBillingCase = caseType === "billing_account";
 
   return (
+    <>
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-lg max-h-[85vh] overflow-y-auto">
         <DialogHeader>
@@ -372,46 +375,22 @@ export const CaseCreationDialog = ({ open, onOpenChange, customerName, defaultCa
                 
                 {/* Meter Reading Error Actions */}
                 {selectedBillingOption.allowsWorkOrder && (
-                  <div className="space-y-2">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setCreateWorkOrder(true);
-                        setBillingActionSelected(true);
-                      }}
-                      className="w-full flex items-center justify-between p-4 rounded-lg border border-border bg-background hover:bg-muted text-left transition-colors"
-                    >
-                      <div className="flex items-center gap-3">
-                        <div className="p-2 rounded-md bg-primary/10">
-                          <ClipboardList className="h-5 w-5 text-primary" />
-                        </div>
-                        <div>
-                          <div className="font-medium text-sm">Create Meter Re-read</div>
-                          <div className="text-xs text-muted-foreground">Schedule a field technician to verify meter reading</div>
-                        </div>
+                  <button
+                    type="button"
+                    onClick={() => setShowMeterRereadDialog(true)}
+                    className="w-full flex items-center justify-between p-4 rounded-lg border border-border bg-background hover:bg-muted text-left transition-colors"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="p-2 rounded-md bg-primary/10">
+                        <Gauge className="h-5 w-5 text-primary" />
                       </div>
-                      <ChevronRight className="h-4 w-4 text-muted-foreground" />
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setCreateWorkOrder(true);
-                        setBillingActionSelected(true);
-                      }}
-                      className="w-full flex items-center justify-between p-4 rounded-lg border border-border bg-background hover:bg-muted text-left transition-colors"
-                    >
-                      <div className="flex items-center gap-3">
-                        <div className="p-2 rounded-md bg-amber-500/10">
-                          <Wrench className="h-5 w-5 text-amber-600" />
-                        </div>
-                        <div>
-                          <div className="font-medium text-sm">Create Work Order</div>
-                          <div className="text-xs text-muted-foreground">Dispatch technician to inspect meter equipment</div>
-                        </div>
+                      <div>
+                        <div className="font-medium text-sm">Create Meter Reread / Work Order</div>
+                        <div className="text-xs text-muted-foreground">Schedule a field technician to verify meter reading or inspect equipment</div>
                       </div>
-                      <ChevronRight className="h-4 w-4 text-muted-foreground" />
-                    </button>
-                  </div>
+                    </div>
+                    <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                  </button>
                 )}
 
                 {/* Payment Plan Actions (for catch-up and extended billing) */}
@@ -906,5 +885,18 @@ export const CaseCreationDialog = ({ open, onOpenChange, customerName, defaultCa
         </DialogFooter>
       </DialogContent>
     </Dialog>
+
+    <MeterRereadDialog
+      open={showMeterRereadDialog}
+      onOpenChange={(open) => {
+        setShowMeterRereadDialog(open);
+        if (!open) {
+          // Close the case dialog when meter reread dialog closes after completion
+          onOpenChange(false);
+        }
+      }}
+      customerName={customerName}
+    />
+  </>
   );
 };
