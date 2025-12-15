@@ -64,9 +64,6 @@ const CASE_TYPES = [
     icon: Wrench,
     subOptions: [
       { value: "outage_report", label: "Outage Report" },
-      { value: "meter_issue", label: "Meter Issue" },
-      { value: "voltage_problem", label: "Voltage Problem" },
-      { value: "service_quality", label: "Service Quality Complaint" },
     ]
   },
   { 
