@@ -26,8 +26,8 @@ export const BillsTab = ({ bills, customerSegment, customerId, customerName, iss
 
   const openIssues = issues.filter(issue => !resolvedIssues.has(issue.id));
 
-  const handleCreateServiceRequest = (issue: ConsolidatedIssue) => {
-    setSelectedCaseType("service_problems");
+  const handleCreateRebill = () => {
+    setSelectedCaseType("billing");
     setShowCaseDialog(true);
   };
 
@@ -149,10 +149,10 @@ export const BillsTab = ({ bills, customerSegment, customerId, customerName, iss
                           <Button
                             size="sm"
                             className="h-8 text-sm px-3"
-                            onClick={() => handleCreateServiceRequest(issue)}
+                            onClick={handleCreateRebill}
                           >
-                            <Wrench className="h-4 w-4 mr-1.5" />
-                            Create Service Request
+                            <FileText className="h-4 w-4 mr-1.5" />
+                            Create Rebill
                           </Button>
                           <Button
                             size="sm"
