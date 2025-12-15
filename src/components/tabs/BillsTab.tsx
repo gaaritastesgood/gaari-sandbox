@@ -100,7 +100,7 @@ export const BillsTab = ({ bills, customerSegment, customerId, customerName, iss
       <div className="flex justify-end">
         <Button
           onClick={() => {
-            setSelectedCaseType("billing");
+            setSelectedCaseType("billing_account");
             setShowCaseDialog(true);
           }}
         >
