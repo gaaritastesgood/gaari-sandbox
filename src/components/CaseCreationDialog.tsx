@@ -721,14 +721,33 @@ export const CaseCreationDialog = ({ open, onOpenChange, customerName, defaultCa
                     <div className="font-medium text-foreground">Outage / Service Issue → Outage Report</div>
                   </div>
 
-                  <div className="bg-amber-500/10 border border-amber-500/20 rounded-lg p-4 space-y-2">
+                  <div className="bg-amber-500/10 border border-amber-500/20 rounded-lg p-4 space-y-3">
                     <div className="flex items-center gap-2">
                       <AlertTriangle className="h-4 w-4 text-amber-600" />
                       <span className="font-medium text-amber-700">Known Outage in Your Area</span>
                     </div>
-                    <div className="text-sm text-amber-700">
-                      We're already aware of an outage affecting your area. Crews are working to restore service. 
-                      Estimated restoration: <span className="font-medium">2-3 hours</span>
+                    
+                    <div className="space-y-2 text-sm">
+                      <div className="flex items-start gap-2">
+                        <span className="text-amber-600 font-medium min-w-[100px]">Cause:</span>
+                        <span className="text-amber-700">Severe thunderstorm with high winds caused damage to transmission lines</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-amber-600 font-medium min-w-[100px]">Status:</span>
+                        <Badge variant="outline" className="bg-amber-100 text-amber-700 border-amber-300">Crews dispatched</Badge>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-amber-600 font-medium min-w-[100px]">Est. Restoration:</span>
+                        <span className="text-amber-700 font-medium">Today by 6:00 PM</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-amber-600 font-medium min-w-[100px]">Reported at:</span>
+                        <span className="text-amber-700">2:15 PM</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-amber-600 font-medium min-w-[100px]">Affected:</span>
+                        <span className="text-amber-700">1,247 customers</span>
+                      </div>
                     </div>
                   </div>
 
