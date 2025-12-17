@@ -1,6 +1,6 @@
 # Gaari Sandbox
 
-This repository is a **sandbox application** used for exploring product ideas and validating assumptions. It's currently just a frontend UI built with React, but it is intended to support **backend development as well**.
+This sandbox is currently just a frontend UI built with React, but it is intended to support backend dev too (atleast for the initial sandbox).
 
 ---
 
